@@ -13,8 +13,8 @@ public class Mutable {
     private BigInteger objectId;
     private BigInteger objectTypeId;
     private BigInteger parentId;
-    private Map<BigInteger, Object> attributeSet;
-    private Map<BigInteger, BigInteger> referenceSet;
+    private Map<BigInteger, Object> attributes;
+    private Map<BigInteger, BigInteger> references;
 
     public BigInteger getObjectId() {
         return objectId;
@@ -40,20 +40,20 @@ public class Mutable {
         this.parentId = parentId;
     }
 
-    public Map<BigInteger, Object> getAttributeSet() {
-        return attributeSet;
+    public Map<BigInteger, Object> getAttributes() {
+        return attributes;
     }
 
-    public void setAttributeSet(Map<BigInteger, Object> attributeSet) {
-        this.attributeSet = attributeSet;
+    public void setAttributes(Map<BigInteger, Object> attributes) {
+        this.attributes = attributes;
     }
 
-    public Map<BigInteger, BigInteger> getReferenceSet() {
-        return referenceSet;
+    public Map<BigInteger, BigInteger> getReferences() {
+        return references;
     }
 
-    public void setReferenceSet(Map<BigInteger, BigInteger> referenceSet) {
-        this.referenceSet = referenceSet;
+    public void setReferences(Map<BigInteger, BigInteger> references) {
+        this.references = references;
     }
 
     @Override
@@ -61,11 +61,11 @@ public class Mutable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mutable mutable = (Mutable) o;
-        return Objects.equals(objectId,      mutable.objectId) &&
+        return Objects.equals(objectId, mutable.objectId) &&
                 Objects.equals(objectTypeId, mutable.objectTypeId) &&
-                Objects.equals(parentId,     mutable.parentId) &&
-                Objects.equals(attributeSet, mutable.attributeSet) &&
-                Objects.equals(referenceSet, mutable.referenceSet);
+                Objects.equals(parentId, mutable.parentId) &&
+                Objects.equals(attributes, mutable.attributes) &&
+                Objects.equals(references, mutable.references);
     }
 
     @Override
