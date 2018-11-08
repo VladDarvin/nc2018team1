@@ -1,12 +1,11 @@
 package com.nc.airport.backend.eav.filtering;
 
-import java.util.Queue;
+import java.util.List;
 
 class FilteringDescriptor {
 
-    private StringBuilder queryBuilder = new StringBuilder();
-
-    String doFiltering(Queue<FilterEntity> filterEntities) {
+    String doFiltering(List<FilterEntity> filterEntities) {
+        StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("WHERE (");
         int countOfEntities = filterEntities.size();
         for (FilterEntity entity:

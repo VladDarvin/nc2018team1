@@ -3,8 +3,8 @@ package com.nc.airport.backend.eav.filtering;
 import java.util.Set;
 
 public class FilterEntity {
-    String type;
-    Set<Object> values;
+    private String type;
+    private Set<Object> values;
 
     public FilterEntity(String type, Set<Object> values) {
         this.type = type;

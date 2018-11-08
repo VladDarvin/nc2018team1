@@ -1,12 +1,11 @@
 package com.nc.airport.backend.eav.filtering;
 
-import java.util.Queue;
+import java.util.List;
 
 class SortingDescriptor {
 
-    private StringBuilder queryBuilder = new StringBuilder();
-
-    String doSorting(Queue<SortEntity> sortEntities) {
+    String doSorting(List<SortEntity> sortEntities) {
+        StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(" ORDER BY ");
         int countOfEntities = sortEntities.size();
         for (SortEntity entity:

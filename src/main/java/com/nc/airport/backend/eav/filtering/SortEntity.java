@@ -2,8 +2,8 @@ package com.nc.airport.backend.eav.filtering;
 
 public class SortEntity {
 
-    String type;
-    Boolean order;
+    private String type;
+    private Boolean order;
 
     public SortEntity(String type, Boolean order) {
         this.type = type;
