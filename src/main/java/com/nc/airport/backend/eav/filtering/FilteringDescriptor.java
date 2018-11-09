@@ -16,13 +16,10 @@ class FilteringDescriptor {
                 if (value instanceof String) {
                     queryBuilder.append("LOWER(")
                             .append(entity.getType())
-                            .append(") LIKE LOWER('%")
-                            .append(value)
-                            .append("%')");
+                            .append(") LIKE LOWER(?)");
                 } else if (value instanceof Integer) {
                     queryBuilder.append(entity.getType())
-                            .append(" = ")
-                            .append(value);
+                            .append(" = ?");
                 }
                 if (countOfValues != 1) {
                     queryBuilder.append(" OR ");
