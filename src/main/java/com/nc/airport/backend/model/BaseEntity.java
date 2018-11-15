@@ -2,27 +2,44 @@ package com.nc.airport.backend.model;
 
 import java.math.BigInteger;
 
-public abstract class BaseEntity implements Entity {
-    private BigInteger id;
+/**
+ * Base class for POJOs that are intended to be converted into mutable
+ */
+public abstract class BaseEntity {
+    private BigInteger objectId;
     private BigInteger parentId;
+    private String objectName;
+    private String objectDescription;
 
-    @Override
     public BigInteger getParentId() {
         return parentId;
     }
 
-    @Override
     public void setParentId(BigInteger parentId) {
         this.parentId = parentId;
     }
 
-    @Override
-    public BigInteger getId() {
-        return id;
+    public BigInteger getObjectId() {
+        return objectId;
     }
 
-    @Override
-    public void setId(BigInteger id) {
-        this.id = id;
+    public void setObjectId(BigInteger objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public String getObjectDescription() {
+        return objectDescription;
+    }
+
+    public void setObjectDescription(String objectDescription) {
+        this.objectDescription = objectDescription;
     }
 }
