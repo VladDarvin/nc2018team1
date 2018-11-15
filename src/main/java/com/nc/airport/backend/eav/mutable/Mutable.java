@@ -53,7 +53,7 @@ public class Mutable {
      * BigInt - Attributes.Attr_id
      * List - Attributes.List_value_id
      */
-    private Map<BigInteger, List> listValues;
+    private Map<BigInteger, BigInteger> listValues;
 
     /**
      * BigInt - ObjReference.Attr_id
