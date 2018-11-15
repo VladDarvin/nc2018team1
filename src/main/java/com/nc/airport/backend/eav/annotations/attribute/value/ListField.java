@@ -1,4 +1,4 @@
-package com.nc.airport.backend.eav.annotations;
+package com.nc.airport.backend.eav.annotations.attribute.value;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -7,12 +7,14 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Used to mark attributes of an @ObjectType
+ * Used as a marker for enum possible values.
  *
- * @see ObjectType
+ * @see DateField
+ * @see ReferenceField
+ * @see ValueField
  */
 @Target(FIELD)
 @Retention(RUNTIME)
-public @interface Attribute {
+public @interface ListField {
     String ID();
 }

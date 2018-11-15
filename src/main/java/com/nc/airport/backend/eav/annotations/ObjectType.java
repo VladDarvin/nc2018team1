@@ -11,27 +11,40 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * <pre>
  *     Example:
- *     &#064;ObjectType(1)
+ *     &#064;ObjectType(ID = "1")
  *     class Airplane extends Aircraft {
- *         &#064;Attribute(1)
- *         &#064;Value
+ *         &#064;ValueField(ID = "1")
  *         String name;
  *
- *         &#064;Attribute(2)
- *         &#064;Value
+ *         &#064;ValueField(ID = "2")
  *         Integer length;
  *
- *         &#064;Attribute(3)
- *         &#064;Date
+ *         &#064;DateField(ID = "3")
  *         LocalDate constructed;
  *
- *         &#064;Attribute(4)
- *         &#064;List
+ *         &#064;ReferenceField(ID = "4")
  *         List<Passenger> passengers;
  *
- *         &#064;Attribute(5)
- *         &#064;Reference
+ *         &#064;ValueField(ID = "5")
+ *         List<Integer> numbers;
+ *
+ *         &#064;ReferenceField(ID = "6")
  *         Pilot pilot;
+ *
+ *         Color color = new Color("7");
+ *
+ *         enum Color {
+ *              &#064;ListField(ID = "7")
+ *              RED,
+ *              &#064;ListField(ID = "8")
+ *              GREEN,
+ *              &#064;ListField(ID = "9")
+ *              BLUE
+ *
+ *              private String id;
+ *
+ *              Color(String id) {this.id = id;}
+ *         }
  *     }
  * </pre>
  */
