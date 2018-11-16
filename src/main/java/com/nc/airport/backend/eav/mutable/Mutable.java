@@ -109,11 +109,11 @@ public class Mutable {
         this.dateValues = dateValues;
     }
 
-    public Map<BigInteger, List> getListValues() {
+    public Map<BigInteger, BigInteger> getListValues() {
         return listValues;
     }
 
-    public void setListValues(Map<BigInteger, List> listValues) {
+    public void setListValues(Map<BigInteger, BigInteger> listValues) {
         this.listValues = listValues;
     }
 
