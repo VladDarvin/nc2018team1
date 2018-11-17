@@ -28,4 +28,8 @@ public class Mutable2Query {
     private void buildASequence(SequenceBuilder sequenceBuilder, Mutable mutable){
         sequenceBuilder.build(mutable);
     }
+
+
+
+            //  TODO SELECTING
 }

@@ -31,20 +31,22 @@ class UpdateSequenceBuilder extends SequenceBuilder{
     }
 
     /**
-     * You can not change Object_ID or Object_Type_ID by this method
+     * This method has a restriction to not change Object_ID or Object_Type_ID
      * for security purposes.
      */
     protected void updateObject(){
-        try (PreparedStatement statement
-                 = connection.prepareStatement(
-                    "UPDATE OBJECTS SET " +
-                         "PARENT_ID = ?, NAME = ?, DESCRIPTION = ?" +
-                            "WHERE OBJECT_ID = ?")){
-
+        StringBuilder sql = new StringBuilder("MERGE INTO OBJECTS O")
+                .append(" USING (SELECT ? PARENT_ID, ? NAME, ? DESCRIPTION, ").append(objectId)
+                .append(" OBJECT_ID FROM dual) NEW ON (O.OBJECT_ID = NEW.OBJECT_ID)")
+                .append(" WHEN MATCHED THEN UPDATE SET O.PARENT_ID = NEW.PARENT_ID, O.NAME = NEW.NAME,")
+                .append(" O.DESCRIPTION = NEW.DESCRIPTION")
+                .append(" WHEN NOT MATCHED THEN INSERT")
+                .append(" VALUES (NEW.OBJECT_ID, NEW.PARENT_ID, ?, NEW.NAME, NEW.DESCRIPTION)");
+        try (PreparedStatement statement = connection.prepareStatement(sql.toString())){
             statement.setObject(1, mutable.getParentId());
             statement.setString(2, mutable.getObjectName());
             statement.setString(3, mutable.getObjectDescription());
-            statement.setObject(4, objectId);
+            statement.setObject(4, mutable.getObjectTypeId());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -81,16 +83,19 @@ class UpdateSequenceBuilder extends SequenceBuilder{
 
 
     /**
-     * Last two method are just there if they will be needed somehow
+     * Last two method are just there if they will be needed somehow.
      * The usage of methods updating ObjReferences is not recommended
      * because of usage only two of three peaces of PK-s,
-     * which is leading to possibility of conflicts
+     * which is leading to possibility of conflicts.
+     * Also if you do need to use them - be careful - they are representing
+     * a dull insert queries, not merge, so if you try to update an ObjReference row
+     * that doesn't exist in the database yet, they will be neither updated nor inserted
      */
     private void updateAtrIdOfObjReferences(){
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
-        String sql = "UPDATE OBJREFERENCE SET ATTR_ID = ?" +
+        String sql = "UPDATE OBJREFERENCE SET ATTR_ID = ?" +        //not a MERGE query
                 " WHERE REFERENCE = ? AND OBJECT_ID = " + objectId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Map.Entry<BigInteger, BigInteger> entry : references.entrySet()) {
@@ -108,7 +113,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
-        String sql = "UPDATE OBJREFERENCE SET REFERENCE = ?" +              //  TODO REMAKE TO MERGE
+        String sql = "UPDATE OBJREFERENCE SET REFERENCE = ?" +      //not a MERGE query
                 " WHERE  ATTR_ID = ? AND OBJECT_ID = " + objectId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Map.Entry<BigInteger, BigInteger> entry : references.entrySet()) {
