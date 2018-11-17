@@ -2,7 +2,6 @@ package com.nc.airport.backend.eav.mutable;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -138,19 +137,11 @@ public class Mutable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mutable mutable = (Mutable) o;
-        return Objects.equals(objectId, mutable.objectId) &&
-                Objects.equals(objectTypeId, mutable.objectTypeId) &&
-                Objects.equals(parentId, mutable.parentId) &&
-                Objects.equals(objectName, mutable.objectName) &&
-                Objects.equals(objectDescription, mutable.objectDescription) &&
-                Objects.equals(values, mutable.values) &&
-                Objects.equals(dateValues, mutable.dateValues) &&
-                Objects.equals(listValues, mutable.listValues) &&
-                Objects.equals(references, mutable.references);
+        return Objects.equals(objectId, mutable.objectId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(objectId, objectTypeId);
+        return Objects.hash(objectId);
     }
 }
