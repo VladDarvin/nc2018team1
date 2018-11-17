@@ -108,7 +108,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
-        String sql = "UPDATE OBJREFERENCE SET REFERENCE = ?" +
+        String sql = "UPDATE OBJREFERENCE SET REFERENCE = ?" +              //  TODO REMAKE TO MERGE
                 " WHERE  ATTR_ID = ? AND OBJECT_ID = " + objectId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Map.Entry<BigInteger, BigInteger> entry : references.entrySet()) {
