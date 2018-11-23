@@ -120,7 +120,11 @@ public final class ReflectionHelper {
             idAsString = ((ListField) annotation).ID();
         } else if (annotationClass == ReferenceField.class) {
             idAsString = ((ReferenceField) annotation).ID();
-        } else throw new IllegalArgumentException("Unknown annotation class " + annotationClass);
+        } else {
+            IllegalArgumentException exception = new IllegalArgumentException("Unknown annotation class " + annotationClass.getName());
+            LOGGER.error(exception);
+            throw exception;
+        }
 
         BigInteger id;
         try {
