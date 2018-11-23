@@ -32,7 +32,7 @@ public class Mutable2Query {
                                                   Collection<BigInteger> listValuesAttrId,
                                                   Queue<Integer> order,
                                                   boolean ascending) {
-        return null;
+        return null;        //TODO
     }
 
     public void sqlInsert (Mutable mutable) throws SQLException {
@@ -87,27 +87,25 @@ public class Mutable2Query {
         return failedMutables;
     }
 
-    // If there is no values in column that you want to sort by, just leave the corresponding collection null
-    public Mutable getMutableFromDB(BigInteger objectId, Collection<BigInteger> valuesAttrId,
-                                                         Collection<BigInteger> dateValuesAttrId,
-                                                         Collection<BigInteger> listValuesAttrId,
-                                                         Collection<BigInteger> referencesId) {
-        return null;
+    /** If there is no values in column that you want to sort by,
+     *  just leave the corresponding collection null or as empty collections
+     *  @param referencesId BigInteger - attr_id
+     */
+    public Mutable getMutableFromDB(BigInteger objectId,
+                                    Collection<BigInteger> valuesAttrId,
+                                    Collection<BigInteger> dateValuesAttrId,
+                                    Collection<BigInteger> listValuesAttrId,
+                                    Collection<BigInteger> referencesId) throws SQLException {
+        return new MutableFromDBPuller(connection)
+                .pull(objectId, valuesAttrId, dateValuesAttrId, listValuesAttrId, referencesId);
     }
 
-    public List<Mutable> getMultipleMutablesFromDB(Collection<QueryingEntity> entities) {
-        List<Mutable> mutables = new ArrayList<>();
-        for (QueryingEntity entity : entities) {
-            Mutable mutable = getMutableFromDB(entity.getObjectId(), entity.getValuesAttrId(),
-                                                                     entity.getDateValuesAttrId(),
-                                                                     entity.getListValuesAttrId(),
-                                                                     entity.getReferencesId());
-            mutables.add(mutable);
-        }
-        return mutables;
+    public List<Mutable> getMultipleMutablesFromDB(Collection<QueryingEntity> entities) throws SQLException{
+        return new MutableFromDBPuller(connection).pullMultiple(entities);
     }
 
     //If there is no values in column that you want to sort by, just leave the corresponding collection null
+    //@param referencesId BigInteger - attr_id
     public class QueryingEntity {
         private BigInteger objectId;
         private Collection<BigInteger> valuesAttrId;
