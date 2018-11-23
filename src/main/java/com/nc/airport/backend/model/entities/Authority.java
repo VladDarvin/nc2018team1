@@ -1,11 +1,16 @@
 package com.nc.airport.backend.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 public class Authority {
 
@@ -16,7 +21,7 @@ public class Authority {
     private String name;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "users")
     private List<User> users;
 
     public Long getId() {

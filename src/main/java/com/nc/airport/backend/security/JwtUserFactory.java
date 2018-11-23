@@ -22,7 +22,7 @@ public final class JwtUserFactory {
                 user.getPassword(),
                 mapToGrantedAuthorities(user.getAuthorities()),
                 user.getEnabled(),
-                user.getLastPasswordResetDate()
+                user.getPhonenumber()
         );
     }
 

@@ -1,12 +1,8 @@
 package com.nc.airport.backend.controller;
 
 import com.nc.airport.backend.model.entities.User;
-import com.nc.airport.backend.security.JwtAuthenticationRequest;
-import com.nc.airport.backend.security.JwtTokenUtil;
-import com.nc.airport.backend.security.service.JwtAuthenticationResponse;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +22,12 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200")
     public List<User> getAllUsers() {
         return userService.getUsers();
+    }
+
+    @RequestMapping(value = "/registrate", method = RequestMethod.POST)
+    @CrossOrigin(origins = "http://localhost:4200")
+    public User registrateNewUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)

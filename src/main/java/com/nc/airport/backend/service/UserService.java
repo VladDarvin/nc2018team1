@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +24,12 @@ public class UserService {
     }
 
     public List<User> getUsers() {
-        return (List<User>) usersRepository.findAll();
+        return usersRepository.getAll();
+        //return (List<User>) usersRepository.findAll();
     }
 
     public User addUser(User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return usersRepository.save(user);
     }
 

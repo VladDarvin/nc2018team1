@@ -1,13 +1,16 @@
 package com.nc.airport.backend.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Table(name = "user")
 public class User {
@@ -18,18 +21,17 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
+    private String phonenumber;
     private String email;
     private String password;
     private Boolean enabled;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LASTPASSWORDRESETDATE")
-    private Date lastPasswordResetDate;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    @JsonManagedReference
+    //@JsonManagedReference(value = "authorities")
+    //@JsonIgnore
     private List<Authority> authorities;
 
 //    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -38,14 +40,24 @@ public class User {
     public User() {
     }
 
-    public User(String firstname, String lastname, String email, String password, Boolean enabled, Date lastPasswordResetDate, List<Authority> authorities) {
+    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.phonenumber = phonenumber;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
-        this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled, List<Authority> authorities) {
+        this.username = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phonenumber = phonenumber;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
 
@@ -113,11 +125,11 @@ public class User {
         this.authorities = authorities;
     }
 
-    public Date getLastPasswordResetDate() {
-        return lastPasswordResetDate;
+    public String getPhonenumber() {
+        return phonenumber;
     }
 
-    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
-        this.lastPasswordResetDate = lastPasswordResetDate;
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 }

@@ -40,7 +40,6 @@ public class AuthenticationRestController {
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
-
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         // Reload password post-security so we can generate the token
@@ -51,10 +50,12 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-//    @ExceptionHandler({AuthenticationException.class})
-//    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-//    }
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        //return ResponseEntity.ok(e.getMessage());
+    }
 
     /**
      * Authenticates the user. If something is wrong, an {@link AuthenticationException} will be thrown

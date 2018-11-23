@@ -3,8 +3,11 @@ package com.nc.airport.backend.security;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import com.nc.airport.backend.model.entities.Authority;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -71,13 +74,13 @@ public class JwtTokenUtil implements Serializable {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String doGenerateToken(Map<String, Object> claims, String username) {
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(subject)
+            .setSubject(username)
             .setIssuedAt(createdDate)
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS512, secret)
@@ -112,7 +115,6 @@ public class JwtTokenUtil implements Serializable {
         return (
             username.equals(user.getUsername())
                 && !isTokenExpired(token)
-                && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
         );
     }
 
