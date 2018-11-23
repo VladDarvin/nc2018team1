@@ -59,9 +59,12 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     // FIXME: 23.11.2018 implement
     private <T extends BaseEntity> void fillListFields(T entity, Mutable mutable) {
-        UnsupportedOperationException exception = new UnsupportedOperationException();
-        LOGGER.error("No implementation for enums", exception);
-        throw exception;
+        if (mutable.getListValues().size() > 0) {
+            String message = "No implementation for enums";
+            UnsupportedOperationException exception = new UnsupportedOperationException(message);
+            LOGGER.error(message, exception);
+            throw exception;
+        }
     }
 
     // TODO: 23.11.2018 refactor
