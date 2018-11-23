@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  *
  */
-public class SimpleEntityBuilder implements EntityBuilder {
-    private static Logger LOGGER = LogManager.getLogger(SimpleEntityBuilder.class);
+public class DefaultEntityBuilder implements EntityBuilder {
+    private static Logger LOGGER = LogManager.getLogger(DefaultEntityBuilder.class);
 
     @Override
     public <T extends BaseEntity> T build(Class<T> clazz, Mutable mutable) {
