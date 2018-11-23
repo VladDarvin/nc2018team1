@@ -109,7 +109,7 @@ public final class ReflectionHelper {
      * @throws IllegalArgumentException if id of annotation is invalid
      */
     public static BigInteger getIdFromAnnotation(Annotation annotation) {
-        Class annotationClass = annotation.getClass();
+        Class annotationClass = annotation.annotationType();
         String idAsString;
 
         if (annotationClass == ValueField.class) {
