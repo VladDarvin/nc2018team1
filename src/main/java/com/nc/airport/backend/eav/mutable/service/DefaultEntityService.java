@@ -17,8 +17,7 @@ public class DefaultEntityService implements EntityService {
 
     @Override
     public <T extends BaseEntity> T convertMutableToEntity(Mutable mutable, Class<T> entityClass) {
-        T entity = entityBuilder.build(entityClass, mutable);
-        throw new UnsupportedOperationException();
+        return entityBuilder.build(entityClass, mutable);
     }
 
     @Override
