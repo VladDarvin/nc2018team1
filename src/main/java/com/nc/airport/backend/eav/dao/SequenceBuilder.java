@@ -15,14 +15,6 @@ abstract class SequenceBuilder {
 
     abstract void build (Mutable mutable);
 
-    void handleStatementExecuteUpdate(Statement statement, String query){
-        try{
-            statement.executeUpdate(query);
-        } catch (SQLException e){
-            LOGGER.log(Level.ERROR, "Invalid query or database access error");
-        }
-    }
-
     boolean noSuchElementsInObject(Map map){
         return map.size() == 0;
     }

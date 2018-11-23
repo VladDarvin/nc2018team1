@@ -29,17 +29,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *         List<Integer> numbers;
  *
  *         &#064;ReferenceField(ID = "6")
- *         Pilot pilot;
+ *         BigInt pilotRef;
  *
  *         Color color = new Color("7");
  *
  *         enum Color {
  *              &#064;ListField(ID = "7")
- *              RED,
+ *              RED(7),
  *              &#064;ListField(ID = "8")
- *              GREEN,
+ *              GREEN(8),
  *              &#064;ListField(ID = "9")
- *              BLUE
+ *              BLUE(9)
  *
  *              private String id;
  *
