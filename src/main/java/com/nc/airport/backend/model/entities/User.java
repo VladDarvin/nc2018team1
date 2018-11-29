@@ -8,9 +8,6 @@ import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @Entity
 @Table(name = "user")
 public class User {
@@ -18,6 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Transient @JsonIgnore
     private String username;
     private String firstname;
     private String lastname;
@@ -25,17 +23,9 @@ public class User {
     private String email;
     private String password;
     private Boolean enabled;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    //@JsonManagedReference(value = "authorities")
-    //@JsonIgnore
-    private List<Authority> authorities;
-
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    private List<Role> roles;
+    @ManyToOne
+    @JoinColumn(name="authority_id", nullable=false)
+    private Authority authority;
 
     public User() {
     }
@@ -50,7 +40,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled, List<Authority> authorities) {
+    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled, Authority authority) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -58,7 +48,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.enabled = enabled;
-        this.authorities = authorities;
+        this.authority = authority;
     }
 
     public Long getId() {
@@ -117,12 +107,12 @@ public class User {
         this.enabled = enabled;
     }
 
-    public List<Authority> getAuthorities() {
-        return authorities;
+    public Authority getAuthority() {
+        return authority;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 
     public String getPhonenumber() {
