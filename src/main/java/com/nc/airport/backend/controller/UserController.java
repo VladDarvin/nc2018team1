@@ -1,11 +1,13 @@
 package com.nc.airport.backend.controller;
 
+import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -54,6 +56,12 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200")
     public List<User> getTenUsers(@PathVariable(name = "page") int page) {
         return userService.getTenUsers(page);
+    }
+
+    @RequestMapping(value = "/users/search/page={page}", method = RequestMethod.POST)
+    @CrossOrigin(origins = "http://localhost:4200")
+    public List<User> searchUsers(@PathVariable(name = "page") int page, @RequestBody List<Map<String, Object>> criterias) {
+        return userService.search(criterias, page);
     }
 
 }
