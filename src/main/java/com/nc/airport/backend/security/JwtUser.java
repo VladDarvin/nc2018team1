@@ -1,16 +1,16 @@
 package com.nc.airport.backend.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import com.nc.airport.backend.model.entities.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * Created by stephan on 20.03.16.
- */
 public class JwtUser implements UserDetails {
 
     private final Long id;
@@ -19,7 +19,7 @@ public class JwtUser implements UserDetails {
     private final String lastname;
     private final String password;
     private final String email;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final Authority authority;
     private final boolean enabled;
     private final String phonenumber;
 
@@ -28,7 +28,8 @@ public class JwtUser implements UserDetails {
           String firstname,
           String lastname,
           String email,
-          String password, Collection<? extends GrantedAuthority> authorities,
+          String password,
+          Authority authority,
           boolean enabled,
           String phonenumber
     ) {
@@ -38,7 +39,7 @@ public class JwtUser implements UserDetails {
         this.lastname = lastname;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
+        this.authority = authority;
         this.enabled = enabled;
         this.phonenumber = phonenumber;
     }
@@ -91,6 +92,8 @@ public class JwtUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(authority);
         return authorities;
     }
 
