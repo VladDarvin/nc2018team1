@@ -2,6 +2,7 @@ package com.nc.airport.backend.eav.mutable;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ public class Mutable {
      * BigInt - Attributes.Attr_id
      * LocalDate - Attributes.Date_value
      */
-    private Map<BigInteger, LocalDate> dateValues;
+    private Map<BigInteger, LocalDateTime> dateValues;
 
     /**
      * BigInt - Attributes.Attr_id
@@ -100,11 +101,11 @@ public class Mutable {
         this.values = values;
     }
 
-    public Map<BigInteger, LocalDate> getDateValues() {
+    public Map<BigInteger, LocalDateTime> getDateValues() {
         return dateValues;
     }
 
-    public void setDateValues(Map<BigInteger, LocalDate> dateValues) {
+    public void setDateValues(Map<BigInteger, LocalDateTime> dateValues) {
         this.dateValues = dateValues;
     }
 

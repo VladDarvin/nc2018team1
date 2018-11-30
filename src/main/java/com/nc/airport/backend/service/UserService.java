@@ -7,7 +7,6 @@ import com.nc.airport.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,14 +46,14 @@ public class UserService {
     }
 
     public List<User> getTenUsers(int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(new PageRequest(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page-1, 10));
         return pageOfUsers.getContent();
     }
 
     public List<User> search(List<Map<String, Object>> criterias, int page) {
         UserFilter filter =
                 new UserFilter(criterias);
-        Page<User> pageOfUsers = usersRepository.findAll(filter, new PageRequest(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page-1, 10));
         return pageOfUsers.getContent();
     }
 
