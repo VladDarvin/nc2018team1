@@ -1,17 +1,11 @@
 package com.nc.airport.backend.eav.dao;
 
 import com.nc.airport.backend.eav.mutable.Mutable;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.*;
 
 /**
  * Created by User on 23.11.2018.

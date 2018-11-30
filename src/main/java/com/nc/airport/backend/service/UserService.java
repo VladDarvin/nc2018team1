@@ -24,8 +24,9 @@ public class UserService {
     }
 
     public List<User> getUsers() {
+
         return usersRepository.getAll();
-        //return (List<User>) usersRepository.findAll();
+//        return (List<User>) usersRepository.findAll();
     }
 
     public User addUser(User user) {
@@ -46,14 +47,14 @@ public class UserService {
     }
 
     public List<User> getTenUsers(int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page - 1, 10));
         return pageOfUsers.getContent();
     }
 
     public List<User> search(List<Map<String, Object>> criterias, int page) {
         UserFilter filter =
                 new UserFilter(criterias);
-        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page - 1, 10));
         return pageOfUsers.getContent();
     }
 

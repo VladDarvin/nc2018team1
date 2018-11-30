@@ -1,6 +1,5 @@
 package com.nc.airport.backend.controller;
 
-import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

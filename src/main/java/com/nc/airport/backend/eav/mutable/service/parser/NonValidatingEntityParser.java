@@ -7,8 +7,7 @@ import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
 import com.nc.airport.backend.eav.mutable.service.util.ReflectionHelper;
 import com.nc.airport.backend.model.BaseEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -22,8 +21,8 @@ import java.util.Map;
  * Does NOT check if annotated field is of correct type
  * ClassCastException is possible
  */
+@Log4j2
 public class NonValidatingEntityParser implements EntityParser {
-    private static Logger LOGGER = LogManager.getLogger(NonValidatingEntityParser.class);
 
     @Override
     public BigInteger parseObjectTypeId(BaseEntity entity) {
@@ -31,7 +30,7 @@ public class NonValidatingEntityParser implements EntityParser {
 
         if (objectTypeAnnotation == null) {
             String message = "Class " + entity.getClass() + " is not annotated with @ObjectType";
-            LOGGER.warn(message, entity);
+            log.warn(message, entity);
             return null;
         }
 
@@ -75,7 +74,7 @@ public class NonValidatingEntityParser implements EntityParser {
         if (idToValue.size() != 0) {
             // TODO: 18.11.2018 add implementation for enums
             UnsupportedOperationException exception = new UnsupportedOperationException("Enums used as POJO field");
-            LOGGER.error("Enums in POJOs are unsupported", exception);
+            log.error("Enums in POJOs are unsupported", exception);
             throw exception;
         }
         return new HashMap<>();

@@ -1,18 +1,13 @@
 package com.nc.airport.backend.security.controller;
 
-import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
-
 import com.nc.airport.backend.security.JwtAuthenticationRequest;
 import com.nc.airport.backend.security.JwtTokenUtil;
-import com.nc.airport.backend.security.JwtUser;
 import com.nc.airport.backend.security.service.JwtAuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -20,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 public class AuthenticationRestController {
