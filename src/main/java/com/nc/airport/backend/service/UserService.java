@@ -1,9 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.UserDTO;
-import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
-import com.nc.airport.backend.repository.AuthorityRepository;
 import com.nc.airport.backend.repository.UserFilter;
 import com.nc.airport.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +18,10 @@ import java.util.Map;
 public class UserService {
 
     private UsersRepository usersRepository;
-    private AuthorityRepository authorityRepository;
 
     @Autowired
-    public UserService(UsersRepository usersRepository, AuthorityRepository authorityRepository) {
+    public UserService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     public List<User> getUsers() {
