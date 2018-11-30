@@ -75,7 +75,7 @@ public class Mutable2Query {
     }
 
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
-        return null;
+        return new SelectMutableConductor(connection).getMutable(objectId, attributesId);
     }
 
     public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId, Collection<BigInteger> attributesId,
