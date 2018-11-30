@@ -15,7 +15,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -70,12 +70,12 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillDateFields(T entity, Mutable mutable) {
-        Map<BigInteger, LocalDate> dateValues = mutable.getDateValues();
+        Map<BigInteger, LocalDateTime> dateValues = mutable.getDateValues();
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
-        for (Map.Entry<BigInteger, LocalDate> pair : dateValues.entrySet()) {
+        for (Map.Entry<BigInteger, LocalDateTime> pair : dateValues.entrySet()) {
             BigInteger id = pair.getKey();
-            LocalDate date = pair.getValue();
+            LocalDateTime date = pair.getValue();
 
             Field field = ReflectionHelper.getFieldByAnnotationId(entityClass, DateField.class, id);
             if (field != null) {

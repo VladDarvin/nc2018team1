@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +55,13 @@ public class NonValidatingEntityParser implements EntityParser {
     }
 
     @Override
-    public Map<BigInteger, LocalDate> parseDateValues(BaseEntity entity) {
+    public Map<BigInteger, LocalDateTime> parseDateValues(BaseEntity entity) {
         Map<BigInteger, Object> parsedMap = getParsedMap(entity, DateField.class);
 
-        Map<BigInteger, LocalDate> idToDate = new HashMap<>();
+        Map<BigInteger, LocalDateTime> idToDate = new HashMap<>();
         for (Map.Entry<BigInteger, Object> pair : parsedMap.entrySet()) {
             BigInteger id = pair.getKey();
-            LocalDate date = (LocalDate) pair.getValue();
+            LocalDateTime date = (LocalDateTime) pair.getValue();
 
             idToDate.put(id, date);
         }
