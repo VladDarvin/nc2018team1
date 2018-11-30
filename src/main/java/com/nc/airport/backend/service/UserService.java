@@ -1,6 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.UserDTO;
+import com.nc.airport.backend.model.dto.UserFilteringWrapper;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.repository.UserFilter;
 import com.nc.airport.backend.repository.UsersRepository;
@@ -24,9 +25,8 @@ public class UserService {
     }
 
     public List<User> getUsers() {
-
         return usersRepository.getAll();
-//        return (List<User>) usersRepository.findAll();
+        //return (List<User>) usersRepository.findAll();
     }
 
     public User addUser(User user) {
@@ -47,15 +47,19 @@ public class UserService {
     }
 
     public List<User> getTenUsers(int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page - 1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page-1, 10));
         return pageOfUsers.getContent();
     }
 
-    public List<User> search(List<Map<String, Object>> criterias, int page) {
+    public UserFilteringWrapper search(List<Map<String, Object>> criterias, int page) {
         UserFilter filter =
                 new UserFilter(criterias);
-        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page - 1, 10));
-        return pageOfUsers.getContent();
+        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page-1, 10));
+        return new UserFilteringWrapper(pageOfUsers.getContent(), pageOfUsers.getTotalPages());
+    }
+
+    public Long getUsersAmount() {
+        return usersRepository.count();
     }
 
 }
