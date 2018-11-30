@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller;
 
+import com.nc.airport.backend.model.dto.UserFilteringWrapper;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
@@ -60,8 +61,14 @@ public class UserController {
 
     @RequestMapping(value = "/users/search/page={page}", method = RequestMethod.POST)
     @CrossOrigin(origins = "http://localhost:4200")
-    public List<User> searchUsers(@PathVariable(name = "page") int page, @RequestBody List<Map<String, Object>> criterias) {
+    public UserFilteringWrapper searchUsers(@PathVariable(name = "page") int page, @RequestBody List<Map<String, Object>> criterias) {
         return userService.search(criterias, page);
+    }
+
+    @RequestMapping(value = "/users/count", method = RequestMethod.GET)
+    @CrossOrigin(origins = "http://localhost:4200")
+    public Long getCountOfUsers() {
+        return userService.getUsersAmount();
     }
 
 }

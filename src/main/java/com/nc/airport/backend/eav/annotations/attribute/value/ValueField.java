@@ -8,6 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used as a marker to indicate that attribute's value is of a simple type (not a date, or list, or reference)
+ * Mark ONLY types that have constructor with single String argument.
  *
  * @see DateField
  * @see ReferenceField

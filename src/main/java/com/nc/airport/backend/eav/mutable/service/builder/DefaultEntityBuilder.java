@@ -8,12 +8,14 @@ import com.nc.airport.backend.eav.mutable.service.util.ReflectionHelper;
 import com.nc.airport.backend.model.BaseEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -21,6 +23,7 @@ import java.util.Map;
  */
 public class DefaultEntityBuilder implements EntityBuilder {
     private static Logger LOGGER = LogManager.getLogger(DefaultEntityBuilder.class);
+    private static final Marker DATA_LOSS = MarkerManager.getMarker("DATA_LOSS");
 
     @Override
     public <T extends BaseEntity> T build(Class<T> clazz, Mutable mutable) {
@@ -61,20 +64,18 @@ public class DefaultEntityBuilder implements EntityBuilder {
     private <T extends BaseEntity> void fillListFields(T entity, Mutable mutable) {
         if (mutable.getListValues().size() > 0) {
             String message = "No implementation for enums";
-            UnsupportedOperationException exception = new UnsupportedOperationException(message);
-            LOGGER.error(message, exception);
-            throw exception;
+            logAndThrowDataLossEx(message, new UnsupportedOperationException());
         }
     }
 
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillDateFields(T entity, Mutable mutable) {
-        Map<BigInteger, LocalDate> dateValues = mutable.getDateValues();
+        Map<BigInteger, LocalDateTime> dateValues = mutable.getDateValues();
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
-        for (Map.Entry<BigInteger, LocalDate> pair : dateValues.entrySet()) {
+        for (Map.Entry<BigInteger, LocalDateTime> pair : dateValues.entrySet()) {
             BigInteger id = pair.getKey();
-            LocalDate date = pair.getValue();
+            LocalDateTime date = pair.getValue();
 
             Field field = ReflectionHelper.getFieldByAnnotationId(entityClass, DateField.class, id);
             if (field != null) {
@@ -100,10 +101,12 @@ public class DefaultEntityBuilder implements EntityBuilder {
                         Object value = constructor.newInstance(valueAsString);
                         ReflectionHelper.setFieldValue(entity, field, value);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        LOGGER.error("Cannot create an instance of given field type", e);
+                        String message = "Cannot create an instance of " + fieldType;
+                        logAndThrowDataLossEx(message, e);
                     }
                 } catch (NoSuchMethodException e) {
-                    LOGGER.error("Cannot find suitable constructor(String) for " + fieldType, e);
+                    String message = "No constructor (String) for " + fieldType;
+                    logAndThrowDataLossEx(message, e);
                 }
             }
         }
@@ -113,8 +116,15 @@ public class DefaultEntityBuilder implements EntityBuilder {
         try {
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.error("Cannot create new instance of class " + clazz.getName(), e);
+            String message = "Cannot create new instance of class " + clazz.getName();
+            logAndThrowDataLossEx(message, e);
         }
         return null;
+    }
+
+    private void logAndThrowDataLossEx(String message, Throwable e) throws RuntimeException {
+        RuntimeException exception = new RuntimeException(message, e);
+        LOGGER.error(DATA_LOSS, message, exception);
+        throw exception;
     }
 }

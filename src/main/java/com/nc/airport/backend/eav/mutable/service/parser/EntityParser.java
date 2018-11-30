@@ -3,7 +3,7 @@ package com.nc.airport.backend.eav.mutable.service.parser;
 import com.nc.airport.backend.model.BaseEntity;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -29,7 +29,7 @@ public interface EntityParser {
      * @param entity parsed entity, fields of which have @DateField annotations
      * @return idsToValues of fields. If field has null value it is skipped
      */
-    Map<BigInteger, LocalDate> parseDateValues(BaseEntity entity);
+    Map<BigInteger, LocalDateTime> parseDateValues(BaseEntity entity);
 
     /**
      * @param entity parsed entity, fields of which have @ListField annotations
