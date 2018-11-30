@@ -11,7 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface UsersRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
-    @Query(value = "select * from user join authority on user.authority_id = authority.id",
+    @Query(value = "select * from \"USER\" join authority on \"USER\".authority_id = authority.id",
     nativeQuery = true)
     List<User> getAll();
     Page<User> findAll(Specification<User> spec, Pageable pageable);
