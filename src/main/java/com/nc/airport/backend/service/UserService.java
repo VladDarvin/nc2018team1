@@ -1,6 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.UserDTO;
+import com.nc.airport.backend.model.dto.UserFilteringWrapper;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.repository.UserFilter;
 import com.nc.airport.backend.repository.UsersRepository;
@@ -50,11 +51,15 @@ public class UserService {
         return pageOfUsers.getContent();
     }
 
-    public List<User> search(List<Map<String, Object>> criterias, int page) {
+    public UserFilteringWrapper search(List<Map<String, Object>> criterias, int page) {
         UserFilter filter =
                 new UserFilter(criterias);
         Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page-1, 10));
-        return pageOfUsers.getContent();
+        return new UserFilteringWrapper(pageOfUsers.getContent(), pageOfUsers.getTotalPages());
+    }
+
+    public Long getUsersAmount() {
+        return usersRepository.count();
     }
 
 }
