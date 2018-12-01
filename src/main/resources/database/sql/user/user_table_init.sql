@@ -1,4 +1,4 @@
-create table "USER"
+create table USERS
 (
   ID           NUMBER,
   PASSWORD     VARCHAR2(100),
