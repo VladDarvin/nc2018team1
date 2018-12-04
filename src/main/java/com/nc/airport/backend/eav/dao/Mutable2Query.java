@@ -74,18 +74,49 @@ public class Mutable2Query {
         return failedMutables;
     }
 
+    /**
+     * Fetching one Mutable object from database
+     * with specified attributes of object or of any of object`s parents
+     *
+     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
+     *
+     * @param objectId ID of the object in OBJECTS table which is also stored or will be included
+     *                in objectId field of specified Mutable object
+     * @param attributesId Collection of IDs of all attributes (values, date_values, list_value_ids and references)
+     *                    included in each Mutable object
+     * @return Mutable object with specified attributes (those which was not specified neither will be in
+     * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
+     * @throws SQLException
+     */
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
-        return new SelectMutableConductor(connection).getMutable(objectId, attributesId);
+        return new LazyDBFetcher(connection)
+                .getMutable(objectId, attributesId);
     }
 
-    public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId, Collection<BigInteger> attributesId,
-                                           int pagingFrom, int pagingTo,
-                                           List<SortEntity> sortBy, List<FilterEntity> filterBy) throws SQLException {
-        return null;
-    }
-
+    /**
+     * Fetching multiple Mutable objects from database
+     * with specified attributes of object or of any of object`s parents
+     *
+     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
+     *
+     * @param objType ID of the object type in OBJTYPE table which is also stored or will be included
+     *                in objectTypeId field of specified Mutable object
+     * @param attributesId Collection of IDs of all attributes (values, date_values, list_value_ids and references)
+     *                    included in each Mutable object
+     * @param pagingFrom number of the first object included
+     * @param pagingTo number of the last object included
+     * @return List of Mutable objects with specified attributes (those which was not specified neither will be in
+     * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
+     * @throws SQLException #feelsbadman
+     */
     public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
                                            int pagingFrom, int pagingTo) throws SQLException {
+        return new LazyDBFetcher(connection)
+                .getMutables(objType, attributesId, pagingFrom, pagingTo);
+    }
+
+    public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId,
+                                           Collection<BigInteger> attributesId) throws SQLException {
         return null;
     }
 

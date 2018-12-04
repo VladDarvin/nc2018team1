@@ -10,6 +10,7 @@ import java.sql.Connection;
 /**
  * Created by User on 23.11.2018.
  */
+@Deprecated
 class MutableFromDBPuller {
     private Logger logger = LogManager.getLogger(MutableFromDBPuller.class.getSimpleName());
     private Connection connection;
