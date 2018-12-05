@@ -120,7 +120,36 @@ class LazyDBFetcher {
             result = resultMultipleMutables(objType, attributesId, statement);
             for (int i = 1; i <= pagingTo - pagingFrom; i++){
                 Mutable mutable = new Mutable();
-                pullAttributes(result, mutable, attributesId.size());
+                pullAttributes(result, mutable, Collections.max(attributesId));
+                pullGeneralInfo(result, mutable);
+                mutables.add(mutable);
+            }
+        } finally {
+            if (result != null)
+                result.close();
+
+            if (statement != null)
+                statement.close();
+        }
+        return mutables;
+    }
+
+    List<Mutable> getMutables(Collection<BigInteger> objectsId,
+                              Collection<BigInteger> attributesId) throws SQLException {
+        List<Mutable> mutables = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        String fullQuery = createSQLQuery(transferObjectsId(objectsId.size()),
+                transferAttributesId(attributesId.size())).toString();
+
+        try {
+            statement = connection.prepareStatement(fullQuery);
+            logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+            result = resultMultipleMutables(objectsId, attributesId, statement);
+            for (int i = 1; i <= objectsId.size(); i++){
+                Mutable mutable = new Mutable();
+                pullAttributes(result, mutable, Collections.max(attributesId));
                 pullGeneralInfo(result, mutable);
                 mutables.add(mutable);
             }
@@ -149,6 +178,12 @@ class LazyDBFetcher {
         return attrSet.toString();
     }
 
+    private String transferObjectsId(int amount) {
+        StringBuilder attrSet = new StringBuilder(" OBJECT_ID IN")
+                .append(transferElements(amount));
+        return attrSet.toString();
+    }
+
     private StringBuilder transferElements(int amount) {
         StringBuilder attrSet = new StringBuilder(" (");
 
@@ -166,7 +201,7 @@ class LazyDBFetcher {
         mutable.setObjectDescription(result.getString(5));
     }
 
-    private void pullAttributes(ResultSet result, Mutable mutable, int attrsPerObject) throws SQLException {
+    private void pullAttributes(ResultSet result, Mutable mutable, BigInteger lastAttrId) throws SQLException {
         Map<BigInteger, String> values = new LinkedHashMap<>();
         Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
@@ -174,7 +209,7 @@ class LazyDBFetcher {
 
         while (result.next()) {
             pullAttr(result, values, references, listValues, dateValues);
-            if (result.getInt(11) % attrsPerObject == 0)
+            if (result.getString(6).equals(lastAttrId.toString()))
                 break;
         }
 
@@ -253,6 +288,14 @@ class LazyDBFetcher {
 
         statement.setObject(1, objType);
         setAttributes(statement, attributesId, 1);
+        return statement.executeQuery();
+    }
+
+    private ResultSet resultMultipleMutables(Collection<BigInteger> objectsId,
+                                             Collection<BigInteger> attributesId,
+                                             PreparedStatement statement) throws SQLException {
+        setObjects(statement, objectsId);
+        setAttributes(statement, attributesId, objectsId.size());
         return statement.executeQuery();
     }
 

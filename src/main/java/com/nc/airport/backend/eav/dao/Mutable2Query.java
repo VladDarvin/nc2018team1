@@ -86,7 +86,7 @@ public class Mutable2Query {
      *                    included in each Mutable object
      * @return Mutable object with specified attributes (those which was not specified neither will be in
      * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
-     * @throws SQLException
+     * @throws SQLException #feelsbadman
      */
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
         return new LazyDBFetcher(connection)
@@ -105,9 +105,14 @@ public class Mutable2Query {
      *                    included in each Mutable object
      * @param pagingFrom number of the first object included
      * @param pagingTo number of the last object included
-     * @return List of Mutable objects with specified attributes (those which was not specified neither will be in
-     * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
-     * @throws SQLException #feelsbadman
+     * @return List of Mutable objects with specified attributes
+     * (those which was not specified neither will be in the resulting Mutable,
+     *  nor will be replaced with nulls, they just won`t be there)
+     * @throws SQLException might have multiple meanings
+     *          case = Exhausted Resultset - means you tried to put attributes to object which originally
+     *          belongs to a child of the object or doesn't belong to object's hierarchical branch at all
+     * @see if your objectsId is of objects, that can contain your attributesId
+     * this means that attributesId must be inherited or declared in objects' class
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
                                            int pagingFrom, int pagingTo) throws SQLException {
@@ -115,9 +120,27 @@ public class Mutable2Query {
                 .getMutables(objType, attributesId, pagingFrom, pagingTo);
     }
 
+    /**
+     * Fetching multiple Mutable objects from database
+     * with specified attributes of object or of any of object`s parents
+     *
+     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
+     *
+     * @param objectsId Collection of objects Id
+     * @param attributesId Collection of all attributes (values, date_values, list_value_ids and references)
+     * @return List of Mutable objects with specified attributes
+     *          (those which was not specified neither will be in the resulting Mutable,
+     *           nor will be replaced with nulls, they just won`t be there)
+     * @throws SQLException might have multiple meanings
+     *          case = Exhausted Resultset - means you tried to put attributes to object which originally
+     *          belongs to a child of the object or doesn't belong to object's hierarchical branch at all
+     * @see if your objectsId is of objects, that can contain your attributesId
+     * this means that attributesId must be inherited or declared in objects' class
+     */
     public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId,
                                            Collection<BigInteger> attributesId) throws SQLException {
-        return null;
+        return new LazyDBFetcher(connection)
+                .getMutables(objectsId, attributesId);
     }
 
     public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
