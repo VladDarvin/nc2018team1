@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Mutable2Query {
     private Connection connection;
@@ -103,8 +105,8 @@ public class Mutable2Query {
      *                in objectTypeId field of specified Mutable object
      * @param attributesId Collection of IDs of all attributes (values, date_values, list_value_ids and references)
      *                    included in each Mutable object
-     * @param pagingFrom number of the first object included
-     * @param pagingTo number of the last object included
+     * @param pagingFrom number of the first object included. must be >= 1
+     * @param pagingTo number of the last object included. must be >= 1
      * @return List of Mutable objects with specified attributes
      * (those which was not specified neither will be in the resulting Mutable,
      *  nor will be replaced with nulls, they just won`t be there)
@@ -143,14 +145,57 @@ public class Mutable2Query {
                 .getMutables(objectsId, attributesId);
     }
 
-    public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
-                                           int pagingFrom, int pagingTo, List<SortEntity> sortBy) throws SQLException {
-        return null;
+    /**
+     *
+     * @param objType type of objects
+     * @param orderValuesInsideMaps true - values in each Map is in ascending order
+     *                              false - values in each Map is in order of passed List
+     * @param values values attr_id List
+     * @param dateValues dateValues attr_id List
+     * @param listValues listValues attr_id List
+     * @param references references attr_id List
+     * @param pagingFrom
+     * @param pagingTo
+     * @param sortBy
+     * @return List of Mutable objects with specified attributes
+     * @throws SQLException
+     */
+    public List<Mutable> getMutablesFromDB(BigInteger objType,
+                                           boolean orderValuesInsideMaps,
+                                           List<BigInteger> values,
+                                           List<BigInteger> dateValues,
+                                           List<BigInteger> listValues,
+                                           List<BigInteger> references,
+                                           int pagingFrom, int pagingTo,
+                                           List<SortEntity> sortBy) throws SQLException {
+            return null;
     }
 
-    public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
+    /**
+     *
+     * @param objType type of objects
+     * @param orderValuesInsideMaps true - values in each Map is in ascending order
+     *                              false - values in each Map is in order of passed List
+     * @param values values attr_id List
+     * @param dateValues dateValues attr_id List
+     * @param listValues listValues attr_id List
+     * @param references references attr_id List
+     * @param pagingFrom
+     * @param pagingTo
+     * @param sortBy
+     * @param filterBy
+     * @return List of Mutable objects with specified attributes
+     * @throws SQLException
+     */
+    public List<Mutable> getMutablesFromDB(BigInteger objType,
+                                           boolean orderValuesInsideMaps,
+                                           List<BigInteger> values,
+                                           List<BigInteger> dateValues,
+                                           List<BigInteger> listValues,
+                                           List<BigInteger> references,
                                            int pagingFrom, int pagingTo,
-                                           List<SortEntity> sortBy, List<FilterEntity> filterBy) throws SQLException {
+                                           List<SortEntity> sortBy,
+                                           List<FilterEntity> filterBy) throws SQLException {
         return null;
     }
 }
