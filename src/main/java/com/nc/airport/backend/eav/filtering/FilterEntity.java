@@ -1,13 +1,21 @@
 package com.nc.airport.backend.eav.filtering;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 public class FilterEntity {
     private String type;
     private Set<Object> values;
 
-    public FilterEntity(String type, Set<Object> values) {
-        this.type = type;
+    /*filter by property*/
+    public FilterEntity(PropertiesEntityType type, Set<Object> values) {
+        this.type = "O."+type.getType();
+        this.values = values;
+    }
+
+    /*filter by field*/
+    public FilterEntity(BigInteger attrId, Set<Object> values) {
+        this.type = "ATTR" + attrId;
         this.values = values;
     }
 
