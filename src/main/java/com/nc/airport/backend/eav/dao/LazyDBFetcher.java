@@ -173,15 +173,11 @@ class LazyDBFetcher {
     }
 
     private String transferAttributesId(int amount) {
-        StringBuilder attrSet = new StringBuilder("WHERE ATRT.ATTR_ID IN")
-                .append(transferElements(amount));
-        return attrSet.toString();
+        return "WHERE ATRT.ATTR_ID IN" + transferElements(amount);
     }
 
     private String transferObjectsId(int amount) {
-        StringBuilder attrSet = new StringBuilder(" OBJECT_ID IN")
-                .append(transferElements(amount));
-        return attrSet.toString();
+        return " OBJECT_ID IN" + transferElements(amount);
     }
 
     private StringBuilder transferElements(int amount) {
