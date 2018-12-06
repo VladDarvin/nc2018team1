@@ -3,13 +3,14 @@ package com.nc.airport.backend.model.entities.model.users;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @ObjectType(ID = "16")
-public class CreditCard {
+public class CreditCard extends BaseEntity {
 
     @ValueField(ID = "50")
     private String number;

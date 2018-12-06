@@ -1,3 +1,5 @@
+DELETE FROM NC_AIRPORT.LISTS;
+
 /***  Airplane model list values  ***/
 
 INSERT INTO NC_AIRPORT.LISTS (ATTR_ID, LIST_VALUE_ID, VALUE) VALUES (16, LISTS_lIST_ID.nextval, 'BOEING 737');    --  1
