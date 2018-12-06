@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.time.LocalDateTime;
-import java.util.*;
 
 public class Mutable2Query {
     private Connection connection;
@@ -91,8 +89,15 @@ public class Mutable2Query {
      * @throws SQLException #feelsbadman
      */
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
-        return new LazyDBFetcher(connection)
+        return new TallLazyDBFetcher(connection)
                 .getMutable(objectId, attributesId);
+    }
+
+    public List<Mutable> getFullMutables(BigInteger objType,
+                                         int pagingFrom, int pagingTo) throws SQLException {
+
+
+        return new TallLazyDBFetcher(connection).new Sandbox().getMutables(objType, pagingFrom, pagingTo);
     }
 
     /**
@@ -118,7 +123,7 @@ public class Mutable2Query {
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
                                            int pagingFrom, int pagingTo) throws SQLException {
-        return new LazyDBFetcher(connection)
+        return new TallLazyDBFetcher(connection)
                 .getMutables(objType, attributesId, pagingFrom, pagingTo);
     }
 
@@ -141,7 +146,7 @@ public class Mutable2Query {
      */
     public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId,
                                            Collection<BigInteger> attributesId) throws SQLException {
-        return new LazyDBFetcher(connection)
+        return new TallLazyDBFetcher(connection)
                 .getMutables(objectsId, attributesId);
     }
 

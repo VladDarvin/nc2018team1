@@ -17,11 +17,11 @@ import java.util.*;
 /**
  * Created by User on 30.11.2018.
  */
-class LazyDBFetcher {
-    private Logger logger = LogManager.getLogger(LazyDBFetcher.class.getSimpleName());
+class TallLazyDBFetcher {
+    private Logger logger = LogManager.getLogger(TallLazyDBFetcher.class.getSimpleName());
     private Connection connection;
 
-    LazyDBFetcher(Connection connection) {
+    TallLazyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
@@ -315,6 +315,114 @@ class LazyDBFetcher {
         for (int i = indexesBefore + 1; i <= elementsId.size() + indexesBefore; i++) {
             BigInteger elementId = elementsIterator.next();
             statement.setObject(i, elementId);
+        }
+    }
+
+    class Sandbox {
+        /*
+        SELECT * FROM
+          (
+            SELECT aTABLE.*, rownum rnum FROM
+            (
+              WITH OBJECTS_FAMILY AS
+              (
+                SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF
+                FROM OBJECTS
+                START WITH OBJECT_TYPE_ID = 8
+                CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID
+              )
+              SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION, ATRT.ATTR_ID, A.VALUE, A.DATE_VALUE, A.LIST_VALUE_ID, R.REFERENCE, LAST.ATTR_ID BREAK, ROWS_PER_OBJECT.N
+                FROM OBJECTS_FAMILY O
+              JOIN ATTRTYPE ATRT
+                  ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID
+              LEFT JOIN ATTRIBUTES A
+                  ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID
+              LEFT JOIN OBJREFERENCE R
+                  ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID
+              JOIN ATTRTYPE LAST
+                ON LAST.ATTR_ID = (SELECT MAX(ATTR_ID) FROM ATTRTYPE MAX_ATTR WHERE MAX_ATTR.OBJECT_TYPE_ID IN (SELECT OBJECT_TYPE_ID FROM OBJECTS_FAMILY WHERE BRANCH_OF = 21)),
+              (SELECT N FROM (SELECT N FROM (SELECT COUNT(*) N FROM OBJECTS_FAMILY O JOIN ATTRTYPE ATTR ON O.OBJECT_TYPE_ID = ATTR.OBJECT_TYPE_ID GROUP BY BRANCH_OF)) WHERE ROWNUM = 1) ROWS_PER_OBJECT
+              ORDER BY O.BRANCH_OF, A.ATTR_ID
+            ) aTABLE
+          WHERE rownum <= 1+N*3-1)
+        WHERE rnum >= 1+N*(2-1);
+         */
+        private String createSQLQuery(int from, int to) {
+            return new StringBuilder
+                    ("SELECT * FROM ")
+                .append("( SELECT aTABLE.*, rownum rnum FROM ")
+                    .append("( WITH OBJECTS_FAMILY AS ")
+                    .append("( SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF ")
+                    .append("FROM OBJECTS ")
+                    .append(" START WITH OBJECT_TYPE_ID = ?")
+                    .append(" CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID ) ")
+
+                    .append("SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION, ATRT.ATTR_ID, A.VALUE, A.DATE_VALUE, A.LIST_VALUE_ID, R.REFERENCE, LAST.ATTR_ID BREAK, ROWS_PER_OBJECT.N ")
+                    .append("FROM OBJECTS_FAMILY O ")
+                    .append("JOIN ATTRTYPE ATRT ")
+                    .append("ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID ")
+                    .append("LEFT JOIN ATTRIBUTES A ")
+                    .append("ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
+                    .append("LEFT JOIN OBJREFERENCE R ")
+                    .append("ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
+                    .append("JOIN ATTRTYPE LAST ")
+                    .append("ON LAST.ATTR_ID = (SELECT MAX(ATTR_ID) FROM ATTRTYPE MAX_ATTR WHERE MAX_ATTR.OBJECT_TYPE_ID IN (SELECT OBJECT_TYPE_ID FROM OBJECTS_FAMILY WHERE BRANCH_OF = 21)), ")
+                    .append("(SELECT N FROM (SELECT N FROM (SELECT COUNT(*) N FROM OBJECTS_FAMILY O JOIN ATTRTYPE ATTR ON O.OBJECT_TYPE_ID = ATTR.OBJECT_TYPE_ID GROUP BY BRANCH_OF)) WHERE ROWNUM = 1) ROWS_PER_OBJECT ")
+                    .append("ORDER BY O.BRANCH_OF, A.ATTR_ID ")
+                    .append(") aTABLE ")
+                    .append("WHERE rownum <= 1+N*").append(to).append("-1) ")
+                    .append("WHERE rnum >= 1+N*(").append(from).append("-1)")
+                    .toString();
+        }
+
+        List<Mutable> getMutables(BigInteger objType,
+                                  int pagingFrom, int pagingTo) throws SQLException {
+            List<Mutable> mutables = new ArrayList<>();
+            PreparedStatement statement = null;
+            ResultSet result = null;
+
+            String fullQuery = createSQLQuery(pagingFrom, pagingTo);
+            try {
+                statement = connection.prepareStatement(fullQuery);
+                logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+                result = resultMultipleMutables(objType, statement);
+
+                do {
+                    Mutable mutable = new Mutable();
+                    pullAttributes(result, mutable);
+                    pullGeneralInfo(result, mutable);
+                    mutables.add(mutable);
+                } while (result.getInt(13) / result.getInt(12) != pagingTo);
+            } finally {
+                if (result != null)
+                    result.close();
+
+                if (statement != null)
+                    statement.close();
+            }
+            return mutables;
+        }
+
+        private ResultSet resultMultipleMutables(BigInteger objType,
+                                                 PreparedStatement statement) throws SQLException {
+
+            statement.setObject(1, objType);
+            return statement.executeQuery();
+        }
+
+        private void pullAttributes(ResultSet result, Mutable mutable) throws SQLException {
+            Map<BigInteger, String> values = new LinkedHashMap<>();
+            Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
+            Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
+            Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
+
+            while (result.next()) {
+                pullAttr(result, values, references, listValues, dateValues);
+                if (result.getInt(6) == result.getInt(11))
+                    break;
+            }
+
+            setMutableAttributes(mutable, values, dateValues, listValues, references);
         }
     }
 }
