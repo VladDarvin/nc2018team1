@@ -2,6 +2,7 @@ package com.nc.airport.backend.eav.mutable;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.Objects;
  * It contains all the information needed either to create the object instance
  * in database, or to create a pojo instance from the database records.
  */
+@ToString
 @Getter
 @Setter
 public class Mutable {
