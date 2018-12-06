@@ -7,8 +7,10 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+import java.math.BigInteger;
+
 @Setter
+@Getter
 @ObjectType(ID = "5")
 public class Airplane extends BaseEntity {
 
@@ -16,21 +18,6 @@ public class Airplane extends BaseEntity {
     private String model;
 
     @ReferenceField(ID = "17")
-    private int airlineId;
+    private BigInteger airlineId;
 
-//    public String getModel() {
-//        return model;
-//    }
-//
-//    public void setModel(String model) {
-//        this.model = model;
-//    }
-//
-//    public int getAirlineId() {
-//        return airlineId;
-//    }
-//
-//    public void setAirlineId(int airlineId) {
-//        this.airlineId = airlineId;
-//    }
 }
