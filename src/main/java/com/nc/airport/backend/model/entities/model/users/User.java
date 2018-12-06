@@ -1,22 +1,29 @@
 package com.nc.airport.backend.model.entities.model.users;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "15")
 public class User {
 
-    private int id;
+    @ValueField(ID = "45")
     private String login;
+
+    @ValueField(ID = "46")
     private String password;
+
+    @ValueField(ID = "47")
     private String email;
+
+    @ValueField(ID = "48")
     private String phone;
+
+    @ValueField(ID = "49")
     private String nickname;
+
+    @ReferenceField(ID = "50")
     private int userRoleIdUserRole;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLogin() {
         return login;

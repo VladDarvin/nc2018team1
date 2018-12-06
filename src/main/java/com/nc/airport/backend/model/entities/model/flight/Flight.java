@@ -1,34 +1,33 @@
 package com.nc.airport.backend.model.entities.model.flight;
 
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.DateField;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
 import java.time.LocalDateTime;
 
+@ObjectType(ID = "3")
 public class Flight {
 
-    private int id;
-    private String flightCol;
+    @DateField(ID = "7")
     private LocalDateTime departureDatetime;
+
+    @DateField(ID = "8")
     private LocalDateTime arrivalDatetime;
+
+    @ReferenceField(ID = "9")
     private int airplaneId;
+
+    @ValueField(ID = "10")
     private double baseCost;
+
+    @ReferenceField(ID = "11")
     private int arrivalAirport;
+
+    @ReferenceField(ID = "12")
     private int departureAirport;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFlightCol() {
-        return flightCol;
-    }
-
-    public void setFlightCol(String flightCol) {
-        this.flightCol = flightCol;
-    }
 
     public LocalDateTime getDepartureDatetime() {
         return departureDatetime;

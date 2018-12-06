@@ -1,20 +1,22 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+
+@ObjectType(ID = "10")
 public class Ticket {
 
-    private int id;
+    @ReferenceField(ID = "31")
     private int flightId;
+
+    @ReferenceField(ID = "32")
     private int seatId;
+
+    @ReferenceField(ID = "33")
     private int passengerId;
+
+    @ReferenceField(ID = "34")
     private int ticketStatusId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getFlightId() {
         return flightId;

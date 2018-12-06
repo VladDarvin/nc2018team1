@@ -1,22 +1,29 @@
 package com.nc.airport.backend.model.entities.model.users;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "16")
 public class CreditCard {
 
-    private int id;
+    @ValueField(ID = "51")
     private String number;
+
+    @ValueField(ID = "52")
     private String month;
+
+    @ValueField(ID = "53")
     private String year;
+
+    @ValueField(ID = "54")
     private String cvv;
+
+    @ValueField(ID = "55")
     private String nickname;
+
+    @ReferenceField(ID = "56")
     private int authorizedUserId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNumber() {
         return number;

@@ -1,25 +1,24 @@
 package com.nc.airport.backend.model.entities.model.airplane;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "6")
 public class Extra {
 
-    private int id;
-    private int extraType;
+    @ValueField(ID = "19")
+    private int extraTypeId;
+
+    @ValueField(ID = "20")
     private int airplaneId;
 
-    public int getId() {
-        return id;
+
+    public int getExtraTypeId() {
+        return extraTypeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getExtraType() {
-        return extraType;
-    }
-
-    public void setExtraType(int extraType) {
-        this.extraType = extraType;
+    public void setExtraTypeId(int extraTypeId) {
+        this.extraTypeId = extraTypeId;
     }
 
     public int getAirplaneId() {

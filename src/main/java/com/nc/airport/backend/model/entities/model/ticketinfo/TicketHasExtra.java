@@ -1,9 +1,19 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "11")
 public class TicketHasExtra {
 
+    @ReferenceField(ID = "35")
     private int ticketId;
+
+    @ReferenceField(ID = "36")
     private int extraId;
+
+    @ValueField(ID = "37")
     private int quantity;
 
     public int getTicketId() {

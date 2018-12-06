@@ -1,8 +1,15 @@
 package com.nc.airport.backend.model.entities.model.users;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
+
+@ObjectType(ID = "18")
 public class TicketHistory {
-    
+
+    @ReferenceField(ID = "58")
     private int ticketId;
+
+    @ReferenceField(ID = "59")
     private int authorizedUserId;
 
     public int getTicketId() {

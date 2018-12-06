@@ -1,19 +1,19 @@
 package com.nc.airport.backend.model.entities.model.airplane;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "9")
 public class SeatType {
 
-    private int id;
+    @ValueField(ID = "28")
     private String name;
+
+    @ValueField(ID = "29")
     private String descr;
+
+    @ValueField(ID = "30")
     private double baseCost;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

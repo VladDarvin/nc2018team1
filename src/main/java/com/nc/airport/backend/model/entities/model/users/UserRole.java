@@ -1,17 +1,13 @@
 package com.nc.airport.backend.model.entities.model.users;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "17")
 public class UserRole {
 
-    private int idUserRole;
+    @ValueField(ID = "57")
     private String role;
-
-    public int getIdUserRole() {
-        return idUserRole;
-    }
-
-    public void setIdUserRole(int idUserRole) {
-        this.idUserRole = idUserRole;
-    }
 
     public String getRole() {
         return role;

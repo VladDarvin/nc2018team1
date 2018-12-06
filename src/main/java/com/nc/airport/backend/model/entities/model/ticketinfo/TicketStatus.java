@@ -1,17 +1,13 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
+import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+
+@ObjectType(ID = "12")
 public class TicketStatus {
 
-    private int id;
+    @ValueField(ID = "38")
     private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
