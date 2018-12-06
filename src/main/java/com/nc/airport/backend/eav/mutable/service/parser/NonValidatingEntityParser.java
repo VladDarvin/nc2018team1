@@ -8,6 +8,7 @@ import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
 import com.nc.airport.backend.eav.mutable.service.util.ReflectionHelper;
 import com.nc.airport.backend.model.BaseEntity;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -22,6 +23,7 @@ import java.util.Map;
  * ClassCastException is possible
  */
 @Log4j2
+@Component("NonValidating")
 public class NonValidatingEntityParser implements EntityParser {
 
     @Override

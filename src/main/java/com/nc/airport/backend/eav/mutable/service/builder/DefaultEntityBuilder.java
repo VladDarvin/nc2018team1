@@ -9,6 +9,7 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -21,6 +22,7 @@ import java.util.Map;
  *
  */
 @Log4j2
+@Component("Default")
 public class DefaultEntityBuilder implements EntityBuilder {
     private static final Marker DATA_LOSS = MarkerManager.getMarker("DATA_LOSS");
 
