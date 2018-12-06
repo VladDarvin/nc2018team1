@@ -3,11 +3,12 @@ package com.nc.airport.backend.model.entities.model.ticketinfo;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.DateField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 
 import java.time.LocalDateTime;
 
 @ObjectType(ID = "14")
-public class Passport {
+public class Passport extends BaseEntity {
 
     @ValueField(ID = "42")
     private String sn;

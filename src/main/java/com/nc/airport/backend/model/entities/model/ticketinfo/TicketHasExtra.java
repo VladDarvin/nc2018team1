@@ -3,9 +3,10 @@ package com.nc.airport.backend.model.entities.model.ticketinfo;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 
 @ObjectType(ID = "11")
-public class TicketHasExtra {
+public class TicketHasExtra extends BaseEntity {
 
     @ReferenceField(ID = "35")
     private int ticketId;

@@ -5,11 +5,12 @@ import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.DateField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 
 import java.time.LocalDateTime;
 
 @ObjectType(ID = "3")
-public class Flight {
+public class Flight extends BaseEntity {
 
     @DateField(ID = "7")
     private LocalDateTime departureDatetime;

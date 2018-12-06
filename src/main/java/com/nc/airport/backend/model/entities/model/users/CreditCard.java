@@ -3,9 +3,10 @@ package com.nc.airport.backend.model.entities.model.users;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 
 @ObjectType(ID = "16")
-public class CreditCard {
+public class CreditCard extends BaseEntity {
 
     @ValueField(ID = "51")
     private String number;

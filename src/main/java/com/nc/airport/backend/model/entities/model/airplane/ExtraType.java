@@ -2,9 +2,10 @@ package com.nc.airport.backend.model.entities.model.airplane;
 
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.model.BaseEntity;
 
 @ObjectType(ID = "7")
-public class ExtraType {
+public class ExtraType extends BaseEntity {
 
     @ValueField(ID = "21")
     private String name;
