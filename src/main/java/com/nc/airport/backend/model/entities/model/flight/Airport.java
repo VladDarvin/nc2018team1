@@ -3,7 +3,11 @@ package com.nc.airport.backend.model.entities.model.flight;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @ObjectType(ID = "2")
 public class Airport {
 
@@ -19,35 +23,35 @@ public class Airport {
     @ValueField(ID = "5")
     private String city;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public int getCountryId() {
+//        return countryId;
+//    }
+//
+//    public void setCountryId(int countryId) {
+//        this.countryId = countryId;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
+//
+//    public String getCity() {
+//        return city;
+//    }
+//
+//    public void setCity(String city) {
+//        this.city = city;
+//    }
 }

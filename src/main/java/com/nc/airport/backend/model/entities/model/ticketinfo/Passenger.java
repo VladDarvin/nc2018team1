@@ -3,40 +3,44 @@ package com.nc.airport.backend.model.entities.model.ticketinfo;
 import com.nc.airport.backend.eav.annotations.ObjectType;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @ObjectType(ID = "13")
 public class Passenger {
 
-    @ValueField(ID = "39")
+    @ValueField(ID = "38")
     private String firstName;
 
-    @ValueField(ID = "40")
+    @ValueField(ID = "39")
     private String lastName;
 
-    @ReferenceField(ID = "41")
+    @ReferenceField(ID = "40")
     private int passportId;
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getPassportId() {
-        return passportId;
-    }
-
-    public void setPassportId(int passportId) {
-        this.passportId = passportId;
-    }
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
+//
+//    public int getPassportId() {
+//        return passportId;
+//    }
+//
+//    public void setPassportId(int passportId) {
+//        this.passportId = passportId;
+//    }
 }
