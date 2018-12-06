@@ -4,12 +4,15 @@ import com.nc.airport.backend.eav.mutable.Mutable;
 import com.nc.airport.backend.eav.mutable.service.builder.EntityBuilder;
 import com.nc.airport.backend.eav.mutable.service.parser.EntityParser;
 import com.nc.airport.backend.model.BaseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DefaultEntityService implements EntityService {
     private EntityParser entityParser;
     private EntityBuilder entityBuilder;
 
-
+    @Autowired
     public DefaultEntityService(EntityParser entityParser, EntityBuilder entityBuilder) {
         this.entityParser = entityParser;
         this.entityBuilder = entityBuilder;
