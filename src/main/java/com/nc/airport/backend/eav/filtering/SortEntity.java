@@ -9,7 +9,7 @@ public class SortEntity {
 
     /*sort by property*/
     public SortEntity(PropertiesEntityType type, Boolean order) {
-        this.type = "O."+type.getType();
+        this.type = "O." + type.getType();
         this.order = order;
     }
 

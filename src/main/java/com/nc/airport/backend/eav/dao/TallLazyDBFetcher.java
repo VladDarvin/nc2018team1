@@ -54,22 +54,22 @@ class TallLazyDBFetcher {
     private StringBuilder createSQLQuery(String startWith, String whereClause) {
         return new StringBuilder
                 ("WITH OBJECTS_FAMILY AS ")
-        .append("(SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF")
-        .append(" FROM OBJECTS")
-        .append(" START WITH ").append(startWith)
-        .append(" CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID) ")
+                .append("(SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF")
+                .append(" FROM OBJECTS")
+                .append(" START WITH ").append(startWith)
+                .append(" CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID) ")
 
-        .append("SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ")
-            .append("ATRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE ")
-        .append("FROM OBJECTS_FAMILY O ")
-        .append("JOIN ATTRTYPE ATRT ")
-            .append("ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID ")
-        .append("LEFT JOIN ATTRIBUTES A ")
-            .append("ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
-        .append("LEFT JOIN OBJREFERENCE R ")
-            .append("ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
-        .append(whereClause)
-        .append("ORDER BY BRANCH_OF, A.ATTR_ID");
+                .append("SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ")
+                .append("ATRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE ")
+                .append("FROM OBJECTS_FAMILY O ")
+                .append("JOIN ATTRTYPE ATRT ")
+                .append("ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID ")
+                .append("LEFT JOIN ATTRIBUTES A ")
+                .append("ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
+                .append("LEFT JOIN OBJREFERENCE R ")
+                .append("ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
+                .append(whereClause)
+                .append("ORDER BY BRANCH_OF, A.ATTR_ID");
     }
 
     Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
@@ -79,7 +79,7 @@ class TallLazyDBFetcher {
 
         String fullQuery = createSQLQuery("OBJECT_ID = ?", transferAttributesId(attributesId.size()))
                 .toString();
-        logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+        logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
         try {
             statement = connection.prepareStatement(fullQuery);
             result = resultSingleMutable(objectId, attributesId, statement);
@@ -109,16 +109,16 @@ class TallLazyDBFetcher {
         PagingDescriptor paging = new PagingDescriptor();
 
         StringBuilder basicQuery = createSQLQuery("OBJECT_TYPE_ID = ?",
-                                                    transferAttributesId(attributesId.size()));
+                transferAttributesId(attributesId.size()));
 
         String fullQuery = paging.getPaging(basicQuery,
-                                            getObjectivePage(pagingFrom, attributesId.size()),
-                                            getObjectivePage(pagingTo + 1, attributesId.size()) - 1);
+                getObjectivePage(pagingFrom, attributesId.size()),
+                getObjectivePage(pagingTo + 1, attributesId.size()) - 1);
         try {
             statement = connection.prepareStatement(fullQuery);
-            logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+            logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             result = resultMultipleMutables(objType, attributesId, statement);
-            for (int i = 1; i <= pagingTo - pagingFrom; i++){
+            for (int i = 1; i <= pagingTo - pagingFrom; i++) {
                 Mutable mutable = new Mutable();
                 pullAttributes(result, mutable, Collections.max(attributesId));
                 pullGeneralInfo(result, mutable);
@@ -145,9 +145,9 @@ class TallLazyDBFetcher {
 
         try {
             statement = connection.prepareStatement(fullQuery);
-            logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+            logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             result = resultMultipleMutables(objectsId, attributesId, statement);
-            for (int i = 1; i <= objectsId.size(); i++){
+            for (int i = 1; i <= objectsId.size(); i++) {
                 Mutable mutable = new Mutable();
                 pullAttributes(result, mutable, Collections.max(attributesId));
                 pullGeneralInfo(result, mutable);
@@ -243,7 +243,7 @@ class TallLazyDBFetcher {
                           Map<BigInteger, String> values,
                           Map<BigInteger, BigInteger> references,
                           Map<BigInteger, BigInteger> listValues,
-                          Map<BigInteger, LocalDateTime> dateValues) throws SQLException{
+                          Map<BigInteger, LocalDateTime> dateValues) throws SQLException {
 
         String value = result.getString(7);
         if (value != null)
@@ -350,7 +350,7 @@ class TallLazyDBFetcher {
         private String createSQLQuery(int from, int to) {
             return new StringBuilder
                     ("SELECT * FROM ")
-                .append("( SELECT aTABLE.*, rownum rnum FROM ")
+                    .append("( SELECT aTABLE.*, rownum rnum FROM ")
                     .append("( WITH OBJECTS_FAMILY AS ")
                     .append("( SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF ")
                     .append("FROM OBJECTS ")
@@ -384,7 +384,7 @@ class TallLazyDBFetcher {
             String fullQuery = createSQLQuery(pagingFrom, pagingTo);
             try {
                 statement = connection.prepareStatement(fullQuery);
-                logger.log(Level.INFO, "Executing sequence:\n"+fullQuery);
+                logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
                 result = resultMultipleMutables(objType, statement);
 
                 do {

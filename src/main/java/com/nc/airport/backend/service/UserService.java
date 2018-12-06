@@ -47,14 +47,14 @@ public class UserService {
     }
 
     public List<User> getTenUsers(int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page - 1, 10));
         return pageOfUsers.getContent();
     }
 
     public UserFilteringWrapper search(List<Map<String, Object>> criterias, int page) {
         UserFilter filter =
                 new UserFilter(criterias);
-        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page-1, 10));
+        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page - 1, 10));
         return new UserFilteringWrapper(pageOfUsers.getContent(), pageOfUsers.getTotalPages());
     }
 

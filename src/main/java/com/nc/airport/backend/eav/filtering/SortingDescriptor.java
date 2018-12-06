@@ -8,7 +8,7 @@ class SortingDescriptor {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(" ORDER BY ");
         int countOfEntities = sortEntities.size();
-        for (SortEntity entity:
+        for (SortEntity entity :
                 sortEntities) {
             if (entity.getOrder() == null) {
                 queryBuilder.append(entity.getType());

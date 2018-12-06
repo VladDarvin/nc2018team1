@@ -17,7 +17,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Transient @JsonIgnore
+    @Transient
+    @JsonIgnore
     private String username;
     private String firstname;
     private String lastname;
@@ -26,13 +27,13 @@ public class User {
     private String password;
     private Boolean enabled;
     @ManyToOne
-    @JoinColumn(name="authority_id", nullable=false)
+    @JoinColumn(name = "authority_id", nullable = false)
     private Authority authority;
 
     public User() {
     }
 
-    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled) {
+    public User(String firstname, String lastname, String phonenumber, String email, String password, Boolean enabled) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -42,7 +43,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public User(String firstname, String lastname, String phonenumber,String email, String password, Boolean enabled, Authority authority) {
+    public User(String firstname, String lastname, String phonenumber, String email, String password, Boolean enabled, Authority authority) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;

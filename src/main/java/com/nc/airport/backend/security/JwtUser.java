@@ -22,14 +22,14 @@ public class JwtUser implements UserDetails {
     private final String phonenumber;
 
     public JwtUser(
-          Long id,
-          String firstname,
-          String lastname,
-          String email,
-          String password,
-          Authority authority,
-          boolean enabled,
-          String phonenumber
+            Long id,
+            String firstname,
+            String lastname,
+            String email,
+            String password,
+            Authority authority,
+            boolean enabled,
+            String phonenumber
     ) {
         this.id = id;
         this.username = email;

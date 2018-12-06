@@ -11,7 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface UsersRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
-//    @Query(value = "select * from \"USER\" inner join AUTHORITY on \"USER\".AUTHORITY_ID = AUTHORITY.ID", nativeQuery = true)
+    //    @Query(value = "select * from \"USER\" inner join AUTHORITY on \"USER\".AUTHORITY_ID = AUTHORITY.ID", nativeQuery = true)
     @Query(value = "select * from USERS inner join AUTHORITY on USERS.AUTHORITY_ID = AUTHORITY.ID", nativeQuery = true)
     List<User> getAll();
 

@@ -9,7 +9,7 @@ public class FilterEntity {
 
     /*filter by property*/
     public FilterEntity(PropertiesEntityType type, Set<Object> values) {
-        this.type = "O."+type.getType();
+        this.type = "O." + type.getType();
         this.values = values;
     }
 

@@ -1,6 +1,6 @@
 package com.nc.airport.backend.eav.filtering;
 
-public enum PropertiesEntityType implements EntityType{
+public enum PropertiesEntityType implements EntityType {
     OBJECT_ID("OBJECT_ID"),
     PARENT_ID("PARENT_ID"),
     OBJECT_TYPE_ID("OBJECT_TYPE_ID"),
