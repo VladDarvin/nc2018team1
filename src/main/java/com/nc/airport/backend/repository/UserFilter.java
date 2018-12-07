@@ -35,14 +35,14 @@ public class UserFilter implements Specification<User> {
     }
 
     public Predicate buildPredicate(Map<String, Object> criteria, Root root, CriteriaQuery criteriaQuery, CriteriaBuilder builder) {
-        for (String key:
-            criteria.keySet()) {
+        for (String key :
+                criteria.keySet()) {
             if (key.equals("authority")) {
                 LinkedHashMap<String, String> map = (LinkedHashMap<String, String>) criteria.get(key);
                 String role = map.get("name");
                 final Subquery<Authority> subQuery = criteriaQuery.subquery(Authority.class);
                 final Root<Authority> authorityRoot = subQuery.from(Authority.class);
-                Predicate userIdPredicate = builder.equal(authorityRoot.get("id"), root.<String> get("authority"));
+                Predicate userIdPredicate = builder.equal(authorityRoot.get("id"), root.<String>get("authority"));
                 Predicate rolePredicate = builder.equal(authorityRoot.get("name"), role);
                 subQuery.select(authorityRoot).where(userIdPredicate, rolePredicate);
 

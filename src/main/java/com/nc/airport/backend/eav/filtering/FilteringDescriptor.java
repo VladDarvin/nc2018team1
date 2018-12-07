@@ -8,11 +8,11 @@ class FilteringDescriptor {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("WHERE (");
         int countOfEntities = filterEntities.size();
-        for (FilterEntity entity:
+        for (FilterEntity entity :
                 filterEntities) {
             int countOfValues = entity.getValues().size();
-            for (Object value:
-                 entity.getValues()) {
+            for (Object value :
+                    entity.getValues()) {
                 if (value instanceof String) {
                     queryBuilder.append("LOWER(")
                             .append(entity.getType())

@@ -1,12 +1,21 @@
 package com.nc.airport.backend.eav.filtering;
 
+import java.math.BigInteger;
+
 public class SortEntity {
 
     private String type;
     private Boolean order;
 
-    public SortEntity(String type, Boolean order) {
-        this.type = type;
+    /*sort by property*/
+    public SortEntity(PropertiesEntityType type, Boolean order) {
+        this.type = "O." + type.getType();
+        this.order = order;
+    }
+
+    /*sort by field*/
+    public SortEntity(BigInteger attrId, Boolean order) {
+        this.type = "ATTR" + attrId;
         this.order = order;
     }
 

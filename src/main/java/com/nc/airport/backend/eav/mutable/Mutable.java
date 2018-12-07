@@ -1,7 +1,10 @@
 package com.nc.airport.backend.eav.mutable;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +14,9 @@ import java.util.Objects;
  * It contains all the information needed either to create the object instance
  * in database, or to create a pojo instance from the database records.
  */
+@ToString
+@Getter
+@Setter
 public class Mutable {
     /**
      * Objects.Object_id
@@ -60,78 +66,6 @@ public class Mutable {
      * BigInt - ObjReference.Reference
      */
     private Map<BigInteger, BigInteger> references;
-
-    public BigInteger getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(BigInteger objectId) {
-        this.objectId = objectId;
-    }
-
-    public BigInteger getObjectTypeId() {
-        return objectTypeId;
-    }
-
-    public void setObjectTypeId(BigInteger objectTypeId) {
-        this.objectTypeId = objectTypeId;
-    }
-
-    public BigInteger getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(BigInteger parentId) {
-        this.parentId = parentId;
-    }
-
-    public Map<BigInteger, BigInteger> getReferences() {
-        return references;
-    }
-
-    public void setReferences(Map<BigInteger, BigInteger> references) {
-        this.references = references;
-    }
-
-    public Map<BigInteger, String> getValues() {
-        return values;
-    }
-
-    public void setValues(Map<BigInteger, String> values) {
-        this.values = values;
-    }
-
-    public Map<BigInteger, LocalDateTime> getDateValues() {
-        return dateValues;
-    }
-
-    public void setDateValues(Map<BigInteger, LocalDateTime> dateValues) {
-        this.dateValues = dateValues;
-    }
-
-    public Map<BigInteger, BigInteger> getListValues() {
-        return listValues;
-    }
-
-    public void setListValues(Map<BigInteger, BigInteger> listValues) {
-        this.listValues = listValues;
-    }
-
-    public String getObjectName() {
-        return objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
-    }
-
-    public String getObjectDescription() {
-        return objectDescription;
-    }
-
-    public void setObjectDescription(String objectDescription) {
-        this.objectDescription = objectDescription;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,0 +1,4 @@
+ALTER TABLE AUTHORITY
+  ADD (
+  CONSTRAINT authority_pk PRIMARY KEY (ID),
+  CONSTRAINT authority_id_not_null CHECK (ID IS NOT NULL));

@@ -5,8 +5,7 @@ import com.nc.airport.backend.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ValueField;
 import com.nc.airport.backend.model.BaseEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -18,8 +17,9 @@ import java.util.List;
 /**
  * Utility class that conceals working with Reflection
  */
+@Log4j2
 public final class ReflectionHelper {
-    private static Logger LOGGER = LogManager.getLogger(ReflectionHelper.class);
+//    private static Logger LOGGER = LogManager.getLogger(ReflectionHelper.class);
 
     private ReflectionHelper() {
     }
@@ -52,7 +52,7 @@ public final class ReflectionHelper {
                 return field.get(entity);
             }
         } catch (IllegalAccessException e) {
-            LOGGER.error(e);
+            log.error(e);
             e.printStackTrace();
         }
         return null;
@@ -76,7 +76,7 @@ public final class ReflectionHelper {
                 field.setAccessible(false);
             }
         } catch (IllegalAccessException e) {
-            LOGGER.error(e);
+            log.error(e);
             e.printStackTrace();
         }
     }
@@ -122,7 +122,7 @@ public final class ReflectionHelper {
             idAsString = ((ReferenceField) annotation).ID();
         } else {
             IllegalArgumentException exception = new IllegalArgumentException("Unknown annotation class " + annotationClass.getName());
-            LOGGER.error(exception);
+            log.error(exception);
             throw exception;
         }
 
@@ -132,7 +132,7 @@ public final class ReflectionHelper {
         } catch (NumberFormatException e) {
             String message = "Id of annotation is invalid \"" + idAsString + "\"";
             IllegalArgumentException exception = new IllegalArgumentException(message, e);
-            LOGGER.error(message, exception);
+            log.error(message, exception);
             throw exception;
         }
         return id;
@@ -155,7 +155,7 @@ public final class ReflectionHelper {
                 return annotatedField;
             }
         }
-        LOGGER.error("{DATA LOSS} No field in " + entityClazz + " with " + annotationClazz + " annotation.");
+        log.error("{DATA LOSS} No field in " + entityClazz + " with " + annotationClazz + " annotation.");
         return null;
     }
 }

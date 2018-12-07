@@ -1,12 +1,6 @@
 package com.nc.airport.backend.security;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public final class JwtUserFactory {
 

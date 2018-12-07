@@ -1,13 +1,15 @@
 package com.nc.airport.backend.eav.dao;
 
 
-
 import com.nc.airport.backend.eav.mutable.Mutable;
+
 import java.math.BigInteger;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
 
-class InsertSequenceBuilder extends SequenceBuilder{
+class InsertSequenceBuilder extends SequenceBuilder {
     private Mutable mutable;
     private Connection connection;
     private BigInteger objectId;
@@ -17,7 +19,7 @@ class InsertSequenceBuilder extends SequenceBuilder{
     }
 
     @Override
-    public void build(Mutable mutable){
+    public void build(Mutable mutable) {
         this.mutable = mutable;
         objectId = mutable.getObjectId();
         insertIntoObjects();
@@ -25,15 +27,15 @@ class InsertSequenceBuilder extends SequenceBuilder{
         insertIntoObjReferences();
     }
 
-    private void logSQLError(SQLException e, String inTable){
+    private void logSQLError(SQLException e, String inTable) {
         logSQLError(e, inTable, "insertion");
     }
 
-    private void insertIntoObjects(){
+    private void insertIntoObjects() {
         try (PreparedStatement statement
-                = connection.prepareStatement(
+                     = connection.prepareStatement(
                 "INSERT INTO OBJECTS " +
-                     "(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?, ?)")){
+                        "(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?, ?)")) {
 
             statement.setObject(1, objectId);
             statement.setObject(2, mutable.getParentId());
@@ -46,29 +48,29 @@ class InsertSequenceBuilder extends SequenceBuilder{
         }
     }
 
-    private void insertIntoAttributes(){
+    private void insertIntoAttributes() {
         insertValues(mutable.getValues(), "value");
         insertValues(mutable.getDateValues(), "date_value");
         insertValues(mutable.getListValues(), "list_value_id");
     }
 
-    private void insertValues(Map<BigInteger, ?> values, String valueType){
+    private void insertValues(Map<BigInteger, ?> values, String valueType) {
         if (noSuchElementsInObject(values)) return;
 
-        String sql = "INSERT INTO ATTRIBUTES (attr_id, "+valueType+", object_id) VALUES (?,?, " + objectId + ")";
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
+        String sql = "INSERT INTO ATTRIBUTES (attr_id, " + valueType + ", object_id) VALUES (?,?, " + objectId + ")";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Map.Entry<BigInteger, ?> entry : values.entrySet()) {
                 statement.setObject(1, entry.getKey());
                 statement.setObject(2, entry.getValue());
                 statement.addBatch();
             }
             statement.executeBatch();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             logSQLError(e, "Attributes while operating " + valueType);
         }
     }
 
-    private void insertIntoObjReferences(){
+    private void insertIntoObjReferences() {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
