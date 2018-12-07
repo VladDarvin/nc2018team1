@@ -62,4 +62,30 @@ public class UserService {
         return usersRepository.count();
     }
 
+    public List<User> sortUsersByFieldAsc(String field) {
+        if (field.equals("firstname")) {
+            return usersRepository.findAllByOrderByFirstnameAsc();
+        } else if (field.equals("lastname")) {
+            return usersRepository.findAllByOrderByLastnameAsc();
+        } else if (field.equals("email")) {
+            return usersRepository.findAllByOrderByEmailAsc();
+        } else if (field.equals("phonenumber")) {
+            return usersRepository.findAllByOrderByPhonenumberAsc();
+        }
+        return null;
+    }
+
+    public List<User> sortUsersByFieldDesc(String field) {
+        if (field.equals("firstname")) {
+            return usersRepository.findAllByOrderByFirstnameDesc();
+        } else if (field.equals("lastname")) {
+            return usersRepository.findAllByOrderByLastnameDesc();
+        } else if (field.equals("email")) {
+            return usersRepository.findAllByOrderByEmailDesc();
+        } else if (field.equals("phonenumber")) {
+            return usersRepository.findAllByOrderByPhonenumberDesc();
+        }
+        return null;
+    }
+
 }

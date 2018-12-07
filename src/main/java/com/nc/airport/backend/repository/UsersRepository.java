@@ -16,4 +16,12 @@ public interface UsersRepository extends PagingAndSortingRepository<User, Long>,
     List<User> getAll();
     Page<User> findAll(Specification<User> spec, Pageable pageable);
     User findUserByEmailAndPassword(String email, String password);
+    List<User> findAllByOrderByFirstnameAsc();
+    List<User> findAllByOrderByFirstnameDesc();
+    List<User> findAllByOrderByLastnameAsc();
+    List<User> findAllByOrderByLastnameDesc();
+    List<User> findAllByOrderByEmailAsc();
+    List<User> findAllByOrderByEmailDesc();
+    List<User> findAllByOrderByPhonenumberAsc();
+    List<User> findAllByOrderByPhonenumberDesc();
 }
