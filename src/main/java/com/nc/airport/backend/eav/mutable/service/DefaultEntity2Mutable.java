@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DefaultEntityService implements EntityService {
+public class DefaultEntity2Mutable implements Entity2Mutable {
     private EntityParser entityParser;
     private EntityBuilder entityBuilder;
 
     @Autowired
-    public DefaultEntityService(EntityParser entityParser, EntityBuilder entityBuilder) {
+    public DefaultEntity2Mutable(EntityParser entityParser, EntityBuilder entityBuilder) {
         this.entityParser = entityParser;
         this.entityBuilder = entityBuilder;
     }
