@@ -22,28 +22,4 @@ public class Passport extends BaseEntity {
 
     @DateField(ID = "43")
     private LocalDateTime birthDate;
-
-//    public String getSn() {
-//        return sn;
-//    }
-//
-//    public void setSn(String sn) {
-//        this.sn = sn;
-//    }
-//
-//    public String getCountry() {
-//        return country;
-//    }
-//
-//    public void setCountry(String country) {
-//        this.country = country;
-//    }
-//
-//    public LocalDateTime getBirthDate() {
-//        return birthDate;
-//    }
-//
-//    public void setBirthDate(LocalDateTime birthDate) {
-//        this.birthDate = birthDate;
-//    }
 }

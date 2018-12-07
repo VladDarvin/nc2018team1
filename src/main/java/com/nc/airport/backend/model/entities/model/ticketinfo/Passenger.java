@@ -7,6 +7,8 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ObjectType(ID = "13")
@@ -19,29 +21,5 @@ public class Passenger extends BaseEntity {
     private String lastName;
 
     @ReferenceField(ID = "40")
-    private int passportId;
-
-//    public String getFirstName() {
-//        return firstName;
-//    }
-//
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
-//
-//    public String getLastName() {
-//        return lastName;
-//    }
-//
-//    public void setLastName(String lastName) {
-//        this.lastName = lastName;
-//    }
-//
-//    public int getPassportId() {
-//        return passportId;
-//    }
-//
-//    public void setPassportId(int passportId) {
-//        this.passportId = passportId;
-//    }
+    private BigInteger passportId;
 }

@@ -7,52 +7,22 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ObjectType(ID = "8")
 public class Seat extends BaseEntity {
 
     @ReferenceField(ID = "23")
-    private int airplaneId;
+    private BigInteger airplaneId;
 
     @ReferenceField(ID = "24")
-    private int seatTypeId;
+    private BigInteger seatTypeId;
 
     @ValueField(ID = "25")
     private int row;
 
     @ValueField(ID = "26")
     private int col;
-
-//    public int getAirplaneId() {
-//        return airplaneId;
-//    }
-//
-//    public void setAirplaneId(int airplaneId) {
-//        this.airplaneId = airplaneId;
-//    }
-//
-//    public int getSeatTypeId() {
-//        return seatTypeId;
-//    }
-//
-//    public void setSeatTypeId(int seatTypeId) {
-//        this.seatTypeId = seatTypeId;
-//    }
-//
-//    public int getRow() {
-//        return row;
-//    }
-//
-//    public void setRow(int row) {
-//        this.row = row;
-//    }
-//
-//    public int getCol() {
-//        return col;
-//    }
-//
-//    public void setCol(int col) {
-//        this.col = col;
-//    }
 }

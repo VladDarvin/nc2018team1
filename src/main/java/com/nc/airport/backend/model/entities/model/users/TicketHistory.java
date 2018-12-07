@@ -6,30 +6,16 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ObjectType(ID = "18")
 public class TicketHistory extends BaseEntity {
 
     @ReferenceField(ID = "57")
-    private int ticketId;
+    private BigInteger ticketId;
 
     @ReferenceField(ID = "58")
-    private int authorizedUserId;
-
-//    public int getTicketId() {
-//        return ticketId;
-//    }
-//
-//    public void setTicketId(int ticketId) {
-//        this.ticketId = ticketId;
-//    }
-//
-//    public int getAuthorizedUserId() {
-//        return authorizedUserId;
-//    }
-//
-//    public void setAuthorizedUserId(int authorizedUserId) {
-//        this.authorizedUserId = authorizedUserId;
-//    }
+    private BigInteger authorizedUserId;
 }

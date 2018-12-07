@@ -19,5 +19,4 @@ public class Airplane extends BaseEntity {
 
     @ReferenceField(ID = "17")
     private BigInteger airlineId;
-
 }
