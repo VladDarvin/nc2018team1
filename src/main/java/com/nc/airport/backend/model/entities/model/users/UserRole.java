@@ -13,12 +13,4 @@ public class UserRole extends BaseEntity {
 
     @ValueField(ID = "56")
     private String userRole;
-
-//    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
 }

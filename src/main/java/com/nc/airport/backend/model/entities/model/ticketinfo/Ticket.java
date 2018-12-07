@@ -1,10 +1,15 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
 import com.nc.airport.backend.eav.annotations.ObjectType;
+import com.nc.airport.backend.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.model.entities.model.airplane.Extra;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigInteger;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -12,46 +17,19 @@ import lombok.Setter;
 public class Ticket extends BaseEntity {
 
     @ReferenceField(ID = "30")
-    private int flightId;
+    private BigInteger flightId;
 
     @ReferenceField(ID = "31")
-    private int seatId;
+    private BigInteger seatId;
 
     @ReferenceField(ID = "32")
-    private int passengerId;
+    private BigInteger passengerId;
 
     @ReferenceField(ID = "33")
-    private int ticketStatusId;
+    private BigInteger ticketStatusId;
 
-//    public int getFlightId() {
-//        return flightId;
-//    }
-//
-//    public void setFlightId(int flightId) {
-//        this.flightId = flightId;
-//    }
-//
-//    public int getSeatId() {
-//        return seatId;
-//    }
-//
-//    public void setSeatId(int seatId) {
-//        this.seatId = seatId;
-//    }
-//
-//    public int getPassengerId() {
-//        return passengerId;
-//    }
-//
-//    public void setPassengerId(int passengerId) {
-//        this.passengerId = passengerId;
-//    }
-//
-//    public int getTicketStatusId() {
-//        return ticketStatusId;
-//    }
-//
-//    public void setTicketStatusId(int ticketStatusId) {
-//        this.ticketStatusId = ticketStatusId;
-//    }
+    @ListField(ID = "11")
+    private Map<Extra, BigInteger> TicketHasExtra;
+
+
 }

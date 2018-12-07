@@ -7,6 +7,8 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ObjectType(ID = "2")
@@ -16,43 +18,11 @@ public class Airport extends BaseEntity {
     private String name;
 
     @ReferenceField(ID = "3")
-    private int countryId;
+    private BigInteger countryId;
 
     @ValueField(ID = "4")
     private String address;
 
     @ValueField(ID = "5")
     private String city;
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public int getCountryId() {
-//        return countryId;
-//    }
-//
-//    public void setCountryId(int countryId) {
-//        this.countryId = countryId;
-//    }
-//
-//    public String getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(String address) {
-//        this.address = address;
-//    }
-//
-//    public String getCity() {
-//        return city;
-//    }
-//
-//    public void setCity(String city) {
-//        this.city = city;
-//    }
 }

@@ -7,6 +7,8 @@ import com.nc.airport.backend.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 @ObjectType(ID = "16")
@@ -28,53 +30,5 @@ public class CreditCard extends BaseEntity {
     private String nickname;
 
     @ReferenceField(ID = "55")
-    private int authorizedUserId;
-
-//    public String getNumber() {
-//        return number;
-//    }
-//
-//    public void setNumber(String number) {
-//        this.number = number;
-//    }
-//
-//    public String getMonth() {
-//        return month;
-//    }
-//
-//    public void setMonth(String month) {
-//        this.month = month;
-//    }
-//
-//    public String getYear() {
-//        return year;
-//    }
-//
-//    public void setYear(String year) {
-//        this.year = year;
-//    }
-//
-//    public String getCvv() {
-//        return cvv;
-//    }
-//
-//    public void setCvv(String cvv) {
-//        this.cvv = cvv;
-//    }
-//
-//    public String getNickname() {
-//        return nickname;
-//    }
-//
-//    public void setNickname(String nickname) {
-//        this.nickname = nickname;
-//    }
-//
-//    public int getAuthorizedUserId() {
-//        return authorizedUserId;
-//    }
-//
-//    public void setAuthorizedUserId(int authorizedUserId) {
-//        this.authorizedUserId = authorizedUserId;
-//    }
+    private BigInteger authorizedUserId;
 }
