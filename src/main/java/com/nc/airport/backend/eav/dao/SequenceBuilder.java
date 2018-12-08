@@ -12,13 +12,14 @@ abstract class SequenceBuilder {
     protected final Logger LOGGER = LogManager.getLogger(this.getClass());
 
 
-    abstract void build(Mutable mutable);
+    abstract void build (Mutable mutable) throws SQLException;
 
     boolean noSuchElementsInObject(Map map) {
-        return map.size() == 0;
+        return map == null || map.size() == 0;
     }
 
-    protected void logSQLError(SQLException e, String inTable, String operation) {
-        LOGGER.log(Level.ERROR, "Invalid values in mutable for " + operation + " in " + inTable, e);
+    protected void logSQLError(SQLException e, String inTable, String operation) throws SQLException {
+        LOGGER.log(Level.ERROR, "Invalid values in mutable for "+operation+" in "+inTable, e);
+        throw e;
     }
 }

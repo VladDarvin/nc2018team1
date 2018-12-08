@@ -2,14 +2,19 @@ package com.nc.airport.backend.eav.dao;
 
 
 import com.nc.airport.backend.eav.mutable.Mutable;
+import jdk.nashorn.internal.runtime.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
 class InsertSequenceBuilder extends SequenceBuilder {
+    private org.apache.logging.log4j.Logger logger = LogManager.getLogger(InsertSequenceBuilder.class.getSimpleName());
     private Mutable mutable;
     private Connection connection;
     private BigInteger objectId;
@@ -19,19 +24,32 @@ class InsertSequenceBuilder extends SequenceBuilder {
     }
 
     @Override
-    public void build(Mutable mutable) {
+    public void build(Mutable mutable) throws SQLException {
         this.mutable = mutable;
-        objectId = mutable.getObjectId();
+
+        try {
+            ResultSet nextVal = connection.createStatement()
+                    .executeQuery(new StringBuilder
+                                    ("SELECT COALESCE(MIN(O1.OBJECT_ID+1), 1) ")
+                            .append("  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID")
+                            .append("  WHERE O2.OBJECT_ID IS NULL;").toString());
+            nextVal.next();
+            objectId = new BigInteger(nextVal.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+
         insertIntoObjects();
         insertIntoAttributes();
         insertIntoObjReferences();
     }
 
-    private void logSQLError(SQLException e, String inTable) {
+    private void logSQLError(SQLException e, String inTable) throws SQLException{
         logSQLError(e, inTable, "insertion");
     }
 
-    private void insertIntoObjects() {
+    private void insertIntoObjects() throws SQLException{
         try (PreparedStatement statement
                      = connection.prepareStatement(
                 "INSERT INTO OBJECTS " +
@@ -48,13 +66,13 @@ class InsertSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void insertIntoAttributes() {
+    private void insertIntoAttributes() throws SQLException {
         insertValues(mutable.getValues(), "value");
         insertValues(mutable.getDateValues(), "date_value");
         insertValues(mutable.getListValues(), "list_value_id");
     }
 
-    private void insertValues(Map<BigInteger, ?> values, String valueType) {
+    private void insertValues(Map<BigInteger, ?> values, String valueType) throws SQLException {
         if (noSuchElementsInObject(values)) return;
 
         String sql = "INSERT INTO ATTRIBUTES (attr_id, " + valueType + ", object_id) VALUES (?,?, " + objectId + ")";
@@ -70,7 +88,7 @@ class InsertSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void insertIntoObjReferences() {
+    private void insertIntoObjReferences() throws SQLException {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
