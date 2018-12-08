@@ -22,56 +22,57 @@ public class Mutable2Query {
         this.connection = connection;
     }
 
-    public void sqlInsert (Mutable mutable) throws SQLException {
-        buildASequence(new InsertSequenceBuilder(connection), mutable);
+    public Mutable sqlInsert(Mutable mutable) throws SQLException {
+        return buildASequence(new InsertSequenceBuilder(connection), mutable);
     }
 
-    public void sqlUpdate(Mutable mutable) throws SQLException {
-        buildASequence(new UpdateSequenceBuilder(connection), mutable);
+    public Mutable sqlUpdate(Mutable mutable) throws SQLException {
+        return buildASequence(new UpdateSequenceBuilder(connection), mutable);
     }
 
-    public void sqlDelete(Mutable mutable) throws SQLException {
-        buildASequence(new DeleteSequenceBuilder(connection), mutable);
+    public Mutable sqlDelete(Mutable mutable) throws SQLException {
+        return buildASequence(new DeleteSequenceBuilder(connection), mutable);
     }
 
-    private void buildASequence(SequenceBuilder sequenceBuilder, Mutable mutable) throws SQLException {
-        sequenceBuilder.build(mutable);
+    private Mutable buildASequence(SequenceBuilder sequenceBuilder, Mutable mutable) throws SQLException {
+        return sequenceBuilder.build(mutable);
     }
 
     public List<Mutable> sqlInsertMultipleMutables(Collection<Mutable> mutables) {
-        List<Mutable> failedMutables = new ArrayList<>();
+        List<Mutable> insertedMutables = new ArrayList<>();
+
         for (Mutable mutable : mutables)
             try {
                 sqlInsert(mutable);
+                insertedMutables.add(mutable);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to parse mutable "+mutable.getObjectTypeId());
-                failedMutables.add(mutable);
+                logger.log(Level.ERROR, "Failed to insert mutable named "+mutable.getObjectName());
             }
-        return failedMutables;
+        return insertedMutables;
     }
 
     public List<Mutable> sqlUpdateMultipleMutables(Collection<Mutable> mutables) {
-        List<Mutable> failedMutables = new ArrayList<>();
+        List<Mutable> updatedMutables = new ArrayList<>();
         for (Mutable mutable : mutables)
             try {
                 sqlUpdate(mutable);
+                updatedMutables.add(mutable);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to parse mutable "+mutable.getObjectTypeId());
-                failedMutables.add(mutable);
+                logger.log(Level.ERROR, "Failed to update mutable named "+mutable.getObjectName());
             }
-        return failedMutables;
+        return updatedMutables;
     }
 
     public List<Mutable> sqlDeleteMultipleMutables(Collection<Mutable> mutables) {
-        List<Mutable> failedMutables = new ArrayList<>();
+        List<Mutable> deletedMutables = new ArrayList<>();
         for (Mutable mutable : mutables)
             try {
                 sqlDelete(mutable);
+                deletedMutables.add(mutable);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to parse mutable "+mutable.getObjectTypeId());
-                failedMutables.add(mutable);
+                logger.log(Level.ERROR, "Failed to delete mutable named "+mutable.getObjectName());
             }
-        return failedMutables;
+        return deletedMutables;
     }
 
     /**
@@ -97,7 +98,7 @@ public class Mutable2Query {
                                          int pagingFrom, int pagingTo) throws SQLException {
 
 
-        return new TallLazyDBFetcher(connection).new Sandbox().getMutables(objType, pagingFrom, pagingTo);
+        return new TallLazyDBFetcher(connection).new FullObjectsFetcher().getMutables(objType, pagingFrom, pagingTo);
     }
 
     /**

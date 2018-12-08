@@ -318,7 +318,7 @@ class TallLazyDBFetcher {
         }
     }
 
-    class Sandbox {
+    class FullObjectsFetcher {
         /*
         SELECT * FROM
           (

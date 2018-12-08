@@ -2,15 +2,10 @@ package com.nc.airport.backend.eav.dao;
 
 
 import com.nc.airport.backend.eav.mutable.Mutable;
-import jdk.nashorn.internal.runtime.logging.Logger;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 
 class InsertSequenceBuilder extends SequenceBuilder {
@@ -24,25 +19,32 @@ class InsertSequenceBuilder extends SequenceBuilder {
     }
 
     @Override
-    public void build(Mutable mutable) throws SQLException {
+    public Mutable build(Mutable mutable) throws SQLException {
         this.mutable = mutable;
-
-        try {
-            ResultSet nextVal = connection.createStatement()
-                    .executeQuery(new StringBuilder
-                                    ("SELECT COALESCE(MIN(O1.OBJECT_ID+1), 1) ")
-                            .append("  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID")
-                            .append("  WHERE O2.OBJECT_ID IS NULL;").toString());
-            nextVal.next();
-            objectId = new BigInteger(nextVal.getString(1));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
+        objectId = getNewObjectId();
 
         insertIntoObjects();
         insertIntoAttributes();
         insertIntoObjReferences();
+
+        if (mutable.getObjectId() != null)
+            logger.warn("Changed inserted mutable object_id from " + mutable.getObjectId() + " to " + objectId);
+        mutable.setObjectId(objectId);
+        return mutable;
+    }
+
+    private BigInteger getNewObjectId() throws SQLException {
+        try {
+            ResultSet nextVal = connection.createStatement()
+                    .executeQuery("SELECT COALESCE(MIN(O1.OBJECT_ID+1), 1)\n" +
+                            "  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID\n" +
+                            "  WHERE O2.OBJECT_ID IS NULL;");
+            nextVal.next();
+            return new BigInteger(nextVal.getString(1));
+        } catch (SQLException e) {
+            logger.error("Failed to get new object id from sequence");
+            throw e;
+        }
     }
 
     private void logSQLError(SQLException e, String inTable) throws SQLException{

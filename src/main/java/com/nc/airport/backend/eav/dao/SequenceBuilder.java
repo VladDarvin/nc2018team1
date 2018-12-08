@@ -12,7 +12,7 @@ abstract class SequenceBuilder {
     protected final Logger LOGGER = LogManager.getLogger(this.getClass());
 
 
-    abstract void build (Mutable mutable) throws SQLException;
+    abstract Mutable build (Mutable mutable) throws SQLException;
 
     boolean noSuchElementsInObject(Map map) {
         return map == null || map.size() == 0;

@@ -18,12 +18,13 @@ class DeleteSequenceBuilder extends SequenceBuilder {
     }
 
     @Override
-    public void build(Mutable mutable) throws SQLException {
+    public Mutable build(Mutable mutable) throws SQLException {
         this.mutable = mutable;
         objectId = mutable.getObjectId();
         deleteObjReferences();
         deleteAttributes();
         deleteObject();
+        return mutable;
     }
 
     protected void logSQLError(SQLException e, String inTable) throws SQLException {
