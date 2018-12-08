@@ -1,10 +1,10 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
-import com.nc.airport.backend.eav.annotations.ObjectType;
-import com.nc.airport.backend.eav.annotations.attribute.value.ListField;
-import com.nc.airport.backend.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.model.entities.model.airplane.Extra;
+import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
+import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
+import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import lombok.Getter;
 import lombok.Setter;
 
