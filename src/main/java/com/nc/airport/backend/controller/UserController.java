@@ -64,13 +64,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/users/sortAscBy={field}", method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<User> sortUserAscBy(@PathVariable(name = "field") String field) {
         return userService.sortUsersByFieldAsc(field);
     }
 
     @RequestMapping(value = "/users/sortDescBy={field}", method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<User> sortUserDescBy(@PathVariable(name = "field") String field) {
         return userService.sortUsersByFieldDesc(field);
     }
