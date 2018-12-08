@@ -15,7 +15,9 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "user_id")
+    @SequenceGenerator(name = "user_id", sequenceName = "SEQ__USERS_ID",
+            initialValue = 50, allocationSize=1)
     private Long id;
     @Transient
     @JsonIgnore
