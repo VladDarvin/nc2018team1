@@ -10,10 +10,10 @@ import java.util.Map;
 
 class DeleteSequenceBuilder extends SequenceBuilder {
     private Mutable mutable;
-    private Connection connection;
     private BigInteger objectId;
 
     DeleteSequenceBuilder(Connection connection) {
+        super(connection);
         this.connection = connection;
     }
 
@@ -48,7 +48,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         deleteValues(mutable.getListValues());
     }
 
-    private void deleteValues(Map<BigInteger, ?> values) throws SQLException {
+    private void deleteValues(Map<BigInteger, ?> values) throws SQLException {//fixme attr_id for deletion is redundant
         if (noSuchElementsInObject(values)) return;
 
         try (PreparedStatement query = connection.prepareStatement(
@@ -64,7 +64,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void deleteObjReferences() throws SQLException {
+    private void deleteObjReferences() throws SQLException { //fixme attr_id for deletion is redundant
         Map<BigInteger, BigInteger> references = mutable.getReferences();
 
         if (noSuchElementsInObject(references)) return;

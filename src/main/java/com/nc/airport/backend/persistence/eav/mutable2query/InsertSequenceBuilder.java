@@ -14,10 +14,10 @@ import java.util.Map;
 class InsertSequenceBuilder extends SequenceBuilder {
     private org.apache.logging.log4j.Logger logger = LogManager.getLogger(InsertSequenceBuilder.class.getSimpleName());
     private Mutable mutable;
-    private Connection connection;
     private BigInteger objectId;
 
     InsertSequenceBuilder(Connection connection) {
+        super(connection);
         this.connection = connection;
     }
 
@@ -34,20 +34,6 @@ class InsertSequenceBuilder extends SequenceBuilder {
             logger.warn("Changed inserted mutable object_id from " + mutable.getObjectId() + " to " + objectId);
         mutable.setObjectId(objectId);
         return mutable;
-    }
-
-    private BigInteger getNewObjectId() throws SQLException {
-        try {
-            ResultSet nextVal = connection.createStatement()
-                    .executeQuery("SELECT COALESCE(MIN(O1.OBJECT_ID+1), 1)\n" +
-                            "  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID\n" +
-                            "  WHERE O2.OBJECT_ID IS NULL;");
-            nextVal.next();
-            return new BigInteger(nextVal.getString(1));
-        } catch (SQLException e) {
-            logger.error("Failed to get new object id from sequence");
-            throw e;
-        }
     }
 
     private void logSQLError(SQLException e, String inTable) throws SQLException{

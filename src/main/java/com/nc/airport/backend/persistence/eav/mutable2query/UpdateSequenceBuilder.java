@@ -11,17 +11,22 @@ import java.util.Map;
 
 class UpdateSequenceBuilder extends SequenceBuilder{
     private Mutable mutable;
-    private Connection connection;
     private BigInteger objectId;
 
     UpdateSequenceBuilder(Connection connection) {
+        super(connection);
         this.connection = connection;
     }
 
     @Override
     public Mutable build(Mutable mutable) throws SQLException {
         this.mutable = mutable;
-        objectId = mutable.getObjectId();
+
+        if (mutable.getObjectId() == null)
+            objectId = getNewObjectId();
+        else
+            objectId = mutable.getObjectId();
+
         updateObject();
         updateAttributes();
         return mutable;
