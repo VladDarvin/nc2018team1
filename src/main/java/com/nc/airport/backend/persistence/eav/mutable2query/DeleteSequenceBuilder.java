@@ -35,7 +35,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         try {
             PreparedStatement query = connection.prepareStatement(
                     "DELETE FROM OBJECTS WHERE OBJECT_ID = ?");
-            query.setObject(1, mutable.getObjectId());
+            query.setObject(1, objectId);
             query.executeUpdate();
         } catch (SQLException e) {
             logSQLError(e, "Objects");
@@ -48,16 +48,13 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         deleteValues(mutable.getListValues());
     }
 
-    private void deleteValues(Map<BigInteger, ?> values) throws SQLException {//fixme attr_id for deletion is redundant
+    private void deleteValues(Map<BigInteger, ?> values) throws SQLException {
         if (noSuchElementsInObject(values)) return;
 
         try (PreparedStatement query = connection.prepareStatement(
-                "DELETE FROM ATTRIBUTES WHERE ATTR_ID = ? AND OBJECT_ID = " + objectId)) {
-            for (Map.Entry<BigInteger, ?> entry : values.entrySet()) {
-                query.setObject(1, entry.getKey());
-                query.addBatch();
-            }
-            query.executeBatch();
+                "DELETE FROM ATTRIBUTES AND OBJECT_ID = ?")) {
+            query.setObject(1, objectId);
+            query.executeUpdate();
         }
         catch (SQLException e){
             logSQLError(e, "Attributes");
@@ -70,14 +67,9 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         if (noSuchElementsInObject(references)) return;
 
         try (PreparedStatement query = connection.prepareStatement(
-                "DELETE FROM OBJREFERENCE WHERE ATTR_ID = ? AND OBJECT_ID = ? AND REFERENCE = ?")) {
-            for (Map.Entry<BigInteger, BigInteger> entry : references.entrySet()) {
-                query.setObject(1, entry.getKey());
-                query.setObject(2, objectId);
-                query.setObject(3, entry.getValue());
-                query.addBatch();
-            }
-            query.executeBatch();
+                "DELETE FROM OBJREFERENCE WHERE OBJECT_ID = ?")) {
+            query.setObject(1, objectId);
+            query.executeUpdate();
         } catch (SQLException e) {
             logSQLError(e, "References");
         }
