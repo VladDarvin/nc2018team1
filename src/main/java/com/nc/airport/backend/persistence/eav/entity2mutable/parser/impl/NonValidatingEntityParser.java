@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.entity2mutable.parser;
+package com.nc.airport.backend.persistence.eav.entity2mutable.parser.impl;
 
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
@@ -6,6 +6,7 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateFi
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.persistence.eav.entity2mutable.parser.EntityParser;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;

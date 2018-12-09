@@ -1,10 +1,11 @@
-package com.nc.airport.backend.persistence.eav.entity2mutable.builder;
+package com.nc.airport.backend.persistence.eav.entity2mutable.builder.impl;
 
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.persistence.eav.entity2mutable.builder.EntityBuilder;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Marker;
