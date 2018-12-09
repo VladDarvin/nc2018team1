@@ -5,12 +5,14 @@ import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigInteger;
 
+@ObjectType(ID = "18")
 @Getter
 @Setter
-@ObjectType(ID = "18")
+@ToString(callSuper = true)
 public class TicketHistory extends BaseEntity {
 
     @ReferenceField(ID = "57")

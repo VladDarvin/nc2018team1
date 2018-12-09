@@ -6,12 +6,14 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.Refere
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigInteger;
 
-@Setter
-@Getter
 @ObjectType(ID = "5")
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Airplane extends BaseEntity {
 
     @ValueField(ID = "16")

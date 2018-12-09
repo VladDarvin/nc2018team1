@@ -5,10 +5,12 @@ import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ObjectType(ID = "7")
 @Getter
 @Setter
-@ObjectType(ID = "7")
+@ToString(callSuper = true)
 public class ExtraType extends BaseEntity {
 
     @ValueField(ID = "20")

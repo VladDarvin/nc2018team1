@@ -6,12 +6,14 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateFi
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@ObjectType(ID = "14")
 @Getter
 @Setter
-@ObjectType(ID = "14")
+@ToString(callSuper = true)
 public class Passport extends BaseEntity {
 
     @ValueField(ID = "41")

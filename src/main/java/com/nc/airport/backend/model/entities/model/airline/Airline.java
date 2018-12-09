@@ -5,10 +5,12 @@ import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ObjectType(ID = "4")
 @Getter
 @Setter
-@ObjectType(ID = "4")
+@ToString(callSuper = true)
 public class Airline extends BaseEntity {
 
     @ValueField(ID = "12")
