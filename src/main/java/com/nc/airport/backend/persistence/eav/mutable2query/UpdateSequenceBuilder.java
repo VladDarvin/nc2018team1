@@ -22,13 +22,17 @@ class UpdateSequenceBuilder extends SequenceBuilder{
     public Mutable build(Mutable mutable) throws SQLException {
         this.mutable = mutable;
 
-        if (mutable.getObjectId() == null)
+        if (mutable.getObjectId() == null) {
             objectId = getNewObjectId();
-        else
+            mutable.setObjectId(objectId);
+        }
+        else {
             objectId = mutable.getObjectId();
+        }
 
         updateObject();
         updateAttributes();
+        updateReferencesOfObjReferences();
         return mutable;
     }
 
@@ -89,25 +93,24 @@ class UpdateSequenceBuilder extends SequenceBuilder{
 
 
     /**
-     * Last two method are just there if they will be needed somehow.
-     * The usage of methods updating ObjReferences is not recommended
-     * because of usage only two of three peaces of PK-s,
-     * which is leading to possibility of conflicts.
-     * Also if you do need to use them - be careful - they are representing
-     * a dull insert queries, not merge, so if you try to update an ObjReference row
-     * that doesn't exist in the database yet, they will be neither updated nor inserted
+     * Can only update the REFERENCE value, can not change attr_id and object_id
      */
-
     private void updateReferencesOfObjReferences() throws SQLException {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 
-        String sql = "UPDATE OBJREFERENCE SET REFERENCE = ?" +      //not a MERGE query
-                " WHERE  ATTR_ID = ? AND OBJECT_ID = " + objectId;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        StringBuilder sql = new StringBuilder("MERGE INTO OBJREFERENCE R ")
+                .append(" USING (SELECT ? ATTR_ID, ? OBJECT_ID, ? REFERENCE FROM dual) NEW ")
+                .append("  ON (R.OBJECT_ID = NEW.OBJECT_ID AND R.ATTR_ID = NEW.ATTR_ID) ")
+                .append(" WHEN MATCHED THEN UPDATE ")
+                .append("  SET R.REFERENCE = NEW.REFERENCE ")
+                .append(" WHEN NOT MATCHED THEN INSERT ")
+                .append("  VALUES (NEW.ATTR_ID, NEW.REFERENCE, NEW.OBJECT_ID)");
+        try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             for (Map.Entry<BigInteger, BigInteger> entry : references.entrySet()) {
-                statement.setObject(1, entry.getValue());
-                statement.setObject(2, entry.getKey());
+                statement.setObject(1, entry.getKey());
+                statement.setObject(2, objectId);
+                statement.setObject(3, entry.getValue());
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -115,6 +118,4 @@ class UpdateSequenceBuilder extends SequenceBuilder{
             logSQLError(e, "References");
         }
     }
-
-
 }
