@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Log4j2
 public final class ReflectionHelper {
-//    private static Logger LOGGER = LogManager.getLogger(ReflectionHelper.class);
 
     private ReflectionHelper() {
     }
