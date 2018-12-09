@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(generator = "user_id")
     @SequenceGenerator(name = "user_id", sequenceName = "SEQ__USERS_ID",
-            initialValue = 50, allocationSize=1)
+            initialValue = 50, allocationSize = 1)
     private Long id;
     @Transient
     @JsonIgnore

@@ -32,14 +32,11 @@ import java.util.Arrays;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    JwtAuthorizationTokenFilter authenticationTokenFilter;
+    @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
-
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
-
-    @Autowired
-    JwtAuthorizationTokenFilter authenticationTokenFilter;
-
     @Value("${jwt.header}")
     private String tokenHeader;
 
