@@ -84,7 +84,7 @@ public final class ReflectionHelper {
      * Gets field list and filters it by specific annotation
      *
      * @param fields     initial list that needs to be filtered
-     * @param annotation filtering2sorting criteria
+     * @param annotation filtering criteria
      * @return list, every field of which contains annotation that is specified
      */
     public static List<Field> getFieldsFilteredByAnnotation(List<Field> fields, Class<? extends Annotation> annotation) {
