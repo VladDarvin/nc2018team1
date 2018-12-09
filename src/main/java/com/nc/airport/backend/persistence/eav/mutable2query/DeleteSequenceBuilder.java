@@ -52,7 +52,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         if (noSuchElementsInObject(values)) return;
 
         try (PreparedStatement query = connection.prepareStatement(
-                "DELETE FROM ATTRIBUTES AND OBJECT_ID = ?")) {
+                "DELETE FROM ATTRIBUTES WHERE OBJECT_ID = ?")) {
             query.setObject(1, objectId);
             query.executeUpdate();
         }
@@ -61,7 +61,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void deleteObjReferences() throws SQLException { //fixme attr_id for deletion is redundant
+    private void deleteObjReferences() throws SQLException {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
 
         if (noSuchElementsInObject(references)) return;
