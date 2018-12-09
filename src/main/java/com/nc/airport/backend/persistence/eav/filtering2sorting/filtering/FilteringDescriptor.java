@@ -1,10 +1,10 @@
-package com.nc.airport.backend.persistence.eav.filtering;
+package com.nc.airport.backend.persistence.eav.filtering2sorting.filtering;
 
 import java.util.List;
 
-class FilteringDescriptor {
+public class FilteringDescriptor {
 
-    String doFiltering(List<FilterEntity> filterEntities) {
+    public String doFiltering(List<FilterEntity> filterEntities) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("WHERE (");
         int countOfEntities = filterEntities.size();

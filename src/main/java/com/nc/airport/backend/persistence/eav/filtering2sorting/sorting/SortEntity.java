@@ -1,4 +1,6 @@
-package com.nc.airport.backend.persistence.eav.filtering;
+package com.nc.airport.backend.persistence.eav.filtering2sorting.sorting;
+
+import com.nc.airport.backend.persistence.eav.filtering2sorting.PropertiesEntityType;
 
 import java.math.BigInteger;
 

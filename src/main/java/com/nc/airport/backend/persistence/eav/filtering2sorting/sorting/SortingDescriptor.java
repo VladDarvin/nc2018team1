@@ -1,10 +1,10 @@
-package com.nc.airport.backend.persistence.eav.filtering;
+package com.nc.airport.backend.persistence.eav.filtering2sorting.sorting;
 
 import java.util.List;
 
-class SortingDescriptor {
+public class SortingDescriptor {
 
-    String doSorting(List<SortEntity> sortEntities) {
+    public String doSorting(List<SortEntity> sortEntities) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(" ORDER BY ");
         int countOfEntities = sortEntities.size();

@@ -1,4 +1,9 @@
-package com.nc.airport.backend.persistence.eav.filtering;
+package com.nc.airport.backend.persistence.eav.filtering2sorting;
+
+import com.nc.airport.backend.persistence.eav.filtering2sorting.filtering.FilterEntity;
+import com.nc.airport.backend.persistence.eav.filtering2sorting.filtering.FilteringDescriptor;
+import com.nc.airport.backend.persistence.eav.filtering2sorting.sorting.SortEntity;
+import com.nc.airport.backend.persistence.eav.filtering2sorting.sorting.SortingDescriptor;
 
 import java.util.List;
 
