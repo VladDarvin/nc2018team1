@@ -1,7 +1,7 @@
 package com.nc.airport.backend.persistence.eav.mutable2query;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
-import com.nc.airport.backend.persistence.eav.filtering.PagingDescriptor;
+import com.nc.airport.backend.persistence.eav.filtering2sorting.paging.PagingDescriptor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
