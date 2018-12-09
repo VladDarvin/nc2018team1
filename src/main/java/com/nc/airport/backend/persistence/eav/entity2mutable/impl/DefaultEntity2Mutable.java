@@ -1,7 +1,8 @@
-package com.nc.airport.backend.persistence.eav.entity2mutable;
+package com.nc.airport.backend.persistence.eav.entity2mutable.impl;
 
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
+import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.builder.EntityBuilder;
 import com.nc.airport.backend.persistence.eav.entity2mutable.parser.EntityParser;
 import org.springframework.beans.factory.annotation.Autowired;

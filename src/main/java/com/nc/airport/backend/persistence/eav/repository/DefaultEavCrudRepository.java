@@ -1,6 +1,7 @@
-package com.nc.airport.backend.repository;
+package com.nc.airport.backend.persistence.eav.repository;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.repository.EavCrudRepository;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
