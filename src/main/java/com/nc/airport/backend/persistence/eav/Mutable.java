@@ -2,6 +2,7 @@ package com.nc.airport.backend.persistence.eav;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -13,7 +14,9 @@ import java.util.Objects;
  * It contains all the information needed either to create the object instance
  * in database, or to create a pojo instance from the database records.
  */
-@Getter @Setter
+@ToString
+@Getter
+@Setter
 public class Mutable {
     /**
      * Objects.Object_id
@@ -77,19 +80,4 @@ public class Mutable {
         return Objects.hash(objectId);
     }
 
-    @Override
-    public String toString() {
-        return new StringBuilder(
-            "\nMutable object\n")
-            .append("Object id = ").append(objectId).append("\n")
-            .append("Object type id = ").append(objectTypeId).append("\n")
-            .append("Object parent id = ").append(parentId).append("\n")
-            .append("Name is ").append(objectName).append("\n")
-            .append("Description: ").append(objectDescription).append("\n")
-            .append("values = ").append(values).append("\n")
-            .append("date values = ").append(dateValues).append("\n")
-            .append("list values = ").append(listValues).append("\n")
-            .append("references = ").append(references).append("\n")
-                .toString();
-    }
 }
