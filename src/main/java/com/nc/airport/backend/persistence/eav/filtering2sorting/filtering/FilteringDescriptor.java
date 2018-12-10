@@ -6,7 +6,7 @@ public class FilteringDescriptor {
 
     public String doFiltering(List<FilterEntity> filterEntities) {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("WHERE (");
+        queryBuilder.append(" WHERE (");
         int countOfEntities = filterEntities.size();
         for (FilterEntity entity :
                 filterEntities) {
