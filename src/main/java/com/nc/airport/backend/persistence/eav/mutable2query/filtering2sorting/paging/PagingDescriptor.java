@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.filtering2sorting.paging;
+package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.paging;
 
 public class PagingDescriptor {
 

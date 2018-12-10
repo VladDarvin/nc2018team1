@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.filtering2sorting.sorting;
+package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting;
 
 import java.util.List;
 

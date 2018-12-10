@@ -1,6 +1,6 @@
-package com.nc.airport.backend.persistence.eav.filtering2sorting.sorting;
+package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting;
 
-import com.nc.airport.backend.persistence.eav.filtering2sorting.PropertiesEntityType;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.PropertiesEntityType;
 
 import java.math.BigInteger;
 
