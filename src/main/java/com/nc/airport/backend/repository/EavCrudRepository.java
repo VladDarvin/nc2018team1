@@ -4,6 +4,7 @@ import com.nc.airport.backend.model.BaseEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,28 +30,28 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @param entities must not be null.
      * @return the saved entities will never be null.
      */
-    <S extends T> Iterable<S> saveAll(Iterable<S> entities);
+    <S extends T> List<S> saveAll(Iterable<S> entities);
 
     /**
-     * Retrieves an entity by its id.
+     * Retrieves an entity by its object_id.
      *
-     * @param id must not be {@literal null}.
+     * @param objectId must not be {@literal null}.
      * @return the entity with the given id or {@literal Optional#empty()} if none found
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
-    Optional<T> findById(BigInteger id);
+    Optional<T> findById(BigInteger objectId);
 
     /**
-     * Returns all instances of the type.
+     * Returns all objects of the class that is supplied.
      *
      * @return all entities
      */
-    Iterable<T> findAll();
+    List<T> findAll(Class<T> entityClass);
 
     /**
-     * Returns all instances of the type with the given IDs.
+     * Returns all instances with the given object_ids.
      */
-    Iterable<T> findAllById(Iterable<T> ids);
+    List<T> findAllById(Iterable<BigInteger> objectIds);
 
     /**
      * Deletes a given entity.
@@ -60,12 +61,12 @@ public interface EavCrudRepository<T extends BaseEntity> {
     void delete(T entity);
 
     /**
-     * Deletes the entity with the given id.
+     * Deletes the entity with the given object_id.
      *
-     * @param id must not be {@literal null}.
+     * @param objectId must not be {@literal null}.
      * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
      */
-    void deleteById(BigInteger id);
+    void deleteById(BigInteger objectId);
 
     /**
      * Deletes the given entities.
@@ -73,4 +74,20 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
      */
     void deleteAll(Iterable<? extends T> entities);
+
+    /**
+     * Returns the number of entities available.
+     *
+     * @return the number of entities
+     */
+    BigInteger count(Class<T> entityClass);
+
+    /**
+     * Returns whether an entity with the given id exists.
+     *
+     * @param objectId must not be {@literal null}.
+     * @return {@literal true} if an entity with the given id exists, {@literal false} otherwise.
+     * @throws IllegalArgumentException if {@code id} is {@literal null}.
+     */
+    boolean existsById(BigInteger objectId);
 }
