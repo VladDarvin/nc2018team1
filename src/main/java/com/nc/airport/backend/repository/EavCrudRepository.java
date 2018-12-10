@@ -3,6 +3,7 @@ package com.nc.airport.backend.repository;
 import com.nc.airport.backend.model.BaseEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,10 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Use the returned instance for further operations as the save operation might
      * have changed the entity instance completely.
      *
-     * @param entity - must not be null
+     * @param entity must not be null
      * @return the saved entity will never be null.
      */
-    <S extends T> S save(S entity);
+    <S extends T> S save(@NotNull S entity);
 
     /**
      * Saves all given entities.
@@ -30,7 +31,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @param entities must not be null.
      * @return the saved entities will never be null.
      */
-    <S extends T> List<S> saveAll(Iterable<S> entities);
+    <S extends T> List<S> saveAll(@NotNull Iterable<S> entities);
 
     /**
      * Retrieves an entity by its object_id.
@@ -39,26 +40,30 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @return the entity with the given id or {@literal Optional#empty()} if none found
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
-    Optional<T> findById(BigInteger objectId);
+    Optional<T> findById(@NotNull BigInteger objectId,@NotNull Class<T> entityClass);
 
     /**
      * Returns all objects of the class that is supplied.
      *
      * @return all entities
      */
-    List<T> findAll(Class<T> entityClass);
+    List<T> findAll(@NotNull Class<T> entityClass);
 
     /**
      * Returns all instances with the given object_ids.
+     *
+     * @param objectIds ids instances of which are searched for. All the object_ids must be of a single type
+     * @param entityClass specifies the type of instances
+     * @return all instances of given type and given objectIds
      */
-    List<T> findAllById(Iterable<BigInteger> objectIds);
+    List<T> findAllById(@NotNull Iterable<BigInteger> objectIds,@NotNull Class<T> entityClass);
 
     /**
      * Deletes a given entity.
      *
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    void delete(T entity);
+    void delete(@NotNull T entity);
 
     /**
      * Deletes the entity with the given object_id.
@@ -66,21 +71,22 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @param objectId must not be {@literal null}.
      * @throws IllegalArgumentException in case the given {@code id} is {@literal null}
      */
-    void deleteById(BigInteger objectId);
+    void deleteById(@NotNull BigInteger objectId);
 
     /**
      * Deletes the given entities.
      *
      * @throws IllegalArgumentException in case the given {@link Iterable} is {@literal null}.
      */
-    void deleteAll(Iterable<? extends T> entities);
+    void deleteAll(@NotNull Iterable<? extends T> entities);
 
     /**
-     * Returns the number of entities available.
+     * Returns the number of entities available. Entity is specified by its class.
      *
+     * @param entityClass class that specifies what object is being searched. Must be not null
      * @return the number of entities
      */
-    BigInteger count(Class<T> entityClass);
+    BigInteger count(@NotNull Class<T> entityClass);
 
     /**
      * Returns whether an entity with the given id exists.
@@ -89,5 +95,5 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @return {@literal true} if an entity with the given id exists, {@literal false} otherwise.
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
-    boolean existsById(BigInteger objectId);
+    boolean existsById(@NotNull BigInteger objectId);
 }
