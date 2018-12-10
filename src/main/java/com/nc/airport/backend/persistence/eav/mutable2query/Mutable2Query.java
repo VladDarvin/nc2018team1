@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class Mutable2Query {
@@ -56,7 +57,7 @@ public class Mutable2Query {
                 sqlInsert(mutable);
                 insertedMutables.add(mutable);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to insert mutable named " + mutable.getObjectName());
+                logger.log(Level.ERROR, "Failed to insert mutable : " + mutable);
             }
         return insertedMutables;
     }
@@ -211,5 +212,64 @@ public class Mutable2Query {
                                            List<SortEntity> sortBy,
                                            List<FilterEntity> filterBy) throws SQLException {
         return null;
+    }
+
+    /**
+     * Returns a list of mutables with specific object_type_id
+     * and all possible attributes
+     *
+     * @param objTypeId search criteria
+     * @return list of mutables
+     */
+    public List<Mutable> getMutablesFromDB(BigInteger objTypeId) {
+        //TODO implement
+        throw new UnsupportedOperationException("List<Mutable> getMutablesFromDB(BigInteger objTypeId) not supported yet");
+
+    }
+
+    /**
+     * Tells if object with such object_id exists
+     *
+     * @param objectId search criteria
+     * @return true if exists, false if not. False if objectId is null.
+     */
+    public boolean existsByObjId(BigInteger objectId) {
+        if (objectId == null)
+            return false;
+
+        //TODO implement
+        throw new UnsupportedOperationException("boolean existsByObjId(BigInteger objectId) not supported yet");
+    }
+
+    /**
+     * Returns a single mutable with specified object id and all possible attributes
+     *
+     * @param objectId search criteria
+     * @return the mutable with given objectId or {@literal Optional#empty()} if none found
+     */
+    public Optional<Mutable> getSingleMutable(BigInteger objectId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Mutable getSingleMutable(BigInteger objectId) is not supported yet");
+    }
+
+    /**
+     * Returns number of objects of given type_id
+     *
+     * @param objTypeId search criteria
+     * @return number of objects
+     */
+    public BigInteger countById(BigInteger objTypeId) {
+        //TODO implement
+        throw new UnsupportedOperationException("BigInteger countById(BigInteger objTypeId)");
+    }
+
+    /**
+     * Deletes an object of given object_id
+     *
+     * @param objectId id of deleted object
+     */
+    public void sqlDelete(BigInteger objectId) {
+        //TODO implement
+        throw new UnsupportedOperationException("void sqlDelete(BigInteger objectId)");
     }
 }
