@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.filtering2sorting;
+package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting;
 
 public enum PropertiesEntityType implements EntityType {
     OBJECT_ID("OBJECT_ID"),
