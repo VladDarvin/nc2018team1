@@ -1,6 +1,7 @@
 package com.nc.airport.backend.persistence.eav.entity2mutable.util;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
@@ -20,8 +21,7 @@ import java.util.List;
 @Log4j2
 public final class ReflectionHelper {
 
-    private ReflectionHelper() {
-    }
+    private ReflectionHelper() {}
 
     /**
      * Gets field list from entity
@@ -156,5 +156,16 @@ public final class ReflectionHelper {
         }
         log.error("{DATA LOSS} No field in " + entityClazz + " with " + annotationClazz + " annotation.");
         return null;
+    }
+
+    /**
+     * Returns ID of ObjType annotation of a class
+     *
+     * @param entityClass annotated class
+     * @return ID of ObjType annotation
+     */
+    public static BigInteger getObjTypeId(Class<? extends BaseEntity> entityClass) {
+        Annotation objTypeAnnotation = entityClass.getAnnotation(ObjectType.class);
+        return getIdFromAnnotation(objTypeAnnotation);
     }
 }
