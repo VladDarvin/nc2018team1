@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,13 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        return usersRepository.save(user);
+        User existUser = usersRepository.findUserByEmail(user.getEmail());
+        if (existUser == null) {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            return usersRepository.save(user);
+        } else {
+            throw new EntityExistsException("User with this email already exists");
+        }
     }
 
     public User logIn(UserDTO user) {
