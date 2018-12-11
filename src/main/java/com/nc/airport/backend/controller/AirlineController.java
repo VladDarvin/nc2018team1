@@ -24,7 +24,7 @@ public class AirlineController {
     }
 
     @RequestMapping(value = "/airlines", method = RequestMethod.POST)
-    public Airline addNewUser(@RequestBody Airline airline) {
+    public Airline addNewAirline(@RequestBody Airline airline) {
         return airlineService.addAirline(airline);
     }
 
