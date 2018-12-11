@@ -5,6 +5,7 @@ import com.nc.airport.backend.repository.EavCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -18,5 +19,17 @@ public class AirlineService {
 
     public List<Airline> findAllAirlines() {
         return airlinesRepository.findAll(Airline.class);
+    }
+
+    public Airline addAirline(Airline airline) {
+        return airlinesRepository.save(airline);
+    }
+
+    public void deleteAirline(BigInteger id) {
+        airlinesRepository.deleteById(id);
+    }
+
+    public BigInteger getAirlinesAmount() {
+        return airlinesRepository.count(Airline.class);
     }
 }
