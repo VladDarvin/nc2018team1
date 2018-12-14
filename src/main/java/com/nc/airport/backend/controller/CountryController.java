@@ -23,22 +23,22 @@ public class CountryController {
         return countryService.findAllCountries();
     }
 
-    @RequestMapping(value = "/countries", method = RequestMethod.POST)
+    @PostMapping(value = "/countries")
     public Country addNewCountry(@RequestBody Country country) {
         return countryService.addCountry(country);
     }
 
-    @RequestMapping(value = "/countries", method = RequestMethod.PUT)
+    @PutMapping(value = "/countries")
     public Country editCountry(@RequestBody Country country) {
         return countryService.addCountry(country);
     }
 
-    @RequestMapping(value = "/countries/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/countries/{id}")
     public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
         countryService.deleteCountry(id);
     }
 
-    @RequestMapping(value = "/countries/count", method = RequestMethod.GET)
+    @GetMapping(value = "/countries/count")
     public BigInteger getCountOfCountries() {
         return countryService.getCountriesAmount();
     }
