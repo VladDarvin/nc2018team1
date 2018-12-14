@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.repository;
+package com.nc.airport.backend.persistence.eav.repository.impl;
 
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
@@ -6,7 +6,7 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.exception.CrudRepositoryException;
 import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
-import com.nc.airport.backend.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

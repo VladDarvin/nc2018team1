@@ -1,4 +1,4 @@
-package com.nc.airport.backend.repository;
+package com.nc.airport.backend.persistence.eav.repository;
 
 import com.nc.airport.backend.model.BaseEntity;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -44,6 +44,8 @@ public interface EavCrudRepository<T extends BaseEntity> {
 
     /**
      * Returns all objects of the class that is supplied.
+     * <h3>*WARNING*</h3>
+     * Heavily loads db if class has many attributes
      *
      * @return all entities
      */
