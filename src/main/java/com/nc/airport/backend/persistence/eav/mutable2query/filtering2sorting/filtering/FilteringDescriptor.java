@@ -1,7 +1,10 @@
 package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class FilteringDescriptor {
 
     public String doFiltering(List<FilterEntity> filterEntities) {
