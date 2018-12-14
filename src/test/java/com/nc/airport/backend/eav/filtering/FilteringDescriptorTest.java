@@ -1,4 +1,5 @@
 package com.nc.airport.backend.eav.filtering;
+
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilteringDescriptor;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.paging.PagingDescriptor;
@@ -13,9 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -35,15 +39,7 @@ public class FilteringDescriptorTest {
 
     @Before
     public void instantiateEntities() {
-        filterEntities = new ArrayList<>();
-        Set<Object> stringValues = new HashSet<>();
-        stringValues.add("mail@email.com");
-        stringValues.add("email@mail.ua");
-        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
-        Set<Object> intValues = new HashSet<>();
-        intValues.add(34);
-        intValues.add(87);
-        filterEntities.add(new FilterEntity(BigInteger.valueOf(5), intValues));
+
 
         sortEntities = new ArrayList<>();
         sortEntities.add(new SortEntity(BigInteger.valueOf(3), true));
@@ -54,16 +50,70 @@ public class FilteringDescriptorTest {
     }
 
     @Test
-    public void doFiltering() {
+    public void givenStringsAndIntsAsFilters_whenFilter_thenAsExpected() {
+        filterEntities = new ArrayList<>();
+
+        Set<Object> stringValues = new HashSet<>();
+        stringValues.add("mail@email.com");
+        stringValues.add("email@mail.ua");
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
+
+        Set<Object> intValues = new HashSet<>();
+        intValues.add(34);
+        intValues.add(87);
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(5), intValues));
+
         String expectedResult = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) AND (ATTR5 = ? OR ATTR5 = ?)";
         String result = filteringDescriptor.doFiltering(filterEntities);
+
+        log.info(result);
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void givenStringsFilter_whenFilter_thenAsExpected(){
+        filterEntities = new ArrayList<>();
+
+        Set<Object> stringValues = new HashSet<>();
+        stringValues.add("mail@email.com");
+        stringValues.add("email@mail.ua");
+
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
+
+        String expected = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?))";
+        String result = filteringDescriptor.doFiltering(filterEntities);
+
+        log.info(result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void given3StringsFilter_whenFilter_thenAsExpected(){
+        filterEntities = new ArrayList<>();
+
+        Set<Object> stringValues = new HashSet<>();
+        stringValues.add("mail@email.com");
+        stringValues.add("email@mail.ua");
+
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
+
+        String expected = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
+                "AND (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
+                "AND (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?))";
+        String result = filteringDescriptor.doFiltering(filterEntities);
+
+        log.info(result);
+        assertEquals(expected, result);
     }
 
     @Test
     public void doSorting() {
         String expectedResult = " ORDER BY ATTR3 ASC, ATTR13 DESC";
         String result = sortingDescriptor.doSorting(sortEntities);
+
+        log.info(result);
         assertEquals(expectedResult, result);
     }
 
@@ -71,6 +121,8 @@ public class FilteringDescriptorTest {
     public void doPaging() {
         String expectedResult = "SELECT * FROM ( SELECT a.*, rownum rnum FROM (SELECT * FROM USERS) a WHERE rownum <= 10) WHERE rnum >= 1";
         String result = pagingDescriptor.getPaging(query, 1, 10);
+
+        log.info(result);
         assertEquals(expectedResult, result);
     }
 }
