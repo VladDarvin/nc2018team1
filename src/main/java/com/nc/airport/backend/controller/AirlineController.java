@@ -23,22 +23,22 @@ public class AirlineController {
         return airlineService.findAllAirlines();
     }
 
-    @RequestMapping(value = "/airlines", method = RequestMethod.POST)
+    @PostMapping(value = "/airlines")
     public Airline addNewAirline(@RequestBody Airline airline) {
         return airlineService.addAirline(airline);
     }
 
-    @RequestMapping(value = "/airlines", method = RequestMethod.PUT)
+    @PutMapping(value = "/airlines")
     public Airline editAirline(@RequestBody Airline airline) {
         return airlineService.addAirline(airline);
     }
 
-    @RequestMapping(value = "/airlines/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/airlines/{id}")
     public void deleteAirline(@PathVariable(name = "id") BigInteger id) {
         airlineService.deleteAirline(id);
     }
 
-    @RequestMapping(value = "/airlines/count", method = RequestMethod.GET)
+    @GetMapping(value = "/airlines/count")
     public BigInteger getCountOfAirlines() {
         return airlineService.getAirlinesAmount();
     }
