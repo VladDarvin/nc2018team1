@@ -1,9 +1,17 @@
 package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class SortingDescriptor {
-
+    /**
+     * Generate sorting query string from list of sortEntities
+     *
+     * @param sortEntities list of sortEntities must not be null
+     * @return sorting string
+     */
     public String doSorting(List<SortEntity> sortEntities) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(" ORDER BY ");

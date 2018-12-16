@@ -1,9 +1,18 @@
 package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class FilteringDescriptor {
 
+    /**
+     * Generate filtering query string from list of FilterEntities
+     *
+     * @param filterEntities list of FilterEntities must not be null
+     * @return filtering string
+     */
     public String doFiltering(List<FilterEntity> filterEntities) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(" WHERE (");
