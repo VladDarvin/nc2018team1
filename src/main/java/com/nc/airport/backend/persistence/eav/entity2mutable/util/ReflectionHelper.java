@@ -119,6 +119,8 @@ public final class ReflectionHelper {
             idAsString = ((ListField) annotation).ID();
         } else if (annotationClass == ReferenceField.class) {
             idAsString = ((ReferenceField) annotation).ID();
+        } else if (annotationClass == ObjectType.class) {
+            idAsString = ((ObjectType) annotation).ID();
         } else {
             IllegalArgumentException exception = new IllegalArgumentException("Unknown annotation class " + annotationClass.getName());
             log.error(exception);
