@@ -6,11 +6,14 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.exception.CrudRepositoryException;
 import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,19 +38,13 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         S updatedEntity;
 
         Mutable updatedMutable;
-        //TODO move the saving logic to m2db
         try {
-            if (existsById(mutable.getObjectId())) {
-                log.info("Updating mutable : " + mutable);
-                updatedMutable = m2db.sqlUpdate(mutable);
-            } else {
-                log.info("Inserting mutable : " + mutable);
-                updatedMutable = m2db.sqlInsert(mutable);
-            }
+            updatedMutable = m2db.sqlUpdate(mutable);
         } catch (SQLException e) {
+//            TODO REMOVE WHEN IT WILL BE MOVED TO DB
             String message = "Entity was not saved properly";
             CrudRepositoryException exception = new CrudRepositoryException(message, e, entity);
-            log.error("Problems with saving entity", exception);
+            log.error(message, exception);
             throw exception;
         }
         updatedEntity = (S) e2m.convertMutableToEntity(updatedMutable, entity.getClass());
@@ -58,6 +55,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
 
     @Override
     public <S extends T> List<S> saveAll(Iterable<S> entities) {
+//             TODO MAKE A METHOD THAT SAVES ALL ENTITIES ON DB PART
         List<S> updatedEntities = new ArrayList<>();
         for (S entity : entities) {
             if (entity != null)
@@ -81,21 +79,13 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findAll(Class<T> entityClass) {
-        checkNull(entityClass);
-
-        BigInteger objTypeId = ReflectionHelper.getObjTypeId(entityClass);
-
-        List<Mutable> mutables = m2db.getMutablesFromDB(objTypeId);
-        List<T> entities = new ArrayList<>();
-        for (Mutable mutable : mutables) {
-            entities.add(e2m.convertMutableToEntity(mutable, entityClass));
-        }
-        return entities;
+    public List<T> findAll(@NotNull Class<T> entityClass) {
+        throw new UnsupportedOperationException("List<T> findAll(@NotNull Class<T> entityClass)");
     }
 
     @Override
-    public List<T> findAllById(Iterable<BigInteger> objectIds, Class<T> entityClass) {
+//             TODO NAMING, ALSO THINK IF THIS METHOD IS REALLY NEEDED
+    public List<T> findAll(Class<T> entityClass, Iterable<BigInteger> objectIds) {
         checkNull(entityClass);
 
         List<T> entities = new ArrayList<>();
@@ -105,6 +95,36 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         }
         return entities;
     }
+
+    @Override
+    public List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow) {
+        checkNull(entityClass);
+
+        List<Mutable> mutables;
+        try {
+            mutables = m2db.getFullMutables(ReflectionHelper.getObjTypeId(entityClass),
+                    startRow,
+                    endRow);
+        } catch (SQLException e) {
+//            TODO REMOVE WHEN IT WILL BE MOVED TO DB
+            String message = "Something's wrong, see logs [List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow)]";
+            RuntimeException exception = new CrudRepositoryException(message, e, null);
+            log.error(message, exception);
+            throw exception;
+        }
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, entityClass));
+        }
+        return entities;
+    }
+
+    @Override
+    public List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
+        return null;
+    }
+
 
     @Override
     public void delete(T entity) {
@@ -146,7 +166,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     /**
-     * Checks if argument is null. If so, logs and throws an exception.
+     * Checks if the argument is null. If so, logs and throws an exception.
      *
      * @param o checked argument
      * @throws IllegalArgumentException if argument is null
@@ -159,4 +179,6 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
             throw exception;
         }
     }
+
+
 }
