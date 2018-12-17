@@ -6,7 +6,6 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import junit.framework.TestCase;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +22,13 @@ import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Log4j2
-public class Mutable2QueryTest extends TestCase {
+public class FullCycleE2DBTest extends TestCase {
     @Autowired
     DataSource dataSource;
     @Autowired
     Entity2Mutable e2m;
     @Autowired
     Mutable2Query m2q;
-
-    private List<BigInteger> ids;
-
-    @Before
-    public void fillIdsList() {
-        ids = new ArrayList<>();
-        for (int i = 1; i <= 18; i++) {
-            ids.add(new BigInteger(String.valueOf(i)));
-        }
-    }
-
-    @Test
-    public void getListOfEAVClasses() {
-        try {
-            for (BigInteger id : ids) {
-                m2q.getFullMutables(id, 1, 10);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void givenBaseEntityDerivative_whenStoredInDBandReadBackUsingCorePart_thenEqual() throws SQLException {
