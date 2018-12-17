@@ -166,8 +166,6 @@ public class Mutable2Query {
 
     /**
      * @param objType               type of objects
-     * @param orderValuesInsideMaps true - values in each Map is in ascending order
-     *                              false - values in each Map is in order of passed List
      * @param values                values attr_id List
      * @param dateValues            dateValues attr_id List
      * @param listValues            listValues attr_id List
@@ -191,8 +189,6 @@ public class Mutable2Query {
 
     /**
      * @param objType               type of objects
-     * @param orderValuesInsideMaps true - values in each Map is in ascending order
-     *                              false - values in each Map is in order of passed List
      * @param values                values attr_id List
      * @param dateValues            dateValues attr_id List
      * @param listValues            listValues attr_id List
@@ -205,7 +201,6 @@ public class Mutable2Query {
      * @throws SQLException
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType,
-                                           boolean orderValuesInsideMaps,
                                            List<BigInteger> values,
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
