@@ -77,12 +77,11 @@ public final class ReflectionHelper {
         } catch (IllegalAccessException e) {
             log.error(e);
             e.printStackTrace();
-
         }
     }
 
     /**
-     * Gets field list and filters it by specific annotation. Does not modify the initial list.
+     * Gets field list and filters it by specific annotation
      *
      * @param fields     initial list that needs to be filtered
      * @param annotation filtering criteria
