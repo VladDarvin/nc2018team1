@@ -1,8 +1,8 @@
 package com.nc.airport.backend.persistence.eav.mutable2query;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
-import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
+import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import org.apache.logging.log4j.LogManager;
@@ -239,10 +239,5 @@ public class Mutable2Query {
     public void sqlDelete(BigInteger objectId) {
         //TODO implement
         throw new UnsupportedOperationException("void sqlDelete(BigInteger objectId)");
-    }
-
-    @Deprecated
-    public List<Mutable> getFullMutables (BigInteger objTypeId, int pFrom, int pTo) {
-        throw new UnsupportedOperationException();
     }
 }

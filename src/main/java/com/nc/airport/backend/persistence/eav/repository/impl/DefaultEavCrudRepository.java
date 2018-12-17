@@ -91,7 +91,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         checkNull(entityClass);
 
         List<Mutable> mutables;
-        mutables = m2db.getFullMutables(ReflectionHelper.getObjTypeId(entityClass),
+        mutables = m2db.getMutablesFromDB(ReflectionHelper.getObjTypeId(entityClass),
+                ReflectionHelper.getAttributeIds(entityClass),
                 startRow,
                 endRow);
 
