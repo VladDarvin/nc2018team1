@@ -50,6 +50,7 @@ public class Mutable2Query {
     }
 
     public List<Mutable> sqlInsertMultipleMutables(Collection<Mutable> mutables) {
+//        TODO MAKE AS SINGLE QUERY FOR PERFORMANCE INCREASE
         List<Mutable> insertedMutables = new ArrayList<>();
 
         for (Mutable mutable : mutables)
@@ -63,6 +64,7 @@ public class Mutable2Query {
     }
 
     public List<Mutable> sqlUpdateMultipleMutables(Collection<Mutable> mutables) {
+//        TODO MAKE AS SINGLE QUERY FOR PERFORMANCE INCREASE
         List<Mutable> updatedMutables = new ArrayList<>();
         for (Mutable mutable : mutables)
             try {
@@ -212,19 +214,6 @@ public class Mutable2Query {
                                            List<SortEntity> sortBy,
                                            List<FilterEntity> filterBy) throws SQLException {
         return null;
-    }
-
-    /**
-     * Returns a list of mutables with specific object_type_id
-     * and all possible attributes
-     *
-     * @param objTypeId search criteria
-     * @return list of mutables
-     */
-    public List<Mutable> getMutablesFromDB(BigInteger objTypeId) {
-        //TODO implement
-        throw new UnsupportedOperationException("List<Mutable> getMutablesFromDB(BigInteger objTypeId) not supported yet");
-
     }
 
     /**
