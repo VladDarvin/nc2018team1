@@ -102,7 +102,7 @@ public final class ReflectionHelper {
     /**
      * Retrieves id value that is stored inside of an Annotation.
      *
-     * @param annotation only ValueField, DateField, ListField and ReferenceField annotations are allowed
+     * @param annotation only ObjectType, ValueField, DateField, ListField and ReferenceField annotations are allowed
      * @return id as BigInteger
      * @throws IllegalArgumentException if annotation is other than those described earlier
      * @throws IllegalArgumentException if id of annotation is invalid
