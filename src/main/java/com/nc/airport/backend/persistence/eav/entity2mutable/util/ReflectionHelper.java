@@ -77,11 +77,12 @@ public final class ReflectionHelper {
         } catch (IllegalAccessException e) {
             log.error(e);
             e.printStackTrace();
+
         }
     }
 
     /**
-     * Gets field list and filters it by specific annotation
+     * Gets field list and filters it by specific annotation. Does not modify the initial list.
      *
      * @param fields     initial list that needs to be filtered
      * @param annotation filtering criteria
@@ -102,7 +103,7 @@ public final class ReflectionHelper {
     /**
      * Retrieves id value that is stored inside of an Annotation.
      *
-     * @param annotation only ValueField, DateField, ListField and ReferenceField annotations are allowed
+     * @param annotation only ValueField, DateField, ListField, ReferenceField and ObjectType annotations are allowed
      * @return id as BigInteger
      * @throws IllegalArgumentException if annotation is other than those described earlier
      * @throws IllegalArgumentException if id of annotation is invalid
@@ -169,5 +170,48 @@ public final class ReflectionHelper {
     public static BigInteger getObjTypeId(Class<? extends BaseEntity> entityClass) {
         Annotation objTypeAnnotation = entityClass.getAnnotation(ObjectType.class);
         return getIdFromAnnotation(objTypeAnnotation);
+    }
+
+
+    /**
+     * Returns an unsorted list of attribute ids which annotations of the passed class contain.
+     *
+     * @param entityClass a class that is scanned for annotations
+     * @return unsorted list of attribute ids that class contains.
+     */
+    public static List<BigInteger> getAttributeIds(Class<? extends BaseEntity> entityClass) {
+        List<BigInteger> attributeIds = new ArrayList<>();
+
+        List<Field> fields = getAllFields(entityClass);
+
+        attributeIds.addAll(getAnnotationIdsFromFields(fields, ValueField.class));
+        attributeIds.addAll(getAnnotationIdsFromFields(fields, DateField.class));
+        attributeIds.addAll(getAnnotationIdsFromFields(fields, ListField.class));
+        attributeIds.addAll(getAnnotationIdsFromFields(fields, ReferenceField.class));
+
+        return attributeIds;
+    }
+
+    /**
+     * Returns a sorted list of attribute ids which annotations of the passed class contain.
+     *
+     * @param entityClass a class that is scanned for annotations
+     * @return sorted list of attribute ids that class contains.
+     */
+    public static List<BigInteger> getSortedAttributeIds(Class<? extends BaseEntity> entityClass) {
+        List<BigInteger> attributeIds = getAttributeIds(entityClass);
+        attributeIds.sort(BigInteger::compareTo);
+        return attributeIds;
+    }
+
+    private static List<BigInteger> getAnnotationIdsFromFields(List<Field> fields, Class<? extends Annotation> annotationClass) {
+        List<BigInteger> ids = new ArrayList<>();
+
+        for (Field field : getFieldsFilteredByAnnotation(fields, annotationClass)) {
+            Annotation annotation = field.getAnnotation(annotationClass);
+            ids.add(getIdFromAnnotation(annotation));
+        }
+
+        return ids;
     }
 }
