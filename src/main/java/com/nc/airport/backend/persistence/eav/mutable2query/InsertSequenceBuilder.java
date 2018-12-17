@@ -22,7 +22,7 @@ class InsertSequenceBuilder extends SequenceBuilder {
     }
 
     @Override
-    public Mutable build(Mutable mutable) throws SQLException {
+    public Mutable build(Mutable mutable) {
         this.mutable = mutable;
         objectId = getNewObjectId();
 
@@ -36,11 +36,11 @@ class InsertSequenceBuilder extends SequenceBuilder {
         return mutable;
     }
 
-    private void logSQLError(SQLException e, String inTable) throws SQLException{
+    private void logSQLError(SQLException e, String inTable) {
         logSQLError(e, inTable, "insertion");
     }
 
-    private void insertIntoObjects() throws SQLException{
+    private void insertIntoObjects() {
         try (PreparedStatement statement
                      = connection.prepareStatement(
                 "INSERT INTO OBJECTS " +
@@ -57,13 +57,13 @@ class InsertSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void insertIntoAttributes() throws SQLException {
+    private void insertIntoAttributes() {
         insertValues(mutable.getValues(), "value");
         insertValues(mutable.getDateValues(), "date_value");
         insertValues(mutable.getListValues(), "list_value_id");
     }
 
-    private void insertValues(Map<BigInteger, ?> values, String valueType) throws SQLException {
+    private void insertValues(Map<BigInteger, ?> values, String valueType) {
         if (noSuchElementsInObject(values)) return;
 
         String sql = "INSERT INTO ATTRIBUTES (attr_id, " + valueType + ", object_id) VALUES (?,?, " + objectId + ")";
@@ -79,7 +79,7 @@ class InsertSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void insertIntoObjReferences() throws SQLException {
+    private void insertIntoObjReferences() {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 

@@ -19,7 +19,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
     }
 
     @Override
-    public Mutable build(Mutable mutable) throws SQLException {
+    public Mutable build(Mutable mutable) {
         this.mutable = mutable;
 
         if (mutable.getObjectId() == null) {
@@ -36,7 +36,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
         return mutable;
     }
 
-    protected void logSQLError(SQLException e, String inTable) throws SQLException {
+    protected void logSQLError(SQLException e, String inTable) {
         logSQLError(e, inTable, "update");
     }
 
@@ -44,7 +44,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
      * This method has a restriction to not change Object_ID or Object_Type_ID
      * for security purposes.
      */
-    protected void updateObject() throws SQLException {
+    protected void updateObject() {
         StringBuilder sql = new StringBuilder("MERGE INTO OBJECTS O")
                 .append(" USING (SELECT ? PARENT_ID, ? NAME, ? DESCRIPTION, ").append(objectId)
                 .append(" OBJECT_ID FROM dual) NEW ON (O.OBJECT_ID = NEW.OBJECT_ID)")
@@ -64,13 +64,13 @@ class UpdateSequenceBuilder extends SequenceBuilder{
         }
     }
 
-    protected void updateAttributes() throws SQLException {
+    protected void updateAttributes() {
         updateValues(mutable.getValues(), "VALUE ");
         updateValues(mutable.getDateValues(), "DATE_VALUE ");
         updateValues(mutable.getListValues(), "LIST_VALUE_ID");
     }
 
-    private void updateValues(Map<BigInteger, ?> values, String valueType) throws SQLException {
+    private void updateValues(Map<BigInteger, ?> values, String valueType) {
         if (noSuchElementsInObject(values)) return;
         StringBuilder sql =
         new StringBuilder("MERGE INTO ATTRIBUTES A ")
@@ -95,7 +95,7 @@ class UpdateSequenceBuilder extends SequenceBuilder{
     /**
      * Can only update the REFERENCE value, can not change attr_id and object_id
      */
-    private void updateReferencesOfObjReferences() throws SQLException {
+    private void updateReferencesOfObjReferences() {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         if (noSuchElementsInObject(references)) return;
 

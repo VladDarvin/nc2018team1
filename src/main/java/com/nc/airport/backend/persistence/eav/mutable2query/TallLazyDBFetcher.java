@@ -1,24 +1,23 @@
 package com.nc.airport.backend.persistence.eav.mutable2query;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
-import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.paging.PagingDescriptor;
+import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
+import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
+import com.nc.airport.backend.persistence.eav.filtering2sorting.paging.PagingDescriptor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class TallLazyDBFetcher {
+class TallLazyDBFetcher {
     private Logger logger = LogManager.getLogger(TallLazyDBFetcher.class.getSimpleName());
     private Connection connection;
 
-    public TallLazyDBFetcher(Connection connection) {
+    TallLazyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
@@ -76,7 +75,7 @@ public class TallLazyDBFetcher {
                 .append("ORDER BY O.OBJECT_ID, A.ATTR_ID");
     }
 
-    Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
+    Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
         Mutable mutable = new Mutable();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -91,23 +90,17 @@ public class TallLazyDBFetcher {
             pullAttributesForSingleObj(result, mutable, Collections.max(attributesId));
             pullGeneralInfo(result, mutable);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Could not get mutable " + objectId);
-            throw e;
+            logger.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            if (result != null)
-                result.close();
-            else logger.log(Level.ERROR, "Could not define ResultSet");
-
-            if (statement != null)
-                statement.close();
-            else logger.log(Level.ERROR, "Could not define Statement");
+            closeResultSetAndStatement(result, statement);
         }
 
         return mutable;
     }
 
     List<Mutable> getMutables(BigInteger objType, Collection<BigInteger> attributesId,
-                              int pagingFrom, int pagingTo) throws SQLException {
+                              int pagingFrom, int pagingTo) {
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -129,18 +122,17 @@ public class TallLazyDBFetcher {
                 pullGeneralInfo(result, mutable);
                 mutables.add(mutable);
             }
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            if (result != null)
-                result.close();
-
-            if (statement != null)
-                statement.close();
+            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
 
-    public List<Mutable> getMutables(List<BigInteger> objectsId,
-                              Collection<BigInteger> attributesId) throws SQLException {
+    List<Mutable> getMutables(List<BigInteger> objectsId,
+                              Collection<BigInteger> attributesId) {
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -160,14 +152,30 @@ public class TallLazyDBFetcher {
                 pullGeneralInfo(result, mutable);
                 mutables.add(mutable);
             }
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            if (result != null)
-                result.close();
-
-            if (statement != null)
-                statement.close();
+            closeResultSetAndStatement(result, statement);
         }
         return mutables;
+    }
+
+    private void closeResultSetAndStatement(ResultSet result, Statement statement) {
+        if (result != null)
+            try {
+                result.close();
+            } catch (SQLException e) {
+                logger.error(e);
+                throw new DatabaseConnectionException("Could not close result set", e);
+            }
+        if (statement != null)
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                logger.error(e);
+                throw new DatabaseConnectionException("Could not close statement", e);
+            }
     }
 
     /*
@@ -200,39 +208,56 @@ public class TallLazyDBFetcher {
         return attrSet;
     }
 
-    private void pullGeneralInfo(ResultSet result, Mutable mutable) throws SQLException {
-        mutable.setObjectId(applyBigInt(1, result));
-        mutable.setParentId(applyBigInt(2, result));
-        mutable.setObjectTypeId(applyBigInt(3, result));
-        mutable.setObjectName(result.getString(4));
-        mutable.setObjectDescription(result.getString(5));
+    private void pullGeneralInfo(ResultSet result, Mutable mutable) {
+        try {
+            mutable.setObjectId(applyBigInt(1, result));
+            mutable.setParentId(applyBigInt(2, result));
+            mutable.setObjectTypeId(applyBigInt(3, result));
+            mutable.setObjectName(result.getString(4));
+            mutable.setObjectDescription(result.getString(5));
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Failed to pull OBJECTS table data", e);
+        }
     }
 
-    private void pullAttributes(ResultSet result, Mutable mutable, BigInteger lastAttrId) throws SQLException {
+    private void pullAttributes(ResultSet result, Mutable mutable, BigInteger lastAttrId) {
         Map<BigInteger, String> values = new LinkedHashMap<>();
         Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
 
-        while (result.next()) {
-            pullAttr(result, values, references, listValues, dateValues);
-            if (result.getString(6).equals(lastAttrId.toString()))
-                break;
+        try {
+            while (result.next()) {
+                pullAttr(result, values, references, listValues, dateValues);
+                if (result.getString(6).equals(lastAttrId.toString()))
+                    break;
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Failed pulling attributes from result set", e);
         }
 
         setMutableAttributes(mutable, values, dateValues, listValues, references);
     }
 
-    private void pullAttributesForSingleObj(ResultSet result, Mutable mutable, BigInteger lastAttrId) throws SQLException {
+    private void pullAttributesForSingleObj(ResultSet result,
+                                            Mutable mutable,
+                                            BigInteger lastAttrId) {
         Map<BigInteger, String> values = new LinkedHashMap<>();
         Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
 
-        while (result.next()) {
-            pullAttr(result, values, references, listValues, dateValues);
-            if (result.getString(6).equals(lastAttrId.toString()))
-                break;
+        try {
+            while (result.next()) {
+                pullAttr(result, values, references, listValues, dateValues);
+                if (result.getString(6).equals(lastAttrId.toString()))
+                    break;
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Failed pulling attributes from result set", e);
         }
 
         setMutableAttributes(mutable, values, dateValues, listValues, references);
@@ -281,37 +306,62 @@ public class TallLazyDBFetcher {
     }
 
     private ResultSet resultSingleMutable(Collection<BigInteger> attributesId,
-                                          PreparedStatement statement) throws SQLException {
+                                          PreparedStatement statement) {
 
         setAttributes(statement, attributesId, 0);
-        return statement.executeQuery();
+        try {
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Error is found after query execution", e);
+        }
     }
 
     private ResultSet resultMultipleMutables(Collection<BigInteger> attributesId,
-                                             PreparedStatement statement) throws SQLException {
+                                             PreparedStatement statement) {
 
         setAttributes(statement, attributesId, 0);
-        return statement.executeQuery();
+        try {
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Error is found after query execution", e);
+        }
     }
 
     private ResultSet resultMultipleMutables(Collection<BigInteger> objectsId,
                                              Collection<BigInteger> attributesId,
-                                             PreparedStatement statement) throws SQLException {
+                                             PreparedStatement statement) {
         setObjects(statement, objectsId);
         setAttributes(statement, attributesId, objectsId.size());
-        return statement.executeQuery();
+        try {
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Error is found after query execution", e);
+        }
     }
 
     private void setAttributes(PreparedStatement statement,
                                Collection<BigInteger> attributesId,
-                               int indexesBefore) throws SQLException {
+                               int indexesBefore) {
 
-        setElements(statement, attributesId, indexesBefore);
+        try {
+            setElements(statement, attributesId, indexesBefore);
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Could not set given attributes", e);
+        }
     }
 
     private void setObjects(PreparedStatement statement,
-                            Collection<BigInteger> objectsId) throws SQLException {
-        setElements(statement, objectsId, 0);
+                            Collection<BigInteger> objectsId) {
+        try {
+            setElements(statement, objectsId, 0);
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new BadDBRequestException("Could not set given objects", e);
+        }
     }
 
     private void setElements(PreparedStatement statement,

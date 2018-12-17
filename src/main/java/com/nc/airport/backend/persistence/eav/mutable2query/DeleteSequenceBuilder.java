@@ -18,7 +18,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
     }
 
     @Override
-    public Mutable build(Mutable mutable) throws SQLException {
+    public Mutable build(Mutable mutable) {
         this.mutable = mutable;
         objectId = mutable.getObjectId();
         deleteObjReferences();
@@ -27,11 +27,11 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         return mutable;
     }
 
-    protected void logSQLError(SQLException e, String inTable) throws SQLException {
+    protected void logSQLError(SQLException e, String inTable) {
         logSQLError(e, inTable, "Deletion");
     }
 
-    void deleteObject() throws SQLException {
+    void deleteObject() {
         try {
             PreparedStatement query = connection.prepareStatement(
                     "DELETE FROM OBJECTS WHERE OBJECT_ID = ?");
@@ -42,13 +42,13 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void deleteAttributes() throws SQLException {
+    private void deleteAttributes() {
         deleteValues(mutable.getValues());
         deleteValues(mutable.getDateValues());
         deleteValues(mutable.getListValues());
     }
 
-    private void deleteValues(Map<BigInteger, ?> values) throws SQLException {
+    private void deleteValues(Map<BigInteger, ?> values) {
         if (noSuchElementsInObject(values)) return;
 
         try (PreparedStatement query = connection.prepareStatement(
@@ -61,7 +61,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void deleteObjReferences() throws SQLException {
+    private void deleteObjReferences() {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
 
         if (noSuchElementsInObject(references)) return;

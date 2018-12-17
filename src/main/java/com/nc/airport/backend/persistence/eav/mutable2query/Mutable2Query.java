@@ -29,70 +29,59 @@ public class Mutable2Query {
         } catch (SQLException e) {
             String message = "Cannot establish connection";
             logger.error(message, e);
-            //FIXME wrap exception into m2q exception and throw
+            throw new DatabaseConnectionException("Couldn't get connection from dataSource", e);
         }
     }
 
-    public Mutable sqlInsert(Mutable mutable) throws SQLException {
+    public Mutable sqlInsert(Mutable mutable) {
         return buildASequence(new InsertSequenceBuilder(connection), mutable);
     }
 
-    public Mutable sqlUpdate(Mutable mutable) throws SQLException {
+    public Mutable sqlUpdate(Mutable mutable) {
         return buildASequence(new UpdateSequenceBuilder(connection), mutable);
     }
 
-    public Mutable sqlDelete(Mutable mutable) throws SQLException {
+    public Mutable sqlDelete(Mutable mutable) {
         return buildASequence(new DeleteSequenceBuilder(connection), mutable);
     }
 
-    private Mutable buildASequence(SequenceBuilder sequenceBuilder, Mutable mutable) throws SQLException {
+    private Mutable buildASequence(SequenceBuilder sequenceBuilder, Mutable mutable) {
         return sequenceBuilder.build(mutable);
     }
 
     public List<Mutable> sqlInsertMultipleMutables(Collection<Mutable> mutables) {
-//        TODO MAKE AS SINGLE QUERY FOR PERFORMANCE INCREASE
         List<Mutable> insertedMutables = new ArrayList<>();
 
-        for (Mutable mutable : mutables)
-            try {
-                sqlInsert(mutable);
-                insertedMutables.add(mutable);
-            } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to insert mutable : " + mutable);
-            }
+        for (Mutable mutable : mutables) {
+            sqlInsert(mutable);
+            insertedMutables.add(mutable);
+        }
+
         return insertedMutables;
     }
 
     public List<Mutable> sqlUpdateMultipleMutables(Collection<Mutable> mutables) {
-//        TODO MAKE AS SINGLE QUERY FOR PERFORMANCE INCREASE
         List<Mutable> updatedMutables = new ArrayList<>();
-        for (Mutable mutable : mutables)
-            try {
-                sqlUpdate(mutable);
-                updatedMutables.add(mutable);
-            } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to update mutable named " + mutable.getObjectName());
-            }
+        for (Mutable mutable : mutables) {
+            sqlUpdate(mutable);
+            updatedMutables.add(mutable);
+        }
+
         return updatedMutables;
     }
 
     public List<Mutable> sqlDeleteMultipleMutables(Collection<Mutable> mutables) {
         List<Mutable> deletedMutables = new ArrayList<>();
-        for (Mutable mutable : mutables)
-            try {
-                sqlDelete(mutable);
-                deletedMutables.add(mutable);
-            } catch (SQLException e) {
-                logger.log(Level.ERROR, "Failed to delete mutable named " + mutable.getObjectName());
-            }
+        for (Mutable mutable : mutables) {
+            sqlDelete(mutable);
+            deletedMutables.add(mutable);
+        }
         return deletedMutables;
     }
 
     /**
      * Fetching one Mutable object from database
      * with specified attributes of object or of any of object`s parents
-     * <p>
-     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
      *
      * @param objectId     ID of the object in OBJECTS table which is also stored or will be included
      *                     in objectId field of specified Mutable object
@@ -100,13 +89,17 @@ public class Mutable2Query {
      *                     included in each Mutable object
      * @return Mutable object with specified attributes (those which was not specified neither will be in
      * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
-     * @throws SQLException #feelsbadman
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
-    public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
+    public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
         return new TallLazyDBFetcher(connection)
                 .getMutable(objectId, attributesId);
     }
 
+    //just don't use this method
+    @Deprecated
     public List<Mutable> getFullMutables(BigInteger objType,
                                          int pagingFrom, int pagingTo) throws SQLException {
 
@@ -117,8 +110,6 @@ public class Mutable2Query {
     /**
      * Fetching multiple Mutable objects from database
      * with specified attributes of object or of any of object`s parents
-     * <p>
-     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
      *
      * @param objType      ID of the object type in OBJTYPE table which is also stored or will be included
      *                     in objectTypeId field of specified Mutable object
@@ -129,14 +120,14 @@ public class Mutable2Query {
      * @return List of Mutable objects with specified attributes
      * (those which was not specified neither will be in the resulting Mutable,
      * nor will be replaced with nulls, they just won`t be there)
-     * @throws SQLException might have multiple meanings
-     *                      case = Exhausted Resultset - means you tried to put attributes to object which originally
-     *                      belongs to a child of the object or doesn't belong to object's hierarchical branch at all
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      * @see if your objectsId is of objects, that can contain your attributesId
      * this means that attributesId must be inherited or declared in objects' class
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType, Collection<BigInteger> attributesId,
-                                           int pagingFrom, int pagingTo) throws SQLException {
+                                           int pagingFrom, int pagingTo) {
         return new TallLazyDBFetcher(connection)
                 .getMutables(objType, attributesId, pagingFrom, pagingTo);
     }
@@ -144,22 +135,20 @@ public class Mutable2Query {
     /**
      * Fetching multiple Mutable objects from database
      * with specified attributes of object or of any of object`s parents
-     * <p>
-     * Each Map is filled in ascending order of attr_id, including attributes that was inherited from parents
      *
      * @param objectsId    Collection of objects Id
      * @param attributesId Collection of all attributes (values, date_values, list_value_ids and references)
      * @return List of Mutable objects with specified attributes
      * (those which was not specified neither will be in the resulting Mutable,
      * nor will be replaced with nulls, they just won`t be there)
-     * @throws SQLException might have multiple meanings
-     *                      case = Exhausted Resultset - means you tried to put attributes to object which originally
-     *                      belongs to a child of the object or doesn't belong to object's hierarchical branch at all
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      * @see if your objectsId is of objects, that can contain your attributesId
      * this means that attributesId must be inherited or declared in objects' class
      */
     public List<Mutable> getMutablesFromDB(List<BigInteger> objectsId,
-                                           Collection<BigInteger> attributesId) throws SQLException {
+                                           Collection<BigInteger> attributesId) {
         return new TallLazyDBFetcher(connection)
                 .getMutables(objectsId, attributesId);
     }
@@ -174,16 +163,17 @@ public class Mutable2Query {
      * @param pagingTo
      * @param sortBy
      * @return List of Mutable objects with specified attributes
-     * @throws SQLException
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType,
-                                           boolean orderValuesInsideMaps,
                                            List<BigInteger> values,
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
                                            List<BigInteger> references,
                                            int pagingFrom, int pagingTo,
-                                           List<SortEntity> sortBy) throws SQLException {
+                                           List<SortEntity> sortBy) {
         return null;
     }
 
@@ -198,7 +188,9 @@ public class Mutable2Query {
      * @param sortBy
      * @param filterBy
      * @return List of Mutable objects with specified attributes
-     * @throws SQLException
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public List<Mutable> getMutablesFromDB(BigInteger objType,
                                            List<BigInteger> values,
@@ -207,7 +199,7 @@ public class Mutable2Query {
                                            List<BigInteger> references,
                                            int pagingFrom, int pagingTo,
                                            List<SortEntity> sortBy,
-                                           List<FilterEntity> filterBy) throws SQLException {
+                                           List<FilterEntity> filterBy) {
         return null;
     }
 
