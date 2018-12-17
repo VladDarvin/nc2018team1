@@ -1,9 +1,10 @@
 package com.nc.airport.backend.persistence.eav.mutable2query;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
+import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
+import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -96,15 +97,6 @@ public class Mutable2Query {
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
         return new TallLazyDBFetcher(connection)
                 .getMutable(objectId, attributesId);
-    }
-
-    //just don't use this method
-    @Deprecated
-    public List<Mutable> getFullMutables(BigInteger objType,
-                                         int pagingFrom, int pagingTo) throws SQLException {
-
-
-        return new TallLazyDBFetcher(connection).new FullObjectsFetcher().getMutables(objType, pagingFrom, pagingTo);
     }
 
     /**
@@ -247,5 +239,10 @@ public class Mutable2Query {
     public void sqlDelete(BigInteger objectId) {
         //TODO implement
         throw new UnsupportedOperationException("void sqlDelete(BigInteger objectId)");
+    }
+
+    @Deprecated
+    public List<Mutable> getFullMutables (BigInteger objTypeId, int pFrom, int pTo) {
+        throw new UnsupportedOperationException();
     }
 }

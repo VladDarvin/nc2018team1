@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.exception;
+package com.nc.airport.backend.persistence.eav.exceptions;
 
 import com.nc.airport.backend.model.BaseEntity;
 

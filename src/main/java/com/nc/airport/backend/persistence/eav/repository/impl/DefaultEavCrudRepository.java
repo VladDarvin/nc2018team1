@@ -4,7 +4,8 @@ import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
-import com.nc.airport.backend.persistence.eav.exception.CrudRepositoryException;
+import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
+import com.nc.airport.backend.persistence.eav.exceptions.CrudRepositoryException;
 import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
@@ -40,7 +41,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         Mutable updatedMutable;
         try {
             updatedMutable = m2db.sqlUpdate(mutable);
-        } catch (SQLException e) {
+        } catch (BadDBRequestException e) {
 //            TODO REMOVE WHEN IT WILL BE MOVED TO DB
             String message = "Entity was not saved properly";
             CrudRepositoryException exception = new CrudRepositoryException(message, e, entity);
@@ -105,7 +106,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
             mutables = m2db.getFullMutables(ReflectionHelper.getObjTypeId(entityClass),
                     startRow,
                     endRow);
-        } catch (SQLException e) {
+        } catch (BadDBRequestException e) {
 //            TODO REMOVE WHEN IT WILL BE MOVED TO DB
             String message = "Something's wrong, see logs [List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow)]";
             RuntimeException exception = new CrudRepositoryException(message, e, null);
