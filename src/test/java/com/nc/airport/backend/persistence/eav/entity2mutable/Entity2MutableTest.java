@@ -2,21 +2,17 @@ package com.nc.airport.backend.persistence.eav.entity2mutable;
 
 import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.persistence.eav.Mutable;
+import com.nc.airport.backend.persistence.eav.entity2mutable.builder.impl.DefaultEntityBuilder;
+import com.nc.airport.backend.persistence.eav.entity2mutable.impl.DefaultEntity2Mutable;
+import com.nc.airport.backend.persistence.eav.entity2mutable.parser.impl.NonValidatingEntityParser;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
 @Log4j2
 public class Entity2MutableTest {
-    @Autowired
-    private Entity2Mutable e2m;
+    private Entity2Mutable e2m = new DefaultEntity2Mutable(new NonValidatingEntityParser(), new DefaultEntityBuilder());
     private Airline initialAirline;
 
     @Before
