@@ -18,6 +18,7 @@ public class AirlineService {
     }
 
     public List<Airline> findAllAirlines() {
+//         TODO USE FINDSLICE
         return airlinesRepository.findAll(Airline.class);
     }
 

@@ -18,6 +18,7 @@ public class CountryService {
     }
 
     public List<Country> findAllCountries() {
+//         TODO USE FINDSLICE
         return countriesRepository.findAll(Country.class);
     }
 
