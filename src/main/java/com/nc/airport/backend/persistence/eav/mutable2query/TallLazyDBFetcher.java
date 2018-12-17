@@ -14,14 +14,11 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/**
- * Created by User on 30.11.2018.
- */
-class TallLazyDBFetcher {
+public class TallLazyDBFetcher {
     private Logger logger = LogManager.getLogger(TallLazyDBFetcher.class.getSimpleName());
     private Connection connection;
 
-    TallLazyDBFetcher(Connection connection) {
+    public TallLazyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
@@ -30,46 +27,53 @@ class TallLazyDBFetcher {
           (
             SELECT a.*, rownum rnum FROM
             (
-              WITH OBJECTS_FAMILY AS
-              (
-                SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF
-                FROM OBJECTS
-                START WITH OBJECT_TYPE_ID = 8
-                CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID
-              )
-              SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ATRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE
-                FROM OBJECTS_FAMILY O
-              JOIN ATTRTYPE ATRT
-                  ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID
-              LEFT JOIN ATTRIBUTES A
-                  ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID
-              LEFT JOIN OBJREFERENCE R
-                  ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID
-              WHERE ATRT.ATTR_ID IN (45, 50, 55)
-              ORDER BY BRANCH_OF, A.ATTR_ID
+              WITH OBJECT_ATTRIBUTES AS
+            (
+              SELECT ATTR_ID
+              FROM ATTRTYPE ATTRT
+              JOIN OBJTYPE OBJT
+                ON ATTRT.OBJECT_TYPE_ID = OBJT.OBJECT_TYPE_ID
+              START WITH OBJT.OBJECT_TYPE_ID = 8
+              CONNECT BY OBJT.OBJECT_TYPE_ID = PRIOR PARENT_ID
+              GROUP BY ATTR_ID
+            )
+            SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ATTRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE
+              FROM OBJECTS O
+            JOIN OBJECT_ATTRIBUTES ATTRT
+                ON O.OBJECT_TYPE_ID = 8
+            LEFT JOIN ATTRIBUTES A
+                ON ATTRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID
+            LEFT JOIN OBJREFERENCE R
+                ON ATTRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID
+            WHERE O.OBJECT_ID = 21
+                AND ATTRT.ATTR_ID IN (45, 50, 55, 43, 48)
+            ORDER BY O.OBJECT_ID, A.ATTR_ID
             ) a
           WHERE rownum <= 6)
         WHERE rnum >= 1;
      */
-    private StringBuilder createSQLQuery(String startWith, String whereClause) {
+    private StringBuilder createSQLQuery(String objectTypeId, String whereClause) {
         return new StringBuilder
-                ("WITH OBJECTS_FAMILY AS ")
-                .append("(SELECT OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION, CONNECT_BY_ROOT OBJECT_ID BRANCH_OF")
-                .append(" FROM OBJECTS")
-                .append(" START WITH ").append(startWith)
-                .append(" CONNECT BY OBJECTS.OBJECT_ID = PRIOR PARENT_ID) ")
+                ("WITH OBJECT_ATTRIBUTES AS ")
+                .append("(SELECT ATTR_ID")
+                .append(" FROM ATTRTYPE ATTRT")
+                .append(" JOIN OBJTYPE OBJT")
+                .append("   ON ATTRT.OBJECT_TYPE_ID = OBJT.OBJECT_TYPE_ID")
+                .append(" START WITH OBJT.OBJECT_TYPE_ID = ").append(objectTypeId)
+                .append(" CONNECT BY OBJT.OBJECT_TYPE_ID = PRIOR PARENT_ID ")
+                .append(" GROUP BY ATTR_ID) ")
 
                 .append("SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ")
-                .append("ATRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE ")
-                .append("FROM OBJECTS_FAMILY O ")
-                .append("JOIN ATTRTYPE ATRT ")
-                .append("ON ATRT.OBJECT_TYPE_ID = O.OBJECT_TYPE_ID ")
-                .append("LEFT JOIN ATTRIBUTES A ")
-                .append("ON ATRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
-                .append("LEFT JOIN OBJREFERENCE R ")
-                .append("ON ATRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
+                .append("ATTRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE ")
+                .append("FROM OBJECTS O ")
+                .append(" JOIN OBJECT_ATTRIBUTES ATTRT ")
+                .append("  ON O.OBJECT_TYPE_ID = ").append(objectTypeId)
+                .append(" LEFT JOIN ATTRIBUTES A ")
+                .append("  ON ATTRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
+                .append(" LEFT JOIN OBJREFERENCE R ")
+                .append("  ON ATTRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
                 .append(whereClause)
-                .append("ORDER BY BRANCH_OF, A.ATTR_ID");
+                .append("ORDER BY O.OBJECT_ID, A.ATTR_ID");
     }
 
     Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) throws SQLException {
@@ -77,12 +81,13 @@ class TallLazyDBFetcher {
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        String fullQuery = createSQLQuery("OBJECT_ID = ?", transferAttributesId(attributesId.size()))
+        String fullQuery = createSQLQuery(getObjTypeIdInQuery(objectId.toString()),
+                "WHERE O.OBJECT_ID = " + objectId + " AND " + transferAttributesId(attributesId.size()))
                 .toString();
         logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
         try {
             statement = connection.prepareStatement(fullQuery);
-            result = resultSingleMutable(objectId, attributesId, statement);
+            result = resultSingleMutable(attributesId, statement);
             pullAttributesForSingleObj(result, mutable, Collections.max(attributesId));
             pullGeneralInfo(result, mutable);
         } catch (SQLException e) {
@@ -108,8 +113,8 @@ class TallLazyDBFetcher {
         ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
 
-        StringBuilder basicQuery = createSQLQuery("OBJECT_TYPE_ID = ?",
-                transferAttributesId(attributesId.size()));
+        StringBuilder basicQuery = createSQLQuery(objType.toString(),
+                "WHERE "+transferAttributesId(attributesId.size()));
 
         String fullQuery = paging.getPaging(basicQuery,
                 getObjectivePage(pagingFrom, attributesId.size()),
@@ -117,7 +122,7 @@ class TallLazyDBFetcher {
         try {
             statement = connection.prepareStatement(fullQuery);
             logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
-            result = resultMultipleMutables(objType, attributesId, statement);
+            result = resultMultipleMutables(attributesId, statement);
             for (int i = 1; i <= pagingTo - pagingFrom; i++) {
                 Mutable mutable = new Mutable();
                 pullAttributes(result, mutable, Collections.max(attributesId));
@@ -134,14 +139,16 @@ class TallLazyDBFetcher {
         return mutables;
     }
 
-    List<Mutable> getMutables(Collection<BigInteger> objectsId,
+    public List<Mutable> getMutables(List<BigInteger> objectsId,
                               Collection<BigInteger> attributesId) throws SQLException {
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        String fullQuery = createSQLQuery(transferObjectsId(objectsId.size()),
-                transferAttributesId(attributesId.size())).toString();
+        String fullQuery = createSQLQuery(getObjTypeIdInQuery(objectsId.get(0).toString()),
+                "WHERE " + transferObjectsId(objectsId.size()) +
+                        " AND " + transferAttributesId(attributesId.size()))
+                        .toString();
 
         try {
             statement = connection.prepareStatement(fullQuery);
@@ -173,11 +180,15 @@ class TallLazyDBFetcher {
     }
 
     private String transferAttributesId(int amount) {
-        return "WHERE ATRT.ATTR_ID IN" + transferElements(amount);
+        return " ATTRT.ATTR_ID IN" + transferElements(amount);
     }
 
     private String transferObjectsId(int amount) {
-        return " OBJECT_ID IN" + transferElements(amount);
+        return " O.OBJECT_ID IN" + transferElements(amount);
+    }
+
+    private String getObjTypeIdInQuery(String objectId) {
+        return "(SELECT OBJECT_TYPE_ID FROM OBJECTS WHERE OBJECT_ID = " + objectId + ") ";
     }
 
     private StringBuilder transferElements(int amount) {
@@ -269,21 +280,17 @@ class TallLazyDBFetcher {
         return applyBigInt(result.getString(columnNumber));
     }
 
-    private ResultSet resultSingleMutable(BigInteger objectId,
-                                          Collection<BigInteger> attributesId,
+    private ResultSet resultSingleMutable(Collection<BigInteger> attributesId,
                                           PreparedStatement statement) throws SQLException {
 
-        statement.setObject(1, objectId);
-        setAttributes(statement, attributesId, 1);
+        setAttributes(statement, attributesId, 0);
         return statement.executeQuery();
     }
 
-    private ResultSet resultMultipleMutables(BigInteger objType,
-                                             Collection<BigInteger> attributesId,
+    private ResultSet resultMultipleMutables(Collection<BigInteger> attributesId,
                                              PreparedStatement statement) throws SQLException {
 
-        statement.setObject(1, objType);
-        setAttributes(statement, attributesId, 1);
+        setAttributes(statement, attributesId, 0);
         return statement.executeQuery();
     }
 

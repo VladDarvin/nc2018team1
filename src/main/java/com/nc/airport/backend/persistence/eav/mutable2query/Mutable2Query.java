@@ -158,7 +158,7 @@ public class Mutable2Query {
      * @see if your objectsId is of objects, that can contain your attributesId
      * this means that attributesId must be inherited or declared in objects' class
      */
-    public List<Mutable> getMutablesFromDB(Collection<BigInteger> objectsId,
+    public List<Mutable> getMutablesFromDB(List<BigInteger> objectsId,
                                            Collection<BigInteger> attributesId) throws SQLException {
         return new TallLazyDBFetcher(connection)
                 .getMutables(objectsId, attributesId);
