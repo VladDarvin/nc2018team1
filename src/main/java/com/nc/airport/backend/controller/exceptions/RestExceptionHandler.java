@@ -1,11 +1,11 @@
 package com.nc.airport.backend.controller.exceptions;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -16,6 +16,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 @ControllerAdvice
+@Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
@@ -24,6 +25,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> defaultExceptionHandler(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+        log.error(ex);
         return buildResponseEntity(apiError);
     }
 
