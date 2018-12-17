@@ -34,14 +34,42 @@ public class Mutable2Query {
         }
     }
 
+    /**
+     * Insert a given mutable object to database
+     *
+     * @param mutable mutable representation of object to be inserted
+     * @return
+     */
     public Mutable sqlInsert(Mutable mutable) {
         return buildASequence(new InsertSequenceBuilder(connection), mutable);
     }
 
+
+    /**
+     * Update or insert a database object represented by given mutable.
+     * Updates if mutable has a preset objectId.
+     * Inserts if mutable has a null value of objectId.
+     *
+     * @param mutable mutable representation of object to be updated
+     */
     public Mutable sqlUpdate(Mutable mutable) {
         return buildASequence(new UpdateSequenceBuilder(connection), mutable);
     }
 
+    /**
+     * Deletes an object of given object_id
+     *
+     * @param objectId id of object to be deleted
+     */
+    public Mutable sqlDelete(BigInteger objectId) {
+        return new DeleteSequenceBuilder(connection).build(objectId);
+    }
+
+    /**
+     * Deletes a database object represented by given mutable
+     *
+     * @param mutable mutable representation of object to be deleted
+     */
     public Mutable sqlDelete(Mutable mutable) {
         return buildASequence(new DeleteSequenceBuilder(connection), mutable);
     }
@@ -229,15 +257,5 @@ public class Mutable2Query {
     public BigInteger countById(BigInteger objTypeId) {
         //TODO implement
         throw new UnsupportedOperationException("BigInteger countById(BigInteger objTypeId)");
-    }
-
-    /**
-     * Deletes an object of given object_id
-     *
-     * @param objectId id of deleted object
-     */
-    public void sqlDelete(BigInteger objectId) {
-        //TODO implement
-        throw new UnsupportedOperationException("void sqlDelete(BigInteger objectId)");
     }
 }

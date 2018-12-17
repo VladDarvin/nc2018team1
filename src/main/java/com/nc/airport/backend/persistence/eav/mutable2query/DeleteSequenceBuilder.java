@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.Map;
 
 class DeleteSequenceBuilder extends SequenceBuilder {
-    private Mutable mutable;
     private BigInteger objectId;
 
     DeleteSequenceBuilder(Connection connection) {
@@ -19,11 +18,15 @@ class DeleteSequenceBuilder extends SequenceBuilder {
 
     @Override
     public Mutable build(Mutable mutable) {
-        this.mutable = mutable;
         objectId = mutable.getObjectId();
-        deleteObjReferences();
-        deleteAttributes();
         deleteObject();
+        return mutable;
+    }
+
+    public Mutable build(BigInteger objectId) {
+        deleteObject();
+        Mutable mutable = new Mutable();
+        mutable.setObjectId(objectId);
         return mutable;
     }
 
@@ -42,36 +45,38 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         }
     }
 
-    private void deleteAttributes() {
-        deleteValues(mutable.getValues());
-        deleteValues(mutable.getDateValues());
-        deleteValues(mutable.getListValues());
-    }
-
-    private void deleteValues(Map<BigInteger, ?> values) {
-        if (noSuchElementsInObject(values)) return;
-
-        try (PreparedStatement query = connection.prepareStatement(
-                "DELETE FROM ATTRIBUTES WHERE OBJECT_ID = ?")) {
-            query.setObject(1, objectId);
-            query.executeUpdate();
-        }
-        catch (SQLException e){
-            logSQLError(e, "Attributes");
-        }
-    }
-
-    private void deleteObjReferences() {
-        Map<BigInteger, BigInteger> references = mutable.getReferences();
-
-        if (noSuchElementsInObject(references)) return;
-
-        try (PreparedStatement query = connection.prepareStatement(
-                "DELETE FROM OBJREFERENCE WHERE OBJECT_ID = ?")) {
-            query.setObject(1, objectId);
-            query.executeUpdate();
-        } catch (SQLException e) {
-            logSQLError(e, "References");
-        }
-    }
+    /* Old stuff that have been used to delete attributes and references before the object
+    *  Is convenient when foreign key constraint is set to ON RESTRICT*/
+//    private void deleteAttributes() {
+//        deleteValues(mutable.getValues());
+//        deleteValues(mutable.getDateValues());
+//        deleteValues(mutable.getListValues());
+//    }
+//
+//    private void deleteValues(Map<BigInteger, ?> values) {
+//        if (noSuchElementsInObject(values)) return;
+//
+//        try (PreparedStatement query = connection.prepareStatement(
+//                "DELETE FROM ATTRIBUTES WHERE OBJECT_ID = ?")) {
+//            query.setObject(1, objectId);
+//            query.executeUpdate();
+//        }
+//        catch (SQLException e){
+//            logSQLError(e, "Attributes");
+//        }
+//    }
+//
+//    private void deleteObjReferences() {
+//        Map<BigInteger, BigInteger> references = mutable.getReferences();
+//
+//        if (noSuchElementsInObject(references)) return;
+//
+//        try (PreparedStatement query = connection.prepareStatement(
+//                "DELETE FROM OBJREFERENCE WHERE OBJECT_ID = ?")) {
+//            query.setObject(1, objectId);
+//            query.executeUpdate();
+//        } catch (SQLException e) {
+//            logSQLError(e, "References");
+//        }
+//    }
 }
