@@ -3,21 +3,24 @@ package com.nc.airport.backend.model.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Authority implements GrantedAuthority {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name="authority_id",sequenceName="authority_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="authority_id")
     private Long id;
 
     private String name;
 
     public Authority() {
+    }
+
+    public Authority(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Authority(String name) {
