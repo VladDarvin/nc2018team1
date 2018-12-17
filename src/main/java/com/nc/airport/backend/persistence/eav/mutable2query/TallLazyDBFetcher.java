@@ -375,6 +375,7 @@ class TallLazyDBFetcher {
         }
     }
 
+    @Deprecated
     class FullObjectsFetcher {
         /*
         SELECT * FROM
