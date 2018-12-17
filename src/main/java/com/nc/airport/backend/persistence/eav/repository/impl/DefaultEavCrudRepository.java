@@ -4,8 +4,6 @@ import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
-import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
-import com.nc.airport.backend.persistence.eav.exceptions.CrudRepositoryException;
 import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,15 +36,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         S updatedEntity;
 
         Mutable updatedMutable;
-        try {
-            updatedMutable = m2db.sqlUpdate(mutable);
-        } catch (BadDBRequestException e) {
-//            TODO REMOVE WHEN IT WILL BE MOVED TO DB
-            String message = "Entity was not saved properly";
-            CrudRepositoryException exception = new CrudRepositoryException(message, e, entity);
-            log.error(message, exception);
-            throw exception;
-        }
+        updatedMutable = m2db.sqlUpdate(mutable);
         updatedEntity = (S) e2m.convertMutableToEntity(updatedMutable, entity.getClass());
         log.info("Saved. Got an updated entity back : " + updatedEntity);
 
@@ -102,17 +91,9 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         checkNull(entityClass);
 
         List<Mutable> mutables;
-        try {
-            mutables = m2db.getFullMutables(ReflectionHelper.getObjTypeId(entityClass),
-                    startRow,
-                    endRow);
-        } catch (BadDBRequestException e) {
-//            TODO REMOVE WHEN IT WILL BE MOVED TO DB
-            String message = "Something's wrong, see logs [List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow)]";
-            RuntimeException exception = new CrudRepositoryException(message, e, null);
-            log.error(message, exception);
-            throw exception;
-        }
+        mutables = m2db.getFullMutables(ReflectionHelper.getObjTypeId(entityClass),
+                startRow,
+                endRow);
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
