@@ -1,6 +1,8 @@
 package com.nc.airport.backend.persistence.eav.repository;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
@@ -43,12 +45,11 @@ public interface EavCrudRepository<T extends BaseEntity> {
     Optional<T> findById(@NotNull BigInteger objectId,@NotNull Class<T> entityClass);
 
     /**
-     * Returns all objects of the class that is supplied.
-     * <h3>*WARNING*</h3>
-     * Heavily loads db if class has many attributes
+     * Use findSlice
      *
      * @return all entities
      */
+    @Deprecated
     List<T> findAll(@NotNull Class<T> entityClass);
 
     /**
@@ -58,7 +59,33 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @param entityClass specifies the type of instances
      * @return all instances of given type and given objectIds
      */
-    List<T> findAllById(@NotNull Iterable<BigInteger> objectIds,@NotNull Class<T> entityClass);
+    List<T> findAll(@NotNull Class<T> entityClass, @NotNull Iterable<BigInteger> objectIds);
+
+    /**
+     * Returns all instances of given entityClass that are within row range.
+     * Consider found instances form a list.
+     *
+     * @param entityClass search criteria
+     * @param startRow of the item list (inclusive, one-based)
+     * @param endRow of the item list (inclusive, one-based)
+     * @return slice of items that are found within specified rows
+     */
+    List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow);
+
+    /**
+     * Returns all instances of given class that are within row range, filtered and sortered.
+     *
+     * @param entityClass search criteria
+     * @param startRow of the item list (inclusive, one-based)
+     * @param endRow of the item list (inclusive, one-based)
+     * @param sortBy sorting criteria
+     * @param filterBy filtering criteria
+     * @return slice of entities that are found and ordered with criterias
+     */
+    List<T> findSlice(@NotNull Class<T> entityClass,
+                      int startRow, int endRow,
+                      List<SortEntity> sortBy,
+                      List<FilterEntity> filterBy);
 
     /**
      * Deletes a given entity.
