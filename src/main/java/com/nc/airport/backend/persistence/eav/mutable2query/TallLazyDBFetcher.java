@@ -113,8 +113,8 @@ class TallLazyDBFetcher {
                 getObjectivePage(pagingFrom, attributesId.size()),
                 getObjectivePage(pagingTo + 1, attributesId.size()) - 1);
         try {
-            statement = connection.prepareStatement(fullQuery);
             logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
+            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(attributesId, statement);
             for (int i = 1; i <= pagingTo - pagingFrom; i++) {
                 Mutable mutable = new Mutable();
@@ -169,6 +169,7 @@ class TallLazyDBFetcher {
                 logger.error(e);
                 throw new DatabaseConnectionException("Could not close result set", e);
             }
+
         if (statement != null)
             try {
                 statement.close();
