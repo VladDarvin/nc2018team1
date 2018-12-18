@@ -313,7 +313,7 @@ class TallLazyDBFetcher {
             return statement.executeQuery();
         } catch (SQLException e) {
             logger.error(e);
-            throw new BadDBRequestException("Error is found after query execution", e);
+            throw new BadDBRequestException("Error occurred after query execution", e);
         }
     }
 

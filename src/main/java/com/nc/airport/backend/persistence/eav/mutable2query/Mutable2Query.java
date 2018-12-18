@@ -38,12 +38,10 @@ public class Mutable2Query {
      * Insert a given mutable object to database
      *
      * @param mutable mutable representation of object to be inserted
-     * @return
      */
     public Mutable sqlInsert(Mutable mutable) {
         return buildASequence(new InsertSequenceBuilder(connection), mutable);
     }
-
 
     /**
      * Update or insert a database object represented by given mutable.
@@ -230,11 +228,17 @@ public class Mutable2Query {
      * @return true if exists, false if not. False if objectId is null.
      */
     public boolean existsByObjId(BigInteger objectId) {
-        if (objectId == null)
-            return false;
+        return new ServiceDBFetcher(connection).existsByObjId(objectId);
+    }
 
-        //TODO implement
-        throw new UnsupportedOperationException("boolean existsByObjId(BigInteger objectId) not supported yet");
+    /**
+     * Returns number of objects of given type_id
+     *
+     * @param objTypeId search criteria
+     * @return number of objects
+     */
+    public BigInteger countById(BigInteger objTypeId) {
+        return new ServiceDBFetcher(connection).countById(objTypeId);
     }
 
     /**
@@ -246,16 +250,5 @@ public class Mutable2Query {
     public Optional<Mutable> getSingleMutable(BigInteger objectId) {
         //TODO implement
         throw new UnsupportedOperationException("Mutable getSingleMutable(BigInteger objectId) is not supported yet");
-    }
-
-    /**
-     * Returns number of objects of given type_id
-     *
-     * @param objTypeId search criteria
-     * @return number of objects
-     */
-    public BigInteger countById(BigInteger objTypeId) {
-        //TODO implement
-        throw new UnsupportedOperationException("BigInteger countById(BigInteger objTypeId)");
     }
 }
