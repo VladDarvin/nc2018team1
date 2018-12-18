@@ -2,6 +2,7 @@ package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.f
 
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Component
@@ -26,7 +27,7 @@ public class FilteringDescriptor {
                     queryBuilder.append("LOWER(")
                             .append(entity.getType())
                             .append(") LIKE LOWER(?)");
-                } else if (value instanceof Integer) {
+                } else if (value instanceof BigInteger) {
                     queryBuilder.append(entity.getType())
                             .append(" = ?");
                 }

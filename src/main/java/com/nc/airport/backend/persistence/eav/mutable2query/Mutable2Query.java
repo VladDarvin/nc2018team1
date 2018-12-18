@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
+//                          TODO MAKE PAGES BIG INTS
 @Component
 public class Mutable2Query {
     private final Logger logger = LogManager.getLogger(Mutable2Query.class.getSimpleName());
@@ -32,6 +32,10 @@ public class Mutable2Query {
             logger.error(message, e);
             throw new DatabaseConnectionException("Couldn't get connection from dataSource", e);
         }
+    }
+
+    public Mutable2Query(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -172,7 +176,6 @@ public class Mutable2Query {
     }
 
     /**
-     * @param objType               type of objects
      * @param values                values attr_id List
      * @param dateValues            dateValues attr_id List
      * @param listValues            listValues attr_id List
@@ -185,18 +188,16 @@ public class Mutable2Query {
      * @exception DatabaseConnectionException when there's some problems with database or with it's connection
      * to the server
      */
-    public List<Mutable> getMutablesFromDB(BigInteger objType,
-                                           List<BigInteger> values,
+    public List<Mutable> getMutablesFromDB(List<BigInteger> values,
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
                                            List<BigInteger> references,
                                            int pagingFrom, int pagingTo,
                                            List<SortEntity> sortBy) {
-        return null;
+        return getMutablesFromDB(values, dateValues, listValues, references, pagingFrom, pagingTo, sortBy, null);
     }
 
     /**
-     * @param objType               type of objects
      * @param values                values attr_id List
      * @param dateValues            dateValues attr_id List
      * @param listValues            listValues attr_id List
@@ -210,15 +211,15 @@ public class Mutable2Query {
      * @exception DatabaseConnectionException when there's some problems with database or with it's connection
      * to the server
      */
-    public List<Mutable> getMutablesFromDB(BigInteger objType,
-                                           List<BigInteger> values,
+    public List<Mutable> getMutablesFromDB(List<BigInteger> values,
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
                                            List<BigInteger> references,
                                            int pagingFrom, int pagingTo,
                                            List<SortEntity> sortBy,
                                            List<FilterEntity> filterBy) {
-        return null;
+        return new WidePickyDBFetcher(connection)
+                .getMutables(values, dateValues, listValues, references, pagingFrom, pagingTo, sortBy, filterBy);
     }
 
     /**
@@ -241,14 +242,13 @@ public class Mutable2Query {
         return new ServiceDBFetcher(connection).countById(objTypeId);
     }
 
-    /**
+    /**     UNSUPPORTED
      * Returns a single mutable with specified object id and all possible attributes
      *
      * @param objectId search criteria
      * @return the mutable with given objectId or {@literal Optional#empty()} if none found
      */
     public Optional<Mutable> getSingleMutable(BigInteger objectId) {
-        //TODO implement
         throw new UnsupportedOperationException("Mutable getSingleMutable(BigInteger objectId) is not supported yet");
     }
 }
