@@ -6,10 +6,12 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.so
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class AirlineService {
@@ -26,7 +28,8 @@ public class AirlineService {
     }
 
     public List<Airline> getTenAirlines(int page) {
-        return airlinesRepository.findSlice(Airline.class, page*10, page*10+10);
+        int offset = (page - 1) * 10;
+        return airlinesRepository.findSlice(Airline.class, 1 + offset, 10 + offset);
     }
 
     public Airline addAirline(Airline airline) {
