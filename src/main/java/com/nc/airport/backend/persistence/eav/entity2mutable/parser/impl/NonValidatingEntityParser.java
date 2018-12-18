@@ -8,6 +8,7 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.Refere
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import com.nc.airport.backend.persistence.eav.entity2mutable.parser.EntityParser;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
+import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +34,9 @@ public class NonValidatingEntityParser implements EntityParser {
 
         if (objectTypeAnnotation == null) {
             String message = "Class " + entity.getClass() + " is not annotated with @ObjectType";
+            RuntimeException exception = new InvalidAnnotatedClassException(message, entity.getClass());
             log.warn(message, entity);
-            return null;
+            throw exception;
         }
 
         return new BigInteger(objectTypeAnnotation.ID());
