@@ -25,7 +25,7 @@ public class AirlineController {
         return airlineService.findAllAirlines();
     }
 
-    @RequestMapping(value = "/users/page={page}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airlines/page={page}", method = RequestMethod.GET)
     public List<Airline> getTenAirlines(@PathVariable(name = "page") int page) {
         return airlineService.getTenAirlines(page);
     }
@@ -50,7 +50,7 @@ public class AirlineController {
         return airlineService.getAirlinesAmount();
     }
 
-    @RequestMapping(value = "/users/airlines/page={page}", method = RequestMethod.POST)
+    @RequestMapping(value = "/airlines/page={page}", method = RequestMethod.POST)
     public List<Airline> searchAirlines(@PathVariable(name = "page") int page, @RequestBody Map<BigInteger, Set<Object>> filtering, @RequestBody Map<BigInteger, Boolean> sorting) {
         return airlineService.filtrateAndSortAirlines(page, filtering, sorting);
     }
