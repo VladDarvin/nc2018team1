@@ -63,7 +63,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
 
     /**
      * Returns all instances of given entityClass that are within row range.
-     * Consider found instances form a list.
+     * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
      * @param startRow of the item list (inclusive, one-based)
@@ -74,6 +74,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
 
     /**
      * Returns all instances of given class that are within row range, filtered and sortered.
+     * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
      * @param startRow of the item list (inclusive, one-based)
