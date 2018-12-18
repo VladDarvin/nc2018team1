@@ -30,6 +30,8 @@ public class FilteringDescriptor {
                 } else if (value instanceof BigInteger) {
                     queryBuilder.append(entity.getType())
                             .append(" = ?");
+                } else {
+                    // TODO: 18.12.2018 either throw an exception or log and continue work
                 }
                 if (countOfValues != 1) {
                     queryBuilder.append(" OR ");
