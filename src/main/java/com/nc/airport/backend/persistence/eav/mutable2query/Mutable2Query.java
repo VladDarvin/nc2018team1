@@ -34,10 +34,6 @@ public class Mutable2Query {
         }
     }
 
-    public Mutable2Query(Connection connection) {
-        this.connection = connection;
-    }
-
     /**
      * Insert a given mutable object to database
      *
