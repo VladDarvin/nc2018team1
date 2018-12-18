@@ -36,7 +36,7 @@ public class FilteringDescriptor {
                 } else {
                     // TODO: 18.12.2018 either throw an exception or log and continue work
                 }
-
+                    //FIXME if instanceof LocalDateTime ?
                 else {
                     log.warn("Filter entities can only have value of String, BigInteger or LocalDateTime/n" +
                             "Don't use other types");
