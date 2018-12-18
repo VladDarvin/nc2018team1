@@ -1,10 +1,13 @@
 package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering;
 
+import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.List;
 
+@Log4j2
 @Component
 public class FilteringDescriptor {
 
@@ -32,6 +35,12 @@ public class FilteringDescriptor {
                             .append(" = ?");
                 } else {
                     // TODO: 18.12.2018 either throw an exception or log and continue work
+                }
+
+                else {
+                    log.warn("Filter entities can only have value of String, BigInteger or LocalDateTime/n" +
+                            "Don't use other types");
+                    throw new BadDBRequestException("Illegal filter entity value", null);
                 }
                 if (countOfValues != 1) {
                     queryBuilder.append(" OR ");
