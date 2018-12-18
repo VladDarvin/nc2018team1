@@ -191,6 +191,27 @@ public final class ReflectionHelper {
         return attributeIds;
     }
 
+    // FIXME: 18.12.2018 REFACTOR
+    public static List<BigInteger> getValueFieldIds(Class<? extends BaseEntity> entityClass) {
+        List<Field> fields = getAllFields(entityClass);
+        return new ArrayList<>(getAnnotationIdsFromFields(fields, ValueField.class));
+    }
+
+    public static List<BigInteger> getListFieldIds(Class<? extends BaseEntity> entityClass) {
+        List<Field> fields = getAllFields(entityClass);
+        return new ArrayList<>(getAnnotationIdsFromFields(fields, ListField.class));
+    }
+
+    public static List<BigInteger> getDateFieldIds(Class<? extends BaseEntity> entityClass) {
+        List<Field> fields = getAllFields(entityClass);
+        return new ArrayList<>(getAnnotationIdsFromFields(fields, DateField.class));
+    }
+
+    public static List<BigInteger> getReferenceFieldIds(Class<? extends BaseEntity> entityClass) {
+        List<Field> fields = getAllFields(entityClass);
+        return new ArrayList<>(getAnnotationIdsFromFields(fields, ReferenceField.class));
+    }
+
     /**
      * Returns a sorted list of attribute ids which annotations of the passed class contain.
      *

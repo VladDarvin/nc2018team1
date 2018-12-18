@@ -105,7 +105,24 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
 
     @Override
     public List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
-        return null;
+        checkNull(entityClass);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesFromDB(ReflectionHelper.getObjTypeId(entityClass),
+                ReflectionHelper.getValueFieldIds(entityClass),
+                ReflectionHelper.getDateFieldIds(entityClass),
+                ReflectionHelper.getListFieldIds(entityClass),
+                ReflectionHelper.getReferenceFieldIds(entityClass),
+                startRow,
+                endRow,
+                sortBy,
+                filterBy);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, entityClass));
+        }
+        return entities;
     }
 
 
