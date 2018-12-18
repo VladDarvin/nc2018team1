@@ -33,10 +33,10 @@ public class FilteringDescriptor {
                 } else if (value instanceof BigInteger) {
                     queryBuilder.append(entity.getType())
                             .append(" = ?");
-                } else {
-                    // TODO: 18.12.2018 either throw an exception or log and continue work
                 }
-                    //FIXME if instanceof LocalDateTime ?
+
+                //FIXME if instanceof LocalDateTime ?
+
                 else {
                     log.error("Filter entities can only have value of String, BigInteger or LocalDateTime. Don't use other types");
                     throw new BadDBRequestException("Illegal filter entity value", null);
