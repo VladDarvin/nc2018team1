@@ -2,6 +2,7 @@ package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.UserDTO;
 import com.nc.airport.backend.model.dto.UserFilteringWrapper;
+import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.repository.UserFilter;
 import com.nc.airport.backend.repository.UsersRepository;
@@ -34,6 +35,12 @@ public class UserService {
         User existUser = usersRepository.findUserByEmail(user.getEmail());
         if (existUser == null) {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            if (user.getEnabled() == null) {
+                user.setEnabled(true);
+            }
+            if (user.getAuthority() == null) {
+                user.setAuthority(new Authority(2L, "ROLE_USER"));
+            }
             return usersRepository.save(user);
         } else {
             throw new EntityExistsException("User with this email already exists");
