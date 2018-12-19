@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller.exceptions;
 
+import com.nc.airport.backend.security.controller.AuthenticationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,51 @@ import javax.persistence.EntityNotFoundException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
+     * App related exceptions handlers
+     */
+
+    /**
+     * Handle exception when entity already exist.
+     */
+    @ExceptionHandler(EntityExistsException.class)
+    protected ResponseEntity<Object> handleEntityAlreadyExist(EntityExistsException ex) {
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    /**
+     * Handle exception when entity doesn't exist.
+     */
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(
+            EntityNotFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    /**
+     * Handle exception when user is disabled or has bad credentials.
+     */
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+
+    /**
+     * Common exceptions handlers
+     */
+
+    /**
      * Handle all exceptions that don’t have specific exception handler
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> defaultExceptionHandler(Exception ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex);
         log.error(ex);
         return buildResponseEntity(apiError);
     }
@@ -65,31 +106,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, builder.substring(0, builder.length() - 2), ex));
     }
 
-    /**
-     * Handle exception when entity already exist.
-     */
-    @ExceptionHandler(EntityExistsException.class)
-    protected ResponseEntity<Object> handleEntityAlreadyExist(EntityExistsException ex) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
 
     /**
-     * Handle exception when entity doesn't exist.
+     * Serving methods
      */
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
-            EntityNotFoundException ex) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-
 
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
-
 }

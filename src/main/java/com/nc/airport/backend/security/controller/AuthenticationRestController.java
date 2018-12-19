@@ -47,12 +47,13 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-    @ExceptionHandler({AuthenticationException.class})
+    //**Moved to global RestExceptionHandler
+    /*@ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         //return ResponseEntity.ok(e.getMessage());
-    }
+    }*/
 
     /**
      * Authenticates the user. If something is wrong, an {@link AuthenticationException} will be thrown
