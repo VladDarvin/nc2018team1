@@ -22,16 +22,16 @@ public class Entity2MutableTest {
         initialAirline.setDescr("TestDescr");
         initialAirline.setEmail("TestEmail");
         initialAirline.setPhone("TestPhone");
-        log.info("Created entity : " + initialAirline);
+        log.info("Created test entity : " + initialAirline);
     }
 
     @Test
     public void givenAirlineFilled_whenConverted2MutAndBack_thenEqual() {
         Mutable mutable = e2m.convertEntityToMutable(initialAirline);
-        log.info("Converted mutable : " + mutable);
+        log.info("Converted test mutable : " + mutable);
 
         Airline convertedAirline = e2m.convertMutableToEntity(mutable, Airline.class);
-        log.info("Converted entity : " + convertedAirline);
+        log.info("Converted test entity : " + convertedAirline);
 
         Assert.assertEquals(initialAirline, convertedAirline);
     }
