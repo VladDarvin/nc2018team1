@@ -44,7 +44,7 @@ public class AirlineService {
         return airlinesRepository.count(Airline.class);
     }
 
-    public List<Airline> filtrateAndSortAirlines(int page,
+    public List<Airline> filterAndSortAirlines(int page,
                                                  Map<BigInteger, Set<Object>> filtering, Map<BigInteger, Boolean> sorting) {
         List<FilterEntity> filterEntities = null;
         if (filtering != null) {

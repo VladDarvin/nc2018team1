@@ -51,7 +51,8 @@ public class AirlineController {
     }
 
     @RequestMapping(value = "/airlines/page={page}", method = RequestMethod.POST)
-    public List<Airline> searchAirlines(@PathVariable(name = "page") int page, @RequestBody Map<BigInteger, Set<Object>> filtering, @RequestBody Map<BigInteger, Boolean> sorting) {
-        return airlineService.filtrateAndSortAirlines(page, filtering, sorting);
+    public List<Airline> searchAirlines(@PathVariable(name = "page") int page,
+                                        @RequestBody Map<BigInteger, Set<Object>> filtering, @RequestBody Map<BigInteger, Boolean> sorting) {
+        return airlineService.filterAndSortAirlines(page, filtering, sorting);
     }
 }
