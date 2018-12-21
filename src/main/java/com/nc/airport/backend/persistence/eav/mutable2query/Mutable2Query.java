@@ -230,7 +230,7 @@ public class Mutable2Query {
      * @return true if exists, false if not. False if objectId is null.
      */
     public boolean existsByObjId(BigInteger objectId) {
-        return new ServiceDBFetcher(connection).existsByObjId(objectId);
+        return new MetaDataDBFetcher(connection).existsByObjId(objectId);
     }
 
     /**
@@ -240,7 +240,7 @@ public class Mutable2Query {
      * @return number of objects
      */
     public BigInteger countById(BigInteger objTypeId) {
-        return new ServiceDBFetcher(connection).countById(objTypeId);
+        return new MetaDataDBFetcher(connection).countById(objTypeId);
     }
 
     /**     UNSUPPORTED

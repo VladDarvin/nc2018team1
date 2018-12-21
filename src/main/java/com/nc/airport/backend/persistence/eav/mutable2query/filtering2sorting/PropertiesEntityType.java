@@ -1,6 +1,6 @@
 package com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting;
 
-public enum PropertiesEntityType implements EntityType {
+public enum PropertiesEntityType {
     OBJECT_ID("OBJECT_ID"),
     PARENT_ID("PARENT_ID"),
     OBJECT_TYPE_ID("OBJECT_TYPE_ID"),

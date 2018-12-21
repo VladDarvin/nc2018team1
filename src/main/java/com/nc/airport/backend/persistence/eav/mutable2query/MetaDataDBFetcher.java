@@ -8,10 +8,10 @@ import java.math.BigInteger;
 import java.sql.*;
 
 @Log4j2
-class ServiceDBFetcher {
+class MetaDataDBFetcher {
     private Connection connection;
 
-    ServiceDBFetcher(Connection connection) {
+    MetaDataDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
