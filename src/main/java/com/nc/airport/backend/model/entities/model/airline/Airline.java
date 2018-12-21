@@ -20,7 +20,7 @@ public class Airline extends BaseEntity {
     private String descr;
 
     @ValueField(ID = "14")
-    private String phone;
+    private String phoneNumber;
 
     @ValueField(ID = "15")
     private String email;
