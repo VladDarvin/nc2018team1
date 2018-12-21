@@ -87,8 +87,9 @@ class TallLazyDBFetcher {
         try {
             statement = connection.prepareStatement(fullQuery);
             result = resultSingleMutable(attributesId, statement);
-            pullAttributesForSingleObj(result, mutable, Collections.max(attributesId));
+            result.next();
             pullGeneralInfo(result, mutable);
+            pullAttributes(result, mutable);
         } catch (SQLException e) {
             logger.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
@@ -116,9 +117,9 @@ class TallLazyDBFetcher {
             logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(attributesId, statement);
-            for (int i = 1; i <= pagingTo - pagingFrom; i++) {
+            while (result.next()){
                 Mutable mutable = new Mutable();
-                pullAttributes(result, mutable, Collections.max(attributesId));
+                pullAttributes(result, mutable, attributesId.size());
                 pullGeneralInfo(result, mutable);
                 mutables.add(mutable);
             }
@@ -146,10 +147,10 @@ class TallLazyDBFetcher {
             statement = connection.prepareStatement(fullQuery);
             logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             result = resultMultipleMutables(objectsId, attributesId, statement);
-            for (int i = 1; i <= objectsId.size(); i++) {
+            while (result.next()){
                 Mutable mutable = new Mutable();
-                pullAttributes(result, mutable, Collections.max(attributesId));
                 pullGeneralInfo(result, mutable);
+                pullAttributes(result, mutable);
                 mutables.add(mutable);
             }
         } catch (SQLException e) {
@@ -218,50 +219,53 @@ class TallLazyDBFetcher {
             mutable.setObjectDescription(result.getString(5));
         } catch (SQLException e) {
             logger.error(e);
-            throw new BadDBRequestException("Failed to pull OBJECTS table data", e);
+            throw new DatabaseConnectionException("Failed to pull OBJECTS table data", e);
         }
     }
 
-    private void pullAttributes(ResultSet result, Mutable mutable, BigInteger lastAttrId) {
+    private void pullAttributes(ResultSet result, Mutable mutable, int objectAttributesAmount) {
         Map<BigInteger, String> values = new LinkedHashMap<>();
         Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
 
         try {
-            while (result.next()) {
+            BigInteger startRow = applyBigInt(11, result);
+            do {
                 pullAttr(result, values, references, listValues, dateValues);
-                if (result.getString(6).equals(lastAttrId.toString()))
+                if (isLastAttrOfObject(startRow, applyBigInt(11, result), objectAttributesAmount)) {
                     break;
-            }
+                }
+            } while (result.next());
         } catch (SQLException e) {
             logger.error(e);
-            throw new BadDBRequestException("Failed pulling attributes from result set", e);
+            throw new DatabaseConnectionException("Failed pulling attributes from result set", e);
         }
 
         setMutableAttributes(mutable, values, dateValues, listValues, references);
     }
 
-    private void pullAttributesForSingleObj(ResultSet result,
-                                            Mutable mutable,
-                                            BigInteger lastAttrId) {
+    private void pullAttributes(ResultSet result,
+                                Mutable mutable) {
         Map<BigInteger, String> values = new LinkedHashMap<>();
         Map<BigInteger, LocalDateTime> dateValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> listValues = new LinkedHashMap<>();
         Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
 
         try {
-            while (result.next()) {
+            do {
                 pullAttr(result, values, references, listValues, dateValues);
-                if (result.getString(6).equals(lastAttrId.toString()))
-                    break;
-            }
+            } while (result.next());
         } catch (SQLException e) {
             logger.error(e);
-            throw new BadDBRequestException("Failed pulling attributes from result set", e);
+            throw new DatabaseConnectionException("Failed pulling attributes from result set", e);
         }
 
         setMutableAttributes(mutable, values, dateValues, listValues, references);
+    }
+
+    private boolean isLastAttrOfObject(BigInteger startRow, BigInteger currentRow, int objAttrSize) {
+        return (currentRow.subtract(startRow).add(BigInteger.ONE).equals(BigInteger.valueOf(objAttrSize)));
     }
 
     private void setMutableAttributes(Mutable mutable,

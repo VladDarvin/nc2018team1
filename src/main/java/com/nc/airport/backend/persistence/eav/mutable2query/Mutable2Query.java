@@ -24,7 +24,8 @@ public class Mutable2Query {
     private final Logger logger = LogManager.getLogger(Mutable2Query.class.getSimpleName());
     private Connection connection;
 
-    public Mutable2Query(@Autowired DataSource dataSource) {
+    @Autowired
+    public Mutable2Query(DataSource dataSource) {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
@@ -32,6 +33,10 @@ public class Mutable2Query {
             logger.error(message, e);
             throw new DatabaseConnectionException("Couldn't get connection from dataSource", e);
         }
+    }
+
+    public Mutable2Query(Connection connection) {
+        this.connection = connection;
     }
 
     /**

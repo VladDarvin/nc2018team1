@@ -290,7 +290,7 @@ class WidePickyDBFetcher {
             pullReferences(result, mutable, references, indexesBefore);
         } catch (SQLException e) {
             log.error(e);
-            throw new BadDBRequestException("Couldn`t pull given attributes", e);
+            throw new DatabaseConnectionException("Couldn`t pull given attributes", e);
         }
     }
 
