@@ -39,7 +39,7 @@ public class UserController {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
     public User editUser(@PathVariable(name = "id") long id, @RequestBody User user) {
-        user.setId(id);
+        user.setObjectId(id);
         return userService.editUser(user);
     }
 

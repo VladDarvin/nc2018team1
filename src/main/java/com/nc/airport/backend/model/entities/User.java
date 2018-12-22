@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 
 @Entity
@@ -18,7 +17,7 @@ public class User {
     @GeneratedValue(generator = "user_id")
     @SequenceGenerator(name = "user_id", sequenceName = "SEQ__USERS_ID",
             initialValue = 50, allocationSize = 1)
-    private Long id;
+    private Long objectId;
     @Transient
     @JsonIgnore
     private String username;
@@ -33,6 +32,14 @@ public class User {
     private Authority authority;
 
     public User() {
+    }
+
+    public User(String firstname, String lastname, String phonenumber, String email) {
+        this.username = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phonenumber = phonenumber;
+        this.email = email;
     }
 
     public User(String firstname, String lastname, String phonenumber, String email, String password, Boolean enabled) {

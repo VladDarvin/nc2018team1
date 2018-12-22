@@ -9,7 +9,7 @@ public final class JwtUserFactory {
 
     public static JwtUser create(User user) {
         return new JwtUser(
-                user.getId(),
+                user.getObjectId(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),

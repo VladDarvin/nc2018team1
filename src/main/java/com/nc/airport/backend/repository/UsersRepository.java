@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface UsersRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-    @Query(value = "SELECT * FROM USERS INNER JOIN AUTHORITY ON USERS.AUTHORITY_ID = AUTHORITY.ID ORDER BY USERS.ID", nativeQuery = true)
+    @Query(value = "SELECT * FROM USERS INNER JOIN AUTHORITY ON USERS.AUTHORITY_ID = AUTHORITY.ID ORDER BY USERS.OBJECT_ID", nativeQuery = true)
     List<User> getAll();
 
     Page<User> findAll(Specification<User> spec, Pageable pageable);
