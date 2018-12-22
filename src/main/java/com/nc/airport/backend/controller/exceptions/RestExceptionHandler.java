@@ -99,9 +99,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
-        log.error("Headers : " + headers +
-                "; Status : " + status +
-                "; Request : " + request, ex);
+        log.error("Headers : {}; Status : {}; Request : {}",
+                headers, status, request, ex);
 
         String error = "Malformed JSON request";
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, ex));
@@ -115,9 +114,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        log.error("Headers : " + headers +
-                "; Status : " + status +
-                "; Request : " + request, ex);
+        log.error("Headers : {}; Status : {}; Request : {}",
+                headers, status, request, ex);
 
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
