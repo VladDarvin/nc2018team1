@@ -38,7 +38,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         Mutable updatedMutable;
         updatedMutable = m2db.sqlUpdate(mutable);
         updatedEntity = (S) e2m.convertMutableToEntity(updatedMutable, entity.getClass());
-        log.info("Saved. Got an updated entity back : " + updatedEntity);
+        log.info("Saved. Got an updated entity back : {}", updatedEntity);
 
         return updatedEntity;
     }
@@ -138,7 +138,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         checkNull(objectId);
 
         m2db.sqlDelete(objectId);
-        log.info("Deleted object with Object_id " + objectId);
+        log.info("Deleted object with Object_id {}", objectId);
     }
 
     @Override

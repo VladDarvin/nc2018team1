@@ -38,7 +38,7 @@ public class FilteringDescriptor {
                 //FIXME if instanceof LocalDateTime ?
 
                 else {
-                    log.error("Filter entities can only have value of String, BigInteger or LocalDateTime. Don't use other types");
+                    log.error("Filter entities can only have value of String, BigInteger or LocalDateTime. Type : {}", value.getClass());
                     throw new BadDBRequestException("Illegal filter entity value", null);
                 }
                 if (countOfValues != 1) {

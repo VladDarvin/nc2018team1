@@ -7,6 +7,8 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListFi
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @Log4j2
 public final class ReflectionHelper {
+    private static final Marker DATA_LOSS = MarkerManager.getMarker("DATA_LOSS");
 
     private ReflectionHelper() {}
 
@@ -156,7 +159,7 @@ public final class ReflectionHelper {
                 return annotatedField;
             }
         }
-        log.error("{DATA LOSS} No field in " + entityClazz + " with " + annotationClazz + " annotation.");
+        log.error(DATA_LOSS, "No field in {} with {} annotation.", entityClazz, annotationClazz);
         return null;
     }
 
