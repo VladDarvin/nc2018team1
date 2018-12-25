@@ -241,11 +241,11 @@ class WidePickyDBFetcher {
                     Object filterVal = filterValuesIterator.next();
                     statement.setObject(j, filterVal);
                 }
-                i = j;
+                i = j - 1;
             }
         } catch (SQLException e) {
             log.error(e);
-            throw new BadDBRequestException("Could not set given attributes", e);
+            throw new BadDBRequestException("Could not set given filters", e);
         }
     }
 
