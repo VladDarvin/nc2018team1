@@ -33,17 +33,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  *         &#064;ListField(ID = "7")
  *         Color color;
+ *     }
  *
- *         &#064;ObjectType(ID = "2")
- *         enum Color {
- *              RED(7),
- *              GREEN(8),
- *              BLUE(9)
- *
- *              private String id;
- *
- *              Color(String id) {this.id = id;}
- *         }
+ *     public enum Color {
+ *         &#064;ListValue(ID = "1")
+ *         RED,
+ *         &#064;ListValue(ID = "2")
+ *         GREEN,
+ *         &#064;ListValue(ID = "3")
+ *         BLUE
  *     }
  * </pre>
  */
