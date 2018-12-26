@@ -108,7 +108,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         checkNull(entityClass);
 
         List<Mutable> mutables;
-        mutables = m2db.getMutablesFromDB(//ReflectionHelper.getObjTypeId(entityClass), todo delete
+        mutables = m2db.getMutablesFromDB(
                 ReflectionHelper.getValueFieldIds(entityClass),
                 ReflectionHelper.getDateFieldIds(entityClass),
                 ReflectionHelper.getListFieldIds(entityClass),
@@ -157,6 +157,16 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         BigInteger objTypeId = ReflectionHelper.getObjTypeId(entityClass);
         return m2db.countById(objTypeId);
     }
+
+    @Override
+    public BigInteger count(Class<T> entityClass, List<FilterEntity> filterBy) {
+        checkNull(entityClass);
+
+        BigInteger objTypeId = ReflectionHelper.getObjTypeId(entityClass);
+        return m2db.countById(objTypeId, filterBy);
+    }
+
+
 
     @Override
     public boolean existsById(BigInteger objectId) {

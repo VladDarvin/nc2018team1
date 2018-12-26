@@ -118,6 +118,16 @@ public interface EavCrudRepository<T extends BaseEntity> {
      */
     BigInteger count(@NotNull Class<T> entityClass);
 
+
+    /**
+     * Returns the number of entities available, filtered by criteria. Entity is specified by its class.
+     *
+     * @param entityClass class that specifies what object is being searched. Must be not null
+     * @param filterBy filtering criteria
+     * @return the number of entities
+     */
+    BigInteger count(@NotNull Class<T> entityClass, List<FilterEntity> filterBy);
+
     /**
      * Returns whether an entity with the given id exists.
      *

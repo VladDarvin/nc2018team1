@@ -243,6 +243,17 @@ public class Mutable2Query {
         return new MetaDataDBFetcher(connection).countById(objTypeId);
     }
 
+    /**
+     * Returns number of objects of given type_id
+     *
+     * @param objTypeId search criteria
+     * @param filterBy search criteria
+     * @return number of objects
+     */
+    public BigInteger countById(BigInteger objTypeId, List<FilterEntity> filterBy) {
+        throw new UnsupportedOperationException("not supported yet");
+    }
+
     /**     UNSUPPORTED
      * Returns a single mutable with specified object id and all possible attributes
      *
