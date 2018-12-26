@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller.exceptions;
 
+import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
 import com.nc.airport.backend.security.controller.AuthenticationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -58,6 +59,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
         apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(InvalidAnnotatedClassException.class)
+    public ResponseEntity<Object> handleInvalidAnnotations(InvalidAnnotatedClassException ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+        apiError.setMessage(ex.getCauseClass() + " is probably poorly annotated, please check.");
         return buildResponseEntity(apiError);
     }
 
