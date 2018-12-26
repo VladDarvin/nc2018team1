@@ -6,6 +6,7 @@ import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateFi
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
+import com.nc.airport.backend.persistence.eav.annotations.enums.ListValue;
 import com.nc.airport.backend.persistence.eav.entity2mutable.parser.EntityParser;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
@@ -25,7 +26,7 @@ import java.util.Map;
  * ClassCastException is possible
  */
 @Log4j2
-@Component("NonValidating")
+@Component
 public class NonValidatingEntityParser implements EntityParser {
 
     @Override
@@ -75,14 +76,38 @@ public class NonValidatingEntityParser implements EntityParser {
 
     @Override
     public Map<BigInteger, BigInteger> parseListValues(BaseEntity entity) {
+        Map<BigInteger, BigInteger> idToEnumId = new HashMap<>();
+
+
         Map<BigInteger, Object> idToValue = getParsedMap(entity, ListField.class);
-        if (idToValue.size() != 0) {
-            // TODO: 18.11.2018 add implementation for enums
-            UnsupportedOperationException exception = new UnsupportedOperationException("Enums used as POJO field");
-            log.error("Enums in POJOs are unsupported", exception);
-            throw exception;
+
+        for (Map.Entry<BigInteger, Object> pair : idToValue.entrySet()) {
+//                annotation id
+            BigInteger id = pair.getKey();
+//                annotated field's value
+            Enum value = (Enum) pair.getValue();
+
+            Field enumField;
+            try {
+                enumField = value.getDeclaringClass().getField(value.name());
+            } catch (NoSuchFieldException e) {
+                String msg = "Annotated field's value does not exist in original Enum";
+                log.error(msg, e);
+                throw new InvalidAnnotatedClassException(msg, value.getDeclaringClass(), e);
+            }
+
+            ListValue annotation = enumField.getAnnotation(ListValue.class);
+            if (annotation == null) {
+                String msg = "Parsed enum is not annotated";
+                InvalidAnnotatedClassException exception = new InvalidAnnotatedClassException(msg, value.getDeclaringClass());
+                log.error(msg + " {}", value.getDeclaringClass());
+                throw exception;
+            }
+            BigInteger valueId = new BigInteger(annotation.ID());
+
+            idToEnumId.put(id, valueId);
         }
-        return new HashMap<>();
+        return idToEnumId;
     }
 
     @Override
