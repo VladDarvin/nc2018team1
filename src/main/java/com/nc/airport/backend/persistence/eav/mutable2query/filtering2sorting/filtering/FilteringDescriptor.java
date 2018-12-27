@@ -49,7 +49,7 @@ public class FilteringDescriptor {
                 countOfValues--;
             }
             if (countOfEntities != 1) {
-                queryBuilder.append(" AND (");
+                queryBuilder.append(" OR (");
             }
             countOfEntities--;
         }

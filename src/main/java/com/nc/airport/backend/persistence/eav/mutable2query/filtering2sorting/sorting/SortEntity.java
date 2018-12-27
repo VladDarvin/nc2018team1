@@ -9,6 +9,9 @@ public class SortEntity {
     private String type;
     private Boolean order;
 
+    public SortEntity() {
+    }
+
     /*sort by property*/
     public SortEntity(PropertiesEntityType type, Boolean order) {
         this.type = "O." + type.getType();
