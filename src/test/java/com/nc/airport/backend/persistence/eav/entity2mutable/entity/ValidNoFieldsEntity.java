@@ -6,6 +6,7 @@ import lombok.ToString;
 
 @ObjectType(ID = "1")
 @ToString
+//Extending this class (actually, any class that has annotations is currently unsupported(derived annotations are ignored))
 public class ValidNoFieldsEntity extends BaseEntity {
 
 }
