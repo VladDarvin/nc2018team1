@@ -1,25 +1,4 @@
-/target/
-!.mvn/wrapper/maven-wrapper.jar
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/build/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+.idea**
+target**
+src/main/java/com/nc/airport/backend/BackendApplication.java
+src/main/java/com/nc/airport/backend/eav/filtering/PagingDescriptor.java
