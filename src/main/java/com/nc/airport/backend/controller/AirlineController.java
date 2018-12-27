@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller;
 
+import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.service.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -50,9 +49,15 @@ public class AirlineController {
         return airlineService.getAirlinesAmount();
     }
 
-    @RequestMapping(value = "/airlines/page={page}", method = RequestMethod.POST)
-    public List<Airline> searchAirlines(@PathVariable(name = "page") int page,
-                                        @RequestBody Map<BigInteger, Set<Object>> filtering, @RequestBody Map<BigInteger, Boolean> sorting) {
-        return airlineService.filterAndSortAirlines(page, filtering, sorting);
+    @GetMapping(value = "/airlines/count/search={searchString}")
+    public BigInteger getCountOfAirlinesByFilter(@PathVariable(name = "searchString") String searchString) {
+        return airlineService.getAmountOfFiltrateAirlines(searchString);
     }
+
+    @RequestMapping(value = "/airlines/search/page={page}", method = RequestMethod.POST)
+    public List<Airline> searchAirlines(@PathVariable(name = "page") int page,
+                                        @RequestBody SortingFilteringWrapper wrapper) {
+        return airlineService.filterAndSortAirlines(page, wrapper.getSearchString(), wrapper.getSortList());
+    }
+
 }
