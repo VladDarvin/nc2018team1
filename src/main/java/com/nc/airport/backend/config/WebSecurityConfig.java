@@ -78,9 +78,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**/**").permitAll()
 
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/users").access("hasAuthority('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/users/**").access("hasAuthority('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.DELETE, "/users/**").access("hasAuthority('ROLE_ADMIN')")
+                //Users access
+                .antMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/users").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ROLE_ADMIN")
+                //Airlines access
+                .antMatchers(HttpMethod.GET, "/airlines").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/airlines").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/airlines/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airlines/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/airlines/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/airlines/**").hasAuthority("ROLE_ADMIN")
+                //Airplanes access
+                .antMatchers(HttpMethod.GET, "/airplanes").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/airplanes").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/airplanes/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airplanes/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/airplanes/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/airplanes/**").hasAuthority("ROLE_ADMIN")
+                //Countries access
+                .antMatchers(HttpMethod.GET, "/country").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/country").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/country/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/country/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/country/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/country/**").hasAuthority("ROLE_ADMIN")
+                //Passengers access
+                .antMatchers(HttpMethod.GET, "/passengers").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.POST, "/passengers").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.POST, "/passengers/**").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.GET, "/passengers/**").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.PUT, "/passengers/**").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.DELETE, "/passengers/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated();
 
         http
@@ -117,10 +149,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
                 .and()
                 .ignoring()
-                .antMatchers("/h2-console/**/**")
-                .and()
-                .ignoring()
-                .antMatchers("/airlines**");
+                .antMatchers("/h2-console/**/**");
     }
 
     @Bean
