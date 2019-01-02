@@ -35,14 +35,14 @@ public class FullCycleE2DBTest extends TestCase {
         Airplane initialAirplane = new Airplane();
         initialAirplane.setAirlineId(new BigInteger("3"));
         initialAirplane.setModel("SomeModel");
-        log.info("initial airplane : " + initialAirplane);
+        log.info("initial airplane : {}", initialAirplane);
 
         log.info("Converting e2m");
         Mutable initialMutable = e2m.convertEntityToMutable(initialAirplane);
 
         log.info("inserting m2db");
         m2q.sqlInsert(initialMutable);
-        log.info("initial mutable : " + initialMutable);
+        log.info("initial mutable : {}", initialMutable);
 
         List<BigInteger> attrIds = new ArrayList<>();
         for (Map.Entry<BigInteger, String> bigIntegerStringEntry : initialMutable.getValues().entrySet()) {
@@ -60,14 +60,14 @@ public class FullCycleE2DBTest extends TestCase {
 
         log.info("getting m from db");
         Mutable fetchedMutable = m2q.getSingleMutable(initialMutable.getObjectId(), attrIds);
-        log.info("fetched mutable : " + fetchedMutable);
+        log.info("fetched mutable : {}", fetchedMutable);
 
         log.info("deleting inserted object");
         m2q.sqlDelete(fetchedMutable);
 
         log.info("converting m2e");
         Airplane fetchedAirplane = e2m.convertMutableToEntity(fetchedMutable, Airplane.class);
-        log.info("converted entity : " + fetchedAirplane);
+        log.info("converted entity : {}", fetchedAirplane);
 
         assertEquals(initialMutable, fetchedMutable);
 
@@ -81,14 +81,14 @@ public class FullCycleE2DBTest extends TestCase {
         Airplane initialAirplane = new Airplane();
         initialAirplane.setAirlineId(new BigInteger("3"));
         initialAirplane.setModel("SomeModel");
-        log.info("initial airplane : " + initialAirplane);
+        log.info("initial airplane : {}", initialAirplane);
 
         log.info("Converting e2m");
         Mutable initialMutable = e2m.convertEntityToMutable(initialAirplane);
 
         log.info("inserting m2db");
         m2q.sqlUpdate(initialMutable);
-        log.info("initial mutable : " + initialMutable);
+        log.info("initial mutable : {}", initialMutable);
 
         List<BigInteger> attrIds = new ArrayList<>();
         for (Map.Entry<BigInteger, String> bigIntegerStringEntry : initialMutable.getValues().entrySet()) {
@@ -106,14 +106,14 @@ public class FullCycleE2DBTest extends TestCase {
 
         log.info("getting m from db");
         Mutable fetchedMutable = m2q.getSingleMutable(initialMutable.getObjectId(), attrIds);
-        log.info("fetched mutable : " + fetchedMutable);
+        log.info("fetched mutable : {}", fetchedMutable);
 
         log.info("deleting inserted object");
         m2q.sqlDelete(fetchedMutable);
 
         log.info("converting m2e");
         Airplane fetchedAirplane = e2m.convertMutableToEntity(fetchedMutable, Airplane.class);
-        log.info("converted entity : " + fetchedAirplane);
+        log.info("converted entity : {}", fetchedAirplane);
 
         assertEquals(initialMutable, fetchedMutable);
 

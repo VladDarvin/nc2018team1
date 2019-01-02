@@ -63,7 +63,7 @@ public class FilteringDescriptorTest {
         intValues.add(new BigInteger("87"));
         filterEntities.add(new FilterEntity(BigInteger.valueOf(5), intValues));
 
-        String expectedResult = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) AND (ATTR5 = ? OR ATTR5 = ?)";
+        String expectedResult = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) OR (ATTR5 = ? OR ATTR5 = ?)";
         String result = filteringDescriptor.doFiltering(filterEntities);
 
         log.info(result);
@@ -100,8 +100,8 @@ public class FilteringDescriptorTest {
         filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
 
         String expected = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
-                "AND (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
-                "AND (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?))";
+                "OR (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
+                "OR (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?))";
         String result = filteringDescriptor.doFiltering(filterEntities);
 
         log.info(result);
