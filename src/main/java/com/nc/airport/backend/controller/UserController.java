@@ -1,6 +1,7 @@
 package com.nc.airport.backend.controller;
 
 import com.nc.airport.backend.model.dto.UserFilteringWrapper;
+import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class UserController {
 
     @RequestMapping(value = "/registrate", method = RequestMethod.POST)
     public User registrateNewUser(@RequestBody User user) {
+        user.setAuthority(new Authority(2L, "ROLE_USER"));
         return userService.addUser(user);
     }
 
