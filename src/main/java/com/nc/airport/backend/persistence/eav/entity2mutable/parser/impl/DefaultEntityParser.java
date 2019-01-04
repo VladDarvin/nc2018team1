@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 @Log4j2
 @Component
-public class NonValidatingEntityParser implements EntityParser {
+public class DefaultEntityParser implements EntityParser {
 
     @Override
     public BigInteger parseObjectTypeId(BaseEntity entity) {
@@ -51,9 +52,17 @@ public class NonValidatingEntityParser implements EntityParser {
         Map<BigInteger, String> idToString = new HashMap<>();
         for (Map.Entry<BigInteger, Object> pair : parsedMap.entrySet()) {
             BigInteger id = pair.getKey();
-            String value = pair.getValue().toString();
-
-            idToString.put(id, value);
+            Object fieldValue = pair.getValue();
+            if (fieldValue instanceof Collection) {
+                Collection collectionFieldValue = (Collection) fieldValue;
+                for (Object collectionValue : collectionFieldValue) {
+                    String stringValue = collectionValue.toString();
+                    idToString.put(id, stringValue);
+                }
+            } else {
+                String stringValue = fieldValue.toString();
+                idToString.put(id, stringValue);
+            }
         }
 
         return idToString;
@@ -66,9 +75,29 @@ public class NonValidatingEntityParser implements EntityParser {
         Map<BigInteger, LocalDateTime> idToDate = new HashMap<>();
         for (Map.Entry<BigInteger, Object> pair : parsedMap.entrySet()) {
             BigInteger id = pair.getKey();
-            LocalDateTime date = (LocalDateTime) pair.getValue();
+            LocalDateTime date;
+            Object fieldValue = pair.getValue();
+            try {
+                if (fieldValue instanceof Collection) {
+                    Collection collectionFieldValue = (Collection) fieldValue;
+                    for (Object collectionValue : collectionFieldValue) {
+                        date = (LocalDateTime) collectionValue;
+                        idToDate.put(id, date);
+                    }
+                } else {
+                    date = (LocalDateTime) fieldValue;
+                    idToDate.put(id, date);
+                }
+            } catch (ClassCastException e) {
+                String msg = "Class " + entity.getClass() + " has " + fieldValue.getClass() +
+                        " field's type that is annotated with @DateField. Field's type must be LocalDateTime.";
+                InvalidAnnotatedClassException exception = new InvalidAnnotatedClassException(
+                        msg, entity.getClass(), e);
+                log.error(msg, exception);
+                throw exception;
+            }
 
-            idToDate.put(id, date);
+
         }
 
         return idToDate;
@@ -117,9 +146,17 @@ public class NonValidatingEntityParser implements EntityParser {
 
         for (Map.Entry<BigInteger, Object> pair : idToValue.entrySet()) {
             BigInteger id = pair.getKey();
-            BigInteger refId = (BigInteger) pair.getValue();
-
-            idToReference.put(id, refId);
+            Object value = pair.getValue();
+            if (value instanceof Collection) {
+                Collection collectionValues = (Collection) value;
+                for (Object collectionValue : collectionValues) {
+                    BigInteger refId = (BigInteger) collectionValue;
+                    idToReference.put(id, refId);
+                }
+            } else {
+                BigInteger refId = (BigInteger) pair.getValue();
+                idToReference.put(id, refId);
+            }
         }
         return idToReference;
     }
