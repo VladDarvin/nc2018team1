@@ -70,7 +70,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
 
     @Override
     public List<T> findAll(@NotNull Class<T> entityClass) {
-        throw new UnsupportedOperationException("List<T> findAll(@NotNull Class<T> entityClass)");
+        throw new UnsupportedOperationException("List<T> findAll(@NotNull Class<T> entityClass) is not supported, " +
+                "use findSlice() method instead");
     }
 
     @Override
@@ -176,7 +177,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     /**
-     * Checks if the argument is null. If so, logs and throws an exception.
+     * Checks if the argument is null. If so, it logs and throws an exception.
      *
      * @param o checked argument
      * @throws IllegalArgumentException if argument is null

@@ -42,7 +42,7 @@ public class AirlineService {
         return airlinesRepository.count(Airline.class);
     }
 
-    public BigInteger getAmountOfFiltrateAirlines(String searchString) {
+    public BigInteger getAmountOfFilteredAirlines(String searchString) {
         List<FilterEntity> filterBy = makeFilterList(searchString);
         return airlinesRepository.count(Airline.class, filterBy);
     }
