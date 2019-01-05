@@ -1,10 +1,12 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
+import com.nc.airport.backend.model.entities.model.airplane.Seat;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,11 @@ public class AirplaneService {
     }
 
     public List<Airplane> findAllAirplanes() {
-//         TODO USE FINDSLICE
         return airplaneRepository.findAll(Airplane.class);
     }
 
     public List<Airplane> getTenAirplanes(int page) {
-        int offset = (page - 1) * 10;
-        return airplaneRepository.findSlice(Airplane.class, 1 + offset, 10 + offset);
+        return airplaneRepository.findSlice(Airplane.class, new Page(page - 1));
     }
 
     public Airplane addAirplane(Airplane airplane) {
@@ -48,19 +48,16 @@ public class AirplaneService {
     }
 
     public List<Airplane> filterAndSortAirplanes(int page, String search, List<SortEntity> sortEntities) {
-
         List<FilterEntity> filterEntities = makeFilterList(search);
-
-        int offset = (page - 1) * 10;
-        return airplaneRepository.findSlice(Airplane.class, 1 + offset, 10 + offset, sortEntities, filterEntities);
+        return airplaneRepository.findSlice(Airplane.class, new Page(page - 1), sortEntities, filterEntities);
 
     }
 
     private List<FilterEntity> makeFilterList(String search) {
-        String searchString = "%"+search+"%";
+        String searchString = "%" + search + "%";
         List<BigInteger> attributeIds = ReflectionHelper.getAttributeIds(Airplane.class);
         Map<BigInteger, Set<Object>> filtering = new HashMap<>();
-        for (BigInteger id:
+        for (BigInteger id :
                 attributeIds) {
             filtering.put(id, new HashSet<>(Arrays.asList(searchString)));
         }
@@ -68,12 +65,16 @@ public class AirplaneService {
         List<FilterEntity> filterEntities = null;
         if (searchString != null) {
             filterEntities = new ArrayList<>();
-            for (BigInteger key:
+            for (BigInteger key :
                     filtering.keySet()) {
                 filterEntities.add(new FilterEntity(key, filtering.get(key)));
             }
         }
         return filterEntities;
+    }
+
+    public List<Seat> findSeatsByAirplane(Airplane airplane) {
+        return null;
     }
 }
 

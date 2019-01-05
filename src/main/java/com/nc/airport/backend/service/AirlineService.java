@@ -5,6 +5,7 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelp
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,7 @@ public class AirlineService {
     }
 
     public List<Airline> getTenAirlines(int page) {
-        int offset = (page - 1) * 10;
-        return airlinesRepository.findSlice(Airline.class, 1 + offset, 10 + offset);
+        return airlinesRepository.findSlice(Airline.class, new Page(page - 1));
     }
 
     public Airline addAirline(Airline airline) {
@@ -49,28 +49,24 @@ public class AirlineService {
 
     public List<Airline> filterAndSortAirlines(int page, String search, List<SortEntity> sortEntities) {
         List<FilterEntity> filterEntities = makeFilterList(search);
-
-        int offset = (page - 1) * 10;
-        return airlinesRepository.findSlice(Airline.class, 1 + offset, 10 + offset, sortEntities, filterEntities);
+        return airlinesRepository.findSlice(Airline.class, new Page(page - 1), sortEntities, filterEntities);
 
     }
 
     private List<FilterEntity> makeFilterList(String search) {
-        String searchString = "%"+search+"%";
+        String searchString = "%" + search + "%";
         List<BigInteger> attributeIds = ReflectionHelper.getAttributeIds(Airline.class);
         Map<BigInteger, Set<Object>> filtering = new HashMap<>();
-        for (BigInteger id:
+        for (BigInteger id :
                 attributeIds) {
             filtering.put(id, new HashSet<>(Arrays.asList(searchString)));
         }
 
         List<FilterEntity> filterEntities = null;
-        if (searchString != null) {
-            filterEntities = new ArrayList<>();
-            for (BigInteger key:
-                    filtering.keySet()) {
-                filterEntities.add(new FilterEntity(key, filtering.get(key)));
-            }
+        filterEntities = new ArrayList<>();
+        for (BigInteger key :
+                filtering.keySet()) {
+            filterEntities.add(new FilterEntity(key, filtering.get(key)));
         }
         return filterEntities;
     }

@@ -5,6 +5,7 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelp
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class CountryService {
 
     public List<Country> findAllCountries() {
         try {
-            return countriesRepository.findSlice(Country.class, 1, getCountriesAmount().intValueExact());
+            return countriesRepository.findSlice(Country.class, new Page(getCountriesAmount().intValueExact(), 0));
         } catch (ArithmeticException e) {
             throw new ArithmeticException("Amount of countries is greater than int range");
         }
@@ -41,8 +42,7 @@ public class CountryService {
     }
 
     public List<Country> getTenCountries(int page) {
-        int offset = (page - 1) * 10;
-        return countriesRepository.findSlice(Country.class, 1 + offset, 10 + offset);
+        return countriesRepository.findSlice(Country.class, new Page(page - 1));
     }
 
     public BigInteger getAmountOfFilteredCountries(String searchString) {
@@ -52,9 +52,7 @@ public class CountryService {
 
     public List<Country> filterAndSortCountries(int page, String search, List<SortEntity> sortEntities) {
         List<FilterEntity> filterEntities = makeFilterList(search);
-
-        int offset = (page - 1) * 10;
-        return countriesRepository.findSlice(Country.class, 1 + offset, 10 + offset, sortEntities, filterEntities);
+        return countriesRepository.findSlice(Country.class, new Page(page - 1), sortEntities, filterEntities);
 
     }
 
