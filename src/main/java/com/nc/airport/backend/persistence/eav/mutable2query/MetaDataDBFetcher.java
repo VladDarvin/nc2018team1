@@ -5,7 +5,10 @@ import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionExcep
 import lombok.extern.log4j.Log4j2;
 
 import java.math.BigInteger;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Log4j2
 class MetaDataDBFetcher {
