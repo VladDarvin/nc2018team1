@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller;
 
+import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.flight.Country;
 import com.nc.airport.backend.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class CountryController {
         return countryService.findAllCountries();
     }
 
+    @RequestMapping(value = "/countries/page={page}", method = RequestMethod.GET)
+    public List<Country> getTenCountries(@PathVariable(name = "page") int page) {
+        return countryService.getTenCountries(page);
+    }
+
     @PostMapping(value = "/countries")
     public Country addNewCountry(@RequestBody Country country) {
         return countryService.addCountry(country);
@@ -45,14 +51,14 @@ public class CountryController {
         return countryService.getCountriesAmount();
     }
 
-    @RequestMapping(value = "/countries/page={page}", method = RequestMethod.GET)
-    public List<Country> getTenCountries(@PathVariable(name = "page") int page) {
-        return countryService.getTenCountries(page);
+    @GetMapping(value = "/countries/count/search={searchString}")
+    public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
+        return countryService.getAmountOfFilteredCountries(searchString);
     }
 
     @RequestMapping(value = "/countries/page={page}", method = RequestMethod.POST)
     public List<Country> searchCountries(@PathVariable(name = "page") int page,
-                                         @RequestBody Map<BigInteger, Set<Object>> filtering, @RequestBody Map<BigInteger, Boolean> sorting) {
-        return countryService.filterAndSortCountries(page, filtering, sorting);
+                                         @RequestBody SortingFilteringWrapper wrapper) {
+        return countryService.filterAndSortCountries(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }

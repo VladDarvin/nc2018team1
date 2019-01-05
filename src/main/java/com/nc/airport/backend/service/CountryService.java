@@ -1,6 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.entities.model.flight.Country;
+import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
@@ -8,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CountryService {
@@ -47,26 +45,36 @@ public class CountryService {
         return countriesRepository.findSlice(Country.class, 1 + offset, 10 + offset);
     }
 
-    public List<Country> filterAndSortCountries(int page,
-                                                  Map<BigInteger, Set<Object>> filtering, Map<BigInteger, Boolean> sorting) {
+    public BigInteger getAmountOfFilteredCountries(String searchString) {
+        List<FilterEntity> filterBy = makeFilterList(searchString);
+        return countriesRepository.count(Country.class, filterBy);
+    }
+
+    public List<Country> filterAndSortCountries(int page, String search, List<SortEntity> sortEntities) {
+        List<FilterEntity> filterEntities = makeFilterList(search);
+
+        int offset = (page - 1) * 10;
+        return countriesRepository.findSlice(Country.class, 1 + offset, 10 + offset, sortEntities, filterEntities);
+
+    }
+
+    private List<FilterEntity> makeFilterList(String search) {
+        String searchString = "%" + search + "%";
+        List<BigInteger> attributeIds = ReflectionHelper.getAttributeIds(Country.class);
+        Map<BigInteger, Set<Object>> filtering = new HashMap<>();
+        for (BigInteger id :
+                attributeIds) {
+            filtering.put(id, new HashSet<>(Arrays.asList(searchString)));
+        }
+
         List<FilterEntity> filterEntities = null;
-        if (filtering != null) {
+        if (searchString != null) {
             filterEntities = new ArrayList<>();
             for (BigInteger key :
                     filtering.keySet()) {
                 filterEntities.add(new FilterEntity(key, filtering.get(key)));
             }
         }
-
-        List<SortEntity> sortEntities = null;
-        if (sorting != null) {
-            sortEntities = new ArrayList<>();
-            for (BigInteger key :
-                    sorting.keySet()) {
-                sortEntities.add(new SortEntity(key, sorting.get(key)));
-            }
-        }
-
-        return countriesRepository.findSlice(Country.class, page * 10, page * 10 + 10, sortEntities, filterEntities);
+        return filterEntities;
     }
 }

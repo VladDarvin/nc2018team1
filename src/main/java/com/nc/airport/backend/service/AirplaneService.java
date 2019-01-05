@@ -21,6 +21,7 @@ public class AirplaneService {
     }
 
     public List<Airplane> findAllAirplanes() {
+//         TODO USE FINDSLICE
         return airplaneRepository.findAll(Airplane.class);
     }
 
@@ -41,12 +42,12 @@ public class AirplaneService {
         return airplaneRepository.count(Airplane.class);
     }
 
-    public BigInteger getAmountOfFiltrateAirplanes(String searchString) {
+    public BigInteger getAmountOfFilteredAirplanes(String searchString) {
         List<FilterEntity> filterBy = makeFilterList(searchString);
         return airplaneRepository.count(Airplane.class, filterBy);
     }
 
-    public List<Airplane> filterAndSortAirlines(int page, String search, List<SortEntity> sortEntities) {
+    public List<Airplane> filterAndSortAirplanes(int page, String search, List<SortEntity> sortEntities) {
 
         List<FilterEntity> filterEntities = makeFilterList(search);
 

@@ -51,7 +51,7 @@ public class AirlineController {
 
     @GetMapping(value = "/airlines/count/search={searchString}")
     public BigInteger getCountOfAirlinesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return airlineService.getAmountOfFiltrateAirlines(searchString);
+        return airlineService.getAmountOfFilteredAirlines(searchString);
     }
 
     @RequestMapping(value = "/airlines/search/page={page}", method = RequestMethod.POST)

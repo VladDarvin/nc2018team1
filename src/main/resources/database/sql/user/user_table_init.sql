@@ -1,6 +1,6 @@
 create table USERS
 (
-  ID           NUMBER,
+  OBJECT_ID           NUMBER,
   PASSWORD     VARCHAR2(100),
   FIRSTNAME    VARCHAR2(100),
   LASTNAME     VARCHAR2(100),
