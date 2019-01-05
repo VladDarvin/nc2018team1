@@ -254,6 +254,30 @@ public class Mutable2Query {
         throw new UnsupportedOperationException("not supported yet");
     }
 
+    /**
+     * Get count of returned items by filtering
+     *
+     * @param values                values attr_id List
+     * @param dateValues            dateValues attr_id List
+     * @param listValues            listValues attr_id List
+     * @param references            references attr_id List
+     * @param filterBy
+     * @return Total count of pages
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
+     */
+    public BigInteger countByFilter(List<BigInteger> values,
+                                    List<BigInteger> dateValues,
+                                    List<BigInteger> listValues,
+                                    List<BigInteger> references,
+                                    List<FilterEntity> filterBy) {
+        int countOfItems = new WidePickyDBFetcher(connection)
+                .getCountOfMutables(values, dateValues, listValues, references, filterBy);
+
+        return BigInteger.valueOf(countOfItems == 0 ? 1 : (int)Math.ceil((double)countOfItems / (double)10));
+    }
+
     /**     UNSUPPORTED
      * Returns a single mutable with specified object id and all possible attributes
      *

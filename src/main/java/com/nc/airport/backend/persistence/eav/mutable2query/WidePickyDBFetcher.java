@@ -73,30 +73,69 @@ class WidePickyDBFetcher {
         return mutables;
     }
 
+    int getCountOfMutables(List<BigInteger> values,
+                                  List<BigInteger> dateValues,
+                                  List<BigInteger> listValues,
+                                  List<BigInteger> references,
+                                  List<FilterEntity> filterBy) {
+
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
+                new FilteringToSortingDescriptor.DescriptorBuilder();
+        int countOfItems = 0;
+
+        values = ensureNonNullSecurity(values);
+        dateValues = ensureNonNullSecurity(dateValues);
+        listValues = ensureNonNullSecurity(listValues);
+        references = ensureNonNullSecurity(references);
+
+        if (!Collections.isEmpty(filterBy))
+            descBuilder.filter(filterBy);
+
+        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder countFilteredSortedQuery = new StringBuilder("SELECT COUNT(*) AS total FROM (").append(basicQuery).append(") ");
+        countFilteredSortedQuery.append(descBuilder.build().getQueryBuilder());
+        try {
+            log.log(Level.INFO, "Executing sequence:\n" + countFilteredSortedQuery);
+            statement = connection.prepareStatement(countFilteredSortedQuery.toString());
+            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
+            while (result.next()) {
+                countOfItems = result.getInt("total");
+            }
+        }catch (SQLException e) {
+            log.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
+        } finally {
+            closeResultSetAndStatement(result, statement);
+        }
+        return countOfItems;
+    }
+
     /*  SELECT * FROM
-        ( SELECT a.*, rownum rnum
-            FROM
-            (SELECT * FROM
-                (
-                SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION,
-                    A1.VALUE ATTR51,
-                    A2.DATE_VALUE ATTR50,
-                    A3.LIST_VALUE_ID ATTR45,
-                    A4.REFERENCE ATTR55
-                FROM OBJECTS O
-                JOIN ATTRIBUTES A1
-                  ON A1.ATTR_ID = 51 AND A1.OBJECT_ID = O.OBJECT_ID
-                JOIN ATTRIBUTES A2
-                  ON A2.ATTR_ID = 50 AND A2.OBJECT_ID = O.OBJECT_ID
-                JOIN ATTRIBUTES A3
-                  ON A3.ATTR_ID = 45 AND A3.OBJECT_ID = O.OBJECT_ID
-                JOIN OBJREFERENCE A4
-                  ON A4.ATTR_ID = 55 AND A4.OBJECT_ID = O.OBJECT_ID
-                )
-              WHERE (ATTR45 = 1 OR ATTR45 = 2) ORDER BY ATTR50 DESC
-              ) a
-            WHERE rownum <= 2)
-        WHERE rnum >= 1                                                                                 */
+            ( SELECT a.*, rownum rnum
+                FROM
+                (SELECT * FROM
+                    (
+                    SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION,
+                        A1.VALUE ATTR51,
+                        A2.DATE_VALUE ATTR50,
+                        A3.LIST_VALUE_ID ATTR45,
+                        A4.REFERENCE ATTR55
+                    FROM OBJECTS O
+                    JOIN ATTRIBUTES A1
+                      ON A1.ATTR_ID = 51 AND A1.OBJECT_ID = O.OBJECT_ID
+                    JOIN ATTRIBUTES A2
+                      ON A2.ATTR_ID = 50 AND A2.OBJECT_ID = O.OBJECT_ID
+                    JOIN ATTRIBUTES A3
+                      ON A3.ATTR_ID = 45 AND A3.OBJECT_ID = O.OBJECT_ID
+                    JOIN OBJREFERENCE A4
+                      ON A4.ATTR_ID = 55 AND A4.OBJECT_ID = O.OBJECT_ID
+                    )
+                  WHERE (ATTR45 = 1 OR ATTR45 = 2) ORDER BY ATTR50 DESC
+                  ) a
+                WHERE rownum <= 2)
+            WHERE rnum >= 1                                                                                 */
     private StringBuilder createSQLQuery(List<BigInteger> values,
                                          List<BigInteger> dateValues,
                                          List<BigInteger> listValues,
