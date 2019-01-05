@@ -174,11 +174,11 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     public BigInteger count(Class<T> entityClass, List<FilterEntity> filterBy) {
         checkNull(entityClass);
 
-        BigInteger objTypeId = ReflectionHelper.getObjTypeId(entityClass);
-        return m2db.countById(objTypeId, filterBy);
+        return m2db.countByFilter(ReflectionHelper.getValueFieldIds(entityClass),
+                ReflectionHelper.getDateFieldIds(entityClass),
+                ReflectionHelper.getListFieldIds(entityClass),
+                ReflectionHelper.getReferenceFieldIds(entityClass), filterBy);
     }
-
-
 
     @Override
     public boolean existsById(BigInteger objectId) {
