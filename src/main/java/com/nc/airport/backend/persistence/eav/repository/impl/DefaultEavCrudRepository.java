@@ -8,6 +8,7 @@ import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -88,14 +89,14 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow) {
+    public List<T> findSlice(@NotNull Class<T> entityClass, Page page) {
         checkNull(entityClass);
 
         List<Mutable> mutables;
         mutables = m2db.getMutablesFromDB(ReflectionHelper.getObjTypeId(entityClass),
                 ReflectionHelper.getAttributeIds(entityClass),
-                startRow,
-                endRow);
+                page.getFirstRow(),
+                page.getLastRow());
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
@@ -105,7 +106,12 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findSlice(@NotNull Class<T> entityClass, int startRow, int endRow, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
+    public List<BaseEntity> findSliceOfChildren(@NotNull T entity, Page page) {
+        return null;
+    }
+
+    @Override
+    public List<T> findSlice(@NotNull Class<T> entityClass, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
         checkNull(entityClass);
 
         List<Mutable> mutables;
@@ -114,8 +120,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getDateFieldIds(entityClass),
                 ReflectionHelper.getListFieldIds(entityClass),
                 ReflectionHelper.getReferenceFieldIds(entityClass),
-                startRow,
-                endRow,
+                page.getFirstRow(),
+                page.getLastRow(),
                 sortBy,
                 filterBy);
 
@@ -124,6 +130,11 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
             entities.add(e2m.convertMutableToEntity(mutable, entityClass));
         }
         return entities;
+    }
+
+    @Override
+    public List<T> findSliceOfChildren(@NotNull T entity, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
+        return null;
     }
 
 
