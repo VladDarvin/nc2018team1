@@ -66,8 +66,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
-     * @param startRow of the item list (inclusive, one-based)
-     * @param endRow of the item list (inclusive, one-based)
+     * @param page zero-based
      * @return slice of items that are found within specified rows
      */
     List<T> findSlice(@NotNull Class<T> entityClass, Page page);
@@ -76,8 +75,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns list of entities that are children of given entity
      *
      * @param entity parent of searched children
-     * @param startRow of the item list, inclusive (one-based)
-     * @param endRow of the item list, inclusive (one-based)
+     * @param page zero-based
      * @return list of entity's children
      */
     List<BaseEntity> findSliceOfChildren(@NotNull T entity, Page page);
@@ -87,8 +85,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
-     * @param startRow of the item list (inclusive, one-based)
-     * @param endRow of the item list (inclusive, one-based)
+     * @param page zero-based
      * @param sortBy sorting criteria
      * @param filterBy filtering criteria
      * @return slice of entities that are found and ordered with criterias
@@ -103,8 +100,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entity search criteria
-     * @param startRow of the item list (inclusive, one-based)
-     * @param endRow of the item list (inclusive, one-based)
+     * @param page zero-based
      * @param sortBy sorting criteria
      * @param filterBy filtering criteria
      * @return slice of entities that are found and ordered with criterias
