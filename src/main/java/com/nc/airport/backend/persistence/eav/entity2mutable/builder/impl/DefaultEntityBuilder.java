@@ -53,15 +53,15 @@ public class DefaultEntityBuilder implements EntityBuilder {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
-        for (Map.Entry<BigInteger, BigInteger> pair : references.entrySet()) {
+        for (Map.Entry<BigInteger, BigInteger> idToRef : references.entrySet()) {
 //            OBJREFERENCE.ATTR_ID - @ReferenceField(ID = "123")
-            BigInteger id = pair.getKey();
+            BigInteger id = idToRef.getKey();
 
-            BigInteger reference = pair.getValue();
+            BigInteger referenceId = idToRef.getValue();
 
-            Field field = ReflectionHelper.getFieldByAnnotationId(entityClass, ReferenceField.class, id);
-            if (field != null) {
-                ReflectionHelper.setFieldValue(entity, field, reference);
+            Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, ReferenceField.class, id);
+            if (entityField != null) {
+                ReflectionHelper.setFieldValue(entity, entityField, referenceId);
             }
         }
     }
@@ -92,7 +92,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
                             try {
                                 enumValue = enumField.get(null);
                             } catch (IllegalAccessException e) {
-                                String msg = "Can't access enum field";
+                                String msg = "Can't access enum field of " + enumClass;
                                 RuntimeException exception = new InvalidAnnotatedClassException(msg, enumClass, e);
                                 log.error(msg);
                                 throw exception;
@@ -114,39 +114,49 @@ public class DefaultEntityBuilder implements EntityBuilder {
             BigInteger id = pair.getKey();
             LocalDateTime date = pair.getValue();
 
-            Field field = ReflectionHelper.getFieldByAnnotationId(entityClass, DateField.class, id);
-            if (field != null) {
-                ReflectionHelper.setFieldValue(entity, field, date);
+            Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, DateField.class, id);
+            if (entityField != null) {
+                ReflectionHelper.setFieldValue(entity, entityField, date);
             }
         }
     }
 
     // TODO: 23.11.2018 refactor
-    private <T extends BaseEntity> void fillValueFields(T entity, Mutable mutable) {
-        Map<BigInteger, String> values = mutable.getValues();
-        Class<? extends BaseEntity> entityClazz = entity.getClass();
 
-        for (Map.Entry<BigInteger, String> pair : values.entrySet()) {
-            BigInteger id = pair.getKey();
-            String valueAsString = pair.getValue();
-            Field field = ReflectionHelper.getFieldByAnnotationId(entityClazz, ValueField.class, id);
-            if (field != null) {
-                Class<?> fieldType = field.getType();
-                try {
-                    Constructor<?> constructor = fieldType.getConstructor(String.class);
-                    try {
-                        Object value = constructor.newInstance(valueAsString);
-                        ReflectionHelper.setFieldValue(entity, field, value);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        String message = "Cannot create an instance of " + fieldType;
-                        logAndThrowDataLossEx(message, e);
-                    }
-                } catch (NoSuchMethodException e) {
-                    String message = "No constructor (String) for " + fieldType;
-                    logAndThrowDataLossEx(message, e);
-                }
+    private <T extends BaseEntity> void fillValueFields(T entity, Mutable mutable) {
+        Map<BigInteger, String> mutableValues = mutable.getValues();
+        Class<? extends BaseEntity> entityClass = entity.getClass();
+
+        for (Map.Entry<BigInteger, String> idToVal : mutableValues.entrySet()) {
+            Field entityField = ReflectionHelper.getFieldByAnnotationId(
+                    entityClass, ValueField.class, idToVal.getKey());
+            if (entityField != null) {
+                Class fieldClass = entityField.getType();
+                Object injectableValue = newStringConstructorInstance(fieldClass, idToVal.getValue());
+                ReflectionHelper.setFieldValue(entity, entityField, injectableValue);
+            } else {
+                String message = "No field annotated with @ValueField with id " + idToVal.getKey() + ". Therefore it is skipped.";
+                logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
             }
         }
+    }
+
+
+    private Object newStringConstructorInstance(Class classToCreate, String initArg) {
+        Object newInstance = null;
+        try {
+            Constructor<?> constructor = classToCreate.getConstructor(String.class);
+            try {
+                newInstance = constructor.newInstance(initArg);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                String message = "Cannot create an instance of " + classToCreate;
+                logAndThrowDataLossEx(message, e);
+            }
+        } catch (NoSuchMethodException e) {
+            String message = "No constructor (String) for " + classToCreate;
+            logAndThrowDataLossEx(message, e);
+        }
+        return newInstance;
     }
 
     private <T extends BaseEntity> T newEntity(Class<T> clazz) {
