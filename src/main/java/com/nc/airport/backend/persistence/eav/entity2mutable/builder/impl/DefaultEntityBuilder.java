@@ -80,8 +80,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
             Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, ListField.class, id);
             if (entityField != null) {
-                entityField.setAccessible(true);
-
+//                entityField.setAccessible(true);
                 Class<Enum> enumClass = (Class<Enum>) entityField.getType();
 
                 Object enumValue = null;
