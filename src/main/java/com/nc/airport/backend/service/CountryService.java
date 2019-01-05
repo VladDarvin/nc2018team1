@@ -1,7 +1,6 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.entities.model.flight.Country;
-import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
@@ -10,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.List;
 
 @Service
-public class CountryService {
+public class CountryService extends AbstractService{
     private EavCrudRepository<Country> countriesRepository;
 
     @Autowired
@@ -56,23 +55,5 @@ public class CountryService {
 
     }
 
-    private List<FilterEntity> makeFilterList(String search) {
-        String searchString = "%" + search + "%";
-        List<BigInteger> attributeIds = ReflectionHelper.getAttributeIds(Country.class);
-        Map<BigInteger, Set<Object>> filtering = new HashMap<>();
-        for (BigInteger id :
-                attributeIds) {
-            filtering.put(id, new HashSet<>(Arrays.asList(searchString)));
-        }
 
-        List<FilterEntity> filterEntities = null;
-        if (searchString != null) {
-            filterEntities = new ArrayList<>();
-            for (BigInteger key :
-                    filtering.keySet()) {
-                filterEntities.add(new FilterEntity(key, filtering.get(key)));
-            }
-        }
-        return filterEntities;
-    }
 }
