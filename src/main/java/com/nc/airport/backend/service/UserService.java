@@ -1,7 +1,7 @@
 package com.nc.airport.backend.service;
 
-import com.nc.airport.backend.model.dto.UserDTO;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
+import com.nc.airport.backend.model.dto.UserDTO;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.repository.UsersRepository;
