@@ -1,10 +1,9 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.UserDTO;
-import com.nc.airport.backend.model.dto.UserFilteringWrapper;
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
-import com.nc.airport.backend.repository.UserFilter;
 import com.nc.airport.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,8 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -64,11 +64,10 @@ public class UserService {
         return pageOfUsers.getContent();
     }
 
-    public UserFilteringWrapper search(List<Map<String, Object>> criterias, int page) {
-        UserFilter filter =
-                new UserFilter(criterias);
-        Page<User> pageOfUsers = usersRepository.findAll(filter, PageRequest.of(page - 1, 10));
-        return new UserFilteringWrapper(pageOfUsers.getContent(), pageOfUsers.getTotalPages());
+    public ResponseFilteringWrapper search(String searchString, int page) {
+        Page<User> pageOfUsers = usersRepository.findAll(searchString, PageRequest.of(page - 1, 10));
+        List<Object> entities = new ArrayList<>(pageOfUsers.getContent());
+        return new ResponseFilteringWrapper(entities, BigInteger.valueOf(pageOfUsers.getTotalPages()));
     }
 
     public Long getUsersAmount() {

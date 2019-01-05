@@ -1,6 +1,6 @@
 package com.nc.airport.backend.controller;
 
-import com.nc.airport.backend.model.dto.UserFilteringWrapper;
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -55,9 +54,9 @@ public class UserController {
         return userService.getTenUsers(page);
     }
 
-    @RequestMapping(value = "/users/search/page={page}", method = RequestMethod.POST)
-    public UserFilteringWrapper searchUsers(@PathVariable(name = "page") int page, @RequestBody List<Map<String, Object>> criterias) {
-        return userService.search(criterias, page);
+    @RequestMapping(value = "/users/search={searchString}/page={page}", method = RequestMethod.GET)
+    public ResponseFilteringWrapper searchUsers(@PathVariable(name = "searchString") String searchString, @PathVariable(name = "page") int page) {
+        return userService.search(searchString, page);
     }
 
     @RequestMapping(value = "/users/count", method = RequestMethod.GET)

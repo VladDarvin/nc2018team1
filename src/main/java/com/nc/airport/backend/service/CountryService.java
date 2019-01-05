@@ -1,5 +1,6 @@
 package com.nc.airport.backend.service;
 
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.flight.Country;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,14 +47,16 @@ public class CountryService extends AbstractService{
     }
 
     public BigInteger getAmountOfFilteredCountries(String searchString) {
-        List<FilterEntity> filterBy = makeFilterList(searchString);
+        List<FilterEntity> filterBy = makeFilterList(searchString, Country.class);
         return countriesRepository.count(Country.class, filterBy);
     }
 
-    public List<Country> filterAndSortCountries(int page, String search, List<SortEntity> sortEntities) {
-        List<FilterEntity> filterEntities = makeFilterList(search);
-        return countriesRepository.findSlice(Country.class, new Page(page - 1), sortEntities, filterEntities);
-
+    public ResponseFilteringWrapper filterAndSortCountries(int page, String search, List<SortEntity> sortEntities) {
+        List<FilterEntity> filterEntities = makeFilterList(search, Country.class);
+        List<Country> countries = countriesRepository.findSlice(Country.class, new Page(page - 1), sortEntities, filterEntities);
+        List<Object> entities = new ArrayList<>(countries);
+        BigInteger countOfPages = countriesRepository.count(Country.class, filterEntities);
+        return new ResponseFilteringWrapper(entities, countOfPages);
     }
 
 

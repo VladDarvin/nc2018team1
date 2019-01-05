@@ -15,7 +15,9 @@ public interface UsersRepository extends PagingAndSortingRepository<User, Long>,
     @Query(value = "SELECT * FROM USERS INNER JOIN AUTHORITY ON USERS.AUTHORITY_ID = AUTHORITY.ID ORDER BY USERS.OBJECT_ID", nativeQuery = true)
     List<User> getAll();
 
-    Page<User> findAll(Specification<User> spec, Pageable pageable);
+    @Query(value = "SELECT * FROM USERS WHERE firstname LIKE %?1% OR " +
+            "lastname LIKE %?1% OR email LIKE %?1% OR phonenumber LIKE %?1%", nativeQuery = true)
+    Page<User> findAll(String searchString, Pageable pageable);
 
     User findUserByEmail(String email);
 

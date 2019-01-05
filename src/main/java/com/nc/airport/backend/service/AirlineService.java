@@ -1,5 +1,6 @@
 package com.nc.airport.backend.service;
 
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,13 +44,16 @@ public class AirlineService extends AbstractService {
     }
 
     public BigInteger getAmountOfFilteredAirlines(String searchString) {
-        List<FilterEntity> filterBy = makeFilterList(searchString);
+        List<FilterEntity> filterBy = makeFilterList(searchString, Airline.class);
         return airlinesRepository.count(Airline.class, filterBy);
     }
 
-    public List<Airline> filterAndSortAirlines(int page, String search, List<SortEntity> sortEntities) {
-        List<FilterEntity> filterEntities = makeFilterList(search);
-        return airlinesRepository.findSlice(Airline.class, new Page(page - 1), sortEntities, filterEntities);
+    public ResponseFilteringWrapper filterAndSortAirlines(int page, String search, List<SortEntity> sortEntities) {
+        List<FilterEntity> filterEntities = makeFilterList(search, Airline.class);
+        List<Airline> airlines = airlinesRepository.findSlice(Airline.class, new Page(page - 1), sortEntities, filterEntities);
+        List<Object> entities = new ArrayList<>(airlines);
+        BigInteger countOfPages = airlinesRepository.count(Airline.class, filterEntities);
+        return new ResponseFilteringWrapper(entities, countOfPages);
 
     }
 }

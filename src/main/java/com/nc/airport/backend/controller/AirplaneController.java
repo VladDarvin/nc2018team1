@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller;
 
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.service.AirplaneService;
@@ -55,8 +56,8 @@ public class AirplaneController {
     }
 
     @RequestMapping(value = "/airplanes/search/page={page}", method = RequestMethod.POST)
-    public List<Airplane> searchAirplanes(@PathVariable(name = "page") int page,
-                                        @RequestBody SortingFilteringWrapper wrapper) {
+    public ResponseFilteringWrapper searchAirplanes(@PathVariable(name = "page") int page,
+                                                    @RequestBody SortingFilteringWrapper wrapper) {
         return airplaneService.filterAndSortAirplanes(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
