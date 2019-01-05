@@ -9,14 +9,14 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.entity.enumfield.Va
 import com.nc.airport.backend.persistence.eav.entity2mutable.entity.reference.ValidReferenceEntity;
 import com.nc.airport.backend.persistence.eav.entity2mutable.entity.value.ValidValueEntity;
 import com.nc.airport.backend.persistence.eav.entity2mutable.impl.DefaultEntity2Mutable;
-import com.nc.airport.backend.persistence.eav.entity2mutable.parser.impl.NonValidatingEntityParser;
+import com.nc.airport.backend.persistence.eav.entity2mutable.parser.impl.DefaultEntityParser;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Test;
 
 @Log4j2
 public class Entity2MutableTest {
-    private Entity2Mutable e2m = new DefaultEntity2Mutable(new NonValidatingEntityParser(), new DefaultEntityBuilder());
+    private Entity2Mutable e2m = new DefaultEntity2Mutable(new DefaultEntityParser(), new DefaultEntityBuilder());
 
     private <T extends BaseEntity> void givenValidEntity_whenConverted2MutAndBack_thenEqual(T expectedBE){
         log.info("Expected entity : {}", expectedBE);
