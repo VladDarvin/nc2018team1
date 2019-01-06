@@ -48,7 +48,11 @@ public abstract class AbstractService<T extends BaseEntity> {
         return repository.findSlice(domainClass, new Page(page - 1));
     }
 
-    public T addEntity(T airline) {
+    public List<T> getEntitiesOfPage(int page, int pageSize){
+        return repository.findSlice(domainClass, new Page(pageSize, page - 1));
+    }
+
+    public T saveEntity(T airline) {
         return repository.save(airline);
     }
 
