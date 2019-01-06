@@ -5,7 +5,6 @@ import com.nc.airport.backend.model.dto.UserDTO;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +20,6 @@ public class UserService {
 
     private UsersRepository usersRepository;
 
-    @Autowired
     public UserService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }

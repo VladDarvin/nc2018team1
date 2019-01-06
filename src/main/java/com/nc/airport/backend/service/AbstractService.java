@@ -7,13 +7,11 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.fi
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
 import java.util.*;
 
 public abstract class AbstractService<T extends BaseEntity> {
-    @Autowired
     protected EavCrudRepository<T> repository;
     private Class<T> domainClass;
 

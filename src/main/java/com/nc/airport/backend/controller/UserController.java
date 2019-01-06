@@ -4,19 +4,17 @@ import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.Authority;
 import com.nc.airport.backend.model.entities.User;
 import com.nc.airport.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class UserController {
 
     private UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
