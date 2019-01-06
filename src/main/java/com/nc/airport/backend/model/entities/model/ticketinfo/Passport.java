@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Passport extends BaseEntity {
 
     @ValueField(ID = "41")
-    private String sn;
+    private String serialNumber;
 
     @ValueField(ID = "42")
     private String country;
