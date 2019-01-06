@@ -1,18 +1,12 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
-import com.nc.airport.backend.model.BaseEntity;
-import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
-import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.nc.airport.backend.persistence.eav.annotations.enums.ListValue;
 
-@ObjectType(ID = "12")
-@Getter
-@Setter
-@ToString(callSuper = true)
-public class TicketStatus extends BaseEntity {
-
-    @ValueField(ID = "37")
-    private String name;
+public enum  TicketStatus{
+    @ListValue(ID = "7")
+    NEW,
+    @ListValue(ID = "8")
+    BOUGHT,
+    @ListValue(ID = "9")
+    ARCHIVED
 }
