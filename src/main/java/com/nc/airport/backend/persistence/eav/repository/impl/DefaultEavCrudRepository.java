@@ -70,12 +70,6 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findAll(@NotNull Class<T> entityClass) {
-        throw new UnsupportedOperationException("List<T> findAll(@NotNull Class<T> entityClass) is not supported, " +
-                "use findSlice() method instead");
-    }
-
-    @Override
 //             TODO NAMING, ALSO THINK IF THIS METHOD IS REALLY NEEDED
     public List<T> findAll(Class<T> entityClass, Iterable<BigInteger> objectIds) {
         checkNull(entityClass);

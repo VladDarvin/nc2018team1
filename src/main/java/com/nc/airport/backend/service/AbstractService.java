@@ -44,10 +44,6 @@ public abstract class AbstractService<T extends BaseEntity> {
         return new ResponseFilteringWrapper<>(foundEntities, countOfPages);
     }
 
-    public List<T> findAllEntities() {
-        return repository.findAll(domainClass);
-    }
-
     public List<T> getTenEntities(int page) {
         return repository.findSlice(domainClass, new Page(page - 1));
     }

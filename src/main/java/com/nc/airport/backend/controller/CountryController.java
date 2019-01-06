@@ -19,11 +19,6 @@ public class CountryController {
         this.countryService = countryService;
     }
 
-    @GetMapping
-    public List<Country> getAllCountries() {
-        return countryService.findAllEntities();
-    }
-
     @GetMapping("/page={page}")
     public List<Country> getTenCountries(@PathVariable(name = "page") int page) {
         return countryService.getTenEntities(page);

@@ -19,11 +19,6 @@ public class AirlineController {
         this.airlineService = airlineService;
     }
 
-    @GetMapping
-    public List<Airline> getAll() {
-        return airlineService.findAllEntities();
-    }
-
     @GetMapping("/page={page}")
     public List<Airline> getTenAirlines(@PathVariable(name = "page") int page) {
         return airlineService.getTenEntities(page);

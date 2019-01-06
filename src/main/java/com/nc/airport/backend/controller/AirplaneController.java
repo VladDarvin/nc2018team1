@@ -19,10 +19,6 @@ public class AirplaneController {
         this.airplaneService = airplaneService;
     }
 
-    @GetMapping
-    public List<Airplane> getAll() {
-        return airplaneService.findAllEntities();
-    }
 
     @GetMapping("/page={page}")
     public List<Airplane> getTenAirplanes(@PathVariable(name = "page") int page) {
