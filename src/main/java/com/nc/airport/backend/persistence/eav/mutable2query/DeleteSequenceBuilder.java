@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Map;
 
 class DeleteSequenceBuilder extends SequenceBuilder {
     private BigInteger objectId;

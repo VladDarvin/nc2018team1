@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -24,42 +22,42 @@ public class CountryController {
 
     @GetMapping(path = "/countries")
     public List<Country> getAllCountries() {
-        return countryService.findAllCountries();
+        return countryService.findAllEntities();
     }
 
     @RequestMapping(value = "/countries/page={page}", method = RequestMethod.GET)
     public List<Country> getTenCountries(@PathVariable(name = "page") int page) {
-        return countryService.getTenCountries(page);
+        return countryService.getTenEntities(page);
     }
 
     @PostMapping(value = "/countries")
     public Country addNewCountry(@RequestBody Country country) {
-        return countryService.addCountry(country);
+        return countryService.addEntity(country);
     }
 
     @PutMapping(value = "/countries")
     public Country editCountry(@RequestBody Country country) {
-        return countryService.addCountry(country);
+        return countryService.addEntity(country);
     }
 
     @DeleteMapping(value = "/countries/{id}")
     public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
-        countryService.deleteCountry(id);
+        countryService.deleteEntity(id);
     }
 
     @GetMapping(value = "/countries/count")
     public BigInteger getCountOfCountries() {
-        return countryService.getCountriesAmount();
+        return countryService.getEntitiesAmount();
     }
 
     @GetMapping(value = "/countries/count/search={searchString}")
     public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return countryService.getAmountOfFilteredCountries(searchString);
+        return countryService.getAmountOfFilteredEntities(searchString);
     }
 
     @RequestMapping(value = "/countries/page={page}", method = RequestMethod.POST)
     public ResponseFilteringWrapper searchCountries(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
-        return countryService.filterAndSortCountries(page, wrapper.getSearchString(), wrapper.getSortList());
+        return countryService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }

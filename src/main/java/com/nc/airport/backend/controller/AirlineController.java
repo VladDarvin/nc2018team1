@@ -22,43 +22,43 @@ public class AirlineController {
 
     @GetMapping(path = "/airlines")
     public List<Airline> getAll() {
-        return airlineService.findAllAirlines();
+        return airlineService.findAllEntities();
     }
 
     @RequestMapping(value = "/airlines/page={page}", method = RequestMethod.GET)
     public List<Airline> getTenAirlines(@PathVariable(name = "page") int page) {
-        return airlineService.getTenAirlines(page);
+        return airlineService.getTenEntities(page);
     }
 
     @PostMapping(value = "/airlines")
     public Airline addNewAirline(@RequestBody Airline airline) {
-        return airlineService.addAirline(airline);
+        return airlineService.addEntity(airline);
     }
 
     @PutMapping(value = "/airlines")
     public Airline editAirline(@RequestBody Airline airline) {
-        return airlineService.addAirline(airline);
+        return airlineService.addEntity(airline);
     }
 
     @DeleteMapping(value = "/airlines/{id}")
     public void deleteAirline(@PathVariable(name = "id") BigInteger id) {
-        airlineService.deleteAirline(id);
+        airlineService.deleteEntity(id);
     }
 
     @GetMapping(value = "/airlines/count")
     public BigInteger getCountOfAirlines() {
-        return airlineService.getAirlinesAmount();
+        return airlineService.getEntitiesAmount();
     }
 
     @GetMapping(value = "/airlines/count/search={searchString}")
     public BigInteger getCountOfAirlinesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return airlineService.getAmountOfFilteredAirlines(searchString);
+        return airlineService.getAmountOfFilteredEntities(searchString);
     }
 
     @RequestMapping(value = "/airlines/search/page={page}", method = RequestMethod.POST)
     public ResponseFilteringWrapper searchAirlines(@PathVariable(name = "page") int page,
                                                    @RequestBody SortingFilteringWrapper wrapper) {
-        return airlineService.filterAndSortAirlines(page, wrapper.getSearchString(), wrapper.getSortList());
+        return airlineService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
 }

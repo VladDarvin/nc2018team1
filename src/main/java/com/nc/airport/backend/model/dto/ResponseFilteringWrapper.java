@@ -3,20 +3,20 @@ package com.nc.airport.backend.model.dto;
 import java.math.BigInteger;
 import java.util.List;
 
-public class ResponseFilteringWrapper {
-    List<Object> entities;
-    BigInteger countOfPages;
+public class ResponseFilteringWrapper<T> {
+    private List<T> entities;
+    private BigInteger countOfPages;
 
-    public ResponseFilteringWrapper(List<Object> entities, BigInteger countOfPages) {
+    public ResponseFilteringWrapper(List<T> entities, BigInteger countOfPages) {
         this.entities = entities;
         this.countOfPages = countOfPages;
     }
 
-    public List<Object> getEntities() {
+    public List<T> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Object> entities) {
+    public void setEntities(List<T> entities) {
         this.entities = entities;
     }
 

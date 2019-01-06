@@ -22,43 +22,43 @@ public class AirplaneController {
 
     @GetMapping(path = "/airplanes")
     public List<Airplane> getAll() {
-        return airplaneService.findAllAirplanes();
+        return airplaneService.findAllEntities();
     }
 
     @RequestMapping(value = "/airplanes/page={page}", method = RequestMethod.GET)
     public List<Airplane> getTenAirplanes(@PathVariable(name = "page") int page) {
-        return airplaneService.getTenAirplanes(page);
+        return airplaneService.getTenEntities(page);
     }
 
     @PostMapping(value = "/airplanes")
     public Airplane addNewAirplane(@RequestBody Airplane airplane) {
-        return airplaneService.addAirplane(airplane);
+        return airplaneService.addEntity(airplane);
     }
 
     @PutMapping(value = "/airplanes")
     public Airplane editAirplane(@RequestBody Airplane airplane) {
-        return airplaneService.addAirplane(airplane);
+        return airplaneService.addEntity(airplane);
     }
 
     @DeleteMapping(value = "/airplanes/{id}")
     public void deleteAirplane(@PathVariable(name = "id") BigInteger id) {
-        airplaneService.deleteAirplane(id);
+        airplaneService.deleteEntity(id);
     }
 
     @GetMapping(value = "/airplanes/count")
     public BigInteger getCountOfAirplanes() {
-        return airplaneService.getAirplanesAmount();
+        return airplaneService.getEntitiesAmount();
     }
 
     @GetMapping(value = "/airplanes/count/search={searchString}")
     public BigInteger getCountOfAirplanesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return airplaneService.getAmountOfFilteredAirplanes(searchString);
+        return airplaneService.getAmountOfFilteredEntities(searchString);
     }
 
     @RequestMapping(value = "/airplanes/search/page={page}", method = RequestMethod.POST)
     public ResponseFilteringWrapper searchAirplanes(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
-        return airplaneService.filterAndSortAirplanes(page, wrapper.getSearchString(), wrapper.getSortList());
+        return airplaneService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
 }
