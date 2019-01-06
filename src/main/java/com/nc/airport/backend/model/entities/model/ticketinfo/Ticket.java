@@ -27,11 +27,9 @@ public class Ticket extends BaseEntity {
     @ReferenceField(ID = "32")
     private BigInteger passengerId;
 
-    @ReferenceField(ID = "33")
-    private BigInteger ticketStatusId;
+    @ListField(ID = "33")
+    private TicketStatus ticketStatus;
 
     @ListField(ID = "11")
     private Map<Extra, BigInteger> TicketHasExtra;
-
-
 }
