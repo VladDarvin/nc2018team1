@@ -19,7 +19,7 @@ public class JwtUser implements UserDetails {
     private final String email;
     private final Authority authority;
     private final boolean enabled;
-    private final String phonenumber;
+    private final String phoneNumber;
 
     public JwtUser(
             Long id,
@@ -29,7 +29,7 @@ public class JwtUser implements UserDetails {
             String password,
             Authority authority,
             boolean enabled,
-            String phonenumber
+            String phoneNumber
     ) {
         this.id = id;
         this.username = email;
@@ -39,7 +39,7 @@ public class JwtUser implements UserDetails {
         this.password = password;
         this.authority = authority;
         this.enabled = enabled;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
     }
 
     @JsonIgnore
@@ -101,7 +101,7 @@ public class JwtUser implements UserDetails {
     }
 
     @JsonIgnore
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }

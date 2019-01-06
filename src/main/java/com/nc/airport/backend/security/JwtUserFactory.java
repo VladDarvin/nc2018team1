@@ -17,7 +17,7 @@ public final class JwtUserFactory {
                 user.getAuthority(),
                 //mapToGrantedAuthorities(user.getAuthorities()),
                 user.getEnabled(),
-                user.getPhonenumber()
+                user.getPhoneNumber()
         );
     }
 

@@ -81,8 +81,8 @@ public class UserService {
             return usersRepository.findAllByOrderByLastnameAsc();
         } else if (field.equals("email")) {
             return usersRepository.findAllByOrderByEmailAsc();
-        } else if (field.equals("phonenumber")) {
-            return usersRepository.findAllByOrderByPhonenumberAsc();
+        } else if (field.equals("phoneNumber")) {
+            return usersRepository.findAllByOrderByPhoneNumberAsc();
         }
         return null;
     }
@@ -94,8 +94,8 @@ public class UserService {
             return usersRepository.findAllByOrderByLastnameDesc();
         } else if (field.equals("email")) {
             return usersRepository.findAllByOrderByEmailDesc();
-        } else if (field.equals("phonenumber")) {
-            return usersRepository.findAllByOrderByPhonenumberDesc();
+        } else if (field.equals("phoneNumber")) {
+            return usersRepository.findAllByOrderByPhoneNumberDesc();
         }
         return null;
     }

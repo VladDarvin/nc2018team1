@@ -16,7 +16,7 @@ public interface UsersRepository extends PagingAndSortingRepository<User, Long>,
     List<User> getAll();
 
     @Query(value = "SELECT * FROM USERS WHERE firstname LIKE %?1% OR " +
-            "lastname LIKE %?1% OR email LIKE %?1% OR phonenumber LIKE %?1%", nativeQuery = true)
+            "lastname LIKE %?1% OR email LIKE %?1% OR phoneNumber LIKE %?1%", nativeQuery = true)
     Page<User> findAll(String searchString, Pageable pageable);
 
     User findUserByEmail(String email);
@@ -35,7 +35,7 @@ public interface UsersRepository extends PagingAndSortingRepository<User, Long>,
 
     List<User> findAllByOrderByEmailDesc();
 
-    List<User> findAllByOrderByPhonenumberAsc();
+    List<User> findAllByOrderByPhoneNumberAsc();
 
-    List<User> findAllByOrderByPhonenumberDesc();
+    List<User> findAllByOrderByPhoneNumberDesc();
 }

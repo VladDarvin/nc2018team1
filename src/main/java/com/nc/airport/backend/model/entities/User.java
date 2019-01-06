@@ -23,7 +23,7 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
-    private String phonenumber;
+    private String phoneNumber;
     private String email;
     private String password;
     private Boolean enabled;
@@ -34,29 +34,29 @@ public class User {
     public User() {
     }
 
-    public User(String firstname, String lastname, String phonenumber, String email) {
+    public User(String firstname, String lastname, String phoneNumber, String email) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
         this.email = email;
     }
 
-    public User(String firstname, String lastname, String phonenumber, String email, String password, Boolean enabled) {
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, Boolean enabled) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
     }
 
-    public User(String firstname, String lastname, String phonenumber, String email, String password, Boolean enabled, Authority authority) {
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, Boolean enabled, Authority authority) {
         this.username = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
