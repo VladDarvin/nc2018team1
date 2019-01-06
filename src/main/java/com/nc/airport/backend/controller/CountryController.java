@@ -54,7 +54,7 @@ public class CountryController {
         return countryService.getAmountOfFilteredEntities(searchString);
     }
 
-    @PostMapping("/page={page}")
+    @PostMapping("/search/page={page}")
     public ResponseFilteringWrapper searchCountries(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return countryService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
