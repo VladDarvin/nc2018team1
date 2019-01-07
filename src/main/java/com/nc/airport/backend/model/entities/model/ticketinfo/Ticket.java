@@ -1,7 +1,6 @@
 package com.nc.airport.backend.model.entities.model.ticketinfo;
 
 import com.nc.airport.backend.model.BaseEntity;
-import com.nc.airport.backend.model.entities.model.airplane.Extra;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
@@ -10,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigInteger;
-import java.util.Map;
 
 @ObjectType(ID = "10")
 @Getter
@@ -31,5 +29,5 @@ public class Ticket extends BaseEntity {
     private TicketStatus ticketStatus;
 
     @ListField(ID = "11")
-    private Map<Extra, BigInteger> TicketHasExtra;
+    private BigInteger ticketExtra;
 }
