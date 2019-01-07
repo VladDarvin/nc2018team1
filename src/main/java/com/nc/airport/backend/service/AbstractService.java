@@ -48,8 +48,8 @@ public abstract class AbstractService<T extends BaseEntity> {
         return repository.findSlice(domainClass, new Page(page - 1));
     }
 
-    public T saveEntity(T airline) {
-        return repository.save(airline);
+    public T saveEntity(T entity) {
+        return repository.save(entity);
     }
 
     public void deleteEntity(BigInteger id) {
