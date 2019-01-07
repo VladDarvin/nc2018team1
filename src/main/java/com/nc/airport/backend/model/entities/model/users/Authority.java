@@ -1,8 +1,9 @@
 package com.nc.airport.backend.model.entities.model.users;
 
 import com.nc.airport.backend.persistence.eav.annotations.enums.ListValue;
+import org.springframework.security.core.GrantedAuthority;
 
-public enum Authority {
+public enum Authority implements GrantedAuthority {
 
     @ListValue(ID = "1")
     ROLE_ADMIN,
@@ -17,5 +18,10 @@ public enum Authority {
     ROLE_ANALYST,
 
     @ListValue(ID = "5")
-    ROLE_CONTROLLER
+    ROLE_CONTROLLER;
+
+    @Override
+    public String getAuthority() {
+        return this.toString();
+    }
 }
