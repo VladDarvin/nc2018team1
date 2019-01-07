@@ -34,7 +34,7 @@ public class AuthenticationRestController {
     private UserDetailsService userDetailsService;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 

@@ -7,13 +7,11 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.fi
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
 import java.util.*;
 
 public abstract class AbstractService<T extends BaseEntity> {
-    @Autowired
     protected EavCrudRepository<T> repository;
     private Class<T> domainClass;
 
@@ -46,15 +44,11 @@ public abstract class AbstractService<T extends BaseEntity> {
         return new ResponseFilteringWrapper<>(foundEntities, countOfPages);
     }
 
-    public List<T> findAllEntities() {
-        return repository.findAll(domainClass);
-    }
-
     public List<T> getTenEntities(int page) {
         return repository.findSlice(domainClass, new Page(page - 1));
     }
 
-    public T addEntity(T airline) {
+    public T saveEntity(T airline) {
         return repository.save(airline);
     }
 

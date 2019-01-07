@@ -31,8 +31,8 @@ public class Flight {
     private double baseCost;
 
     @ReferenceField(ID = "10")
-    private BigInteger arrivalAirport;
+    private BigInteger arrivalAirportId;
 
     @ReferenceField(ID = "11")
-    private BigInteger departureAirport;
+    private BigInteger departureAirportId;
 }

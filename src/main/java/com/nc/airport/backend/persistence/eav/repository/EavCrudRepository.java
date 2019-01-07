@@ -45,14 +45,6 @@ public interface EavCrudRepository<T extends BaseEntity> {
     Optional<T> findById(@NotNull BigInteger objectId,@NotNull Class<T> entityClass);
 
     /**
-     * Use findSlice
-     *
-     * @return all entities
-     */
-    @Deprecated
-    List<T> findAll(@NotNull Class<T> entityClass);
-
-    /**
      * Returns all instances with the given object_ids.
      *
      * @param objectIds ids instances of which are searched for. All the object_ids must be of a single type
