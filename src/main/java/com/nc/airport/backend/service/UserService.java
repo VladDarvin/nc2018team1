@@ -1,101 +1,84 @@
 package com.nc.airport.backend.service;
 
-import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
-import com.nc.airport.backend.model.dto.UserDTO;
-import com.nc.airport.backend.model.entities.Authority;
-import com.nc.airport.backend.model.entities.User;
-import com.nc.airport.backend.repository.UsersRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.nc.airport.backend.model.entities.model.users.User;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
+import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
+import com.nc.airport.backend.service.exception.PersistenceException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-public class UserService {
+@Log4j2
+public class UserService extends AbstractService<User> {
 
-    private UsersRepository usersRepository;
-
-    public UserService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
+    public UserService(EavCrudRepository<User> repository) {
+        super(User.class, repository);
     }
 
-    public List<User> getUsers() {
-        return usersRepository.getAll();
-        //return (List<User>) usersRepository.findAll();
+    /**
+     * Returns a user with given login, or null if nothing found
+     * <h2>ATTR ID MUST BE 44 :(</h2>
+     *
+     * @param login search criteria
+     * @return null if login is not found
+     */
+    public User findByLogin(String login) {
+        BigInteger loginAttrId = new BigInteger("44");
+        return findByAttr(login, loginAttrId);
     }
 
-    public User addUser(User user) {
-        User existUser = usersRepository.findUserByEmail(user.getEmail());
-        if (existUser == null) {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            if (user.getEnabled() == null) {
-                user.setEnabled(true);
-            }
-            if (user.getAuthority() == null) {
-                user.setAuthority(new Authority(2L, "ROLE_USER"));
-            }
-            return usersRepository.save(user);
+    /**
+     * Returns a user with given email, or null if nothing found
+     * <h2>ATTR ID MUST BE 46 :(</h2>
+     *
+     * @param email search criteria
+     * @return null if email is not found
+     */
+    public User findByEmail(String email) {
+        BigInteger emailAttrId = new BigInteger("46");
+        return findByAttr(email, emailAttrId);
+    }
+
+    private User findByAttr(String value, BigInteger attrId) {
+//        TODO IMPLEMENT ATTR_ID PARSING
+        Set<Object> searchSet = new HashSet<>();
+        searchSet.add(value);
+        FilterEntity filterEntity = new FilterEntity(attrId, searchSet);
+
+        List<FilterEntity> filterEntities = new ArrayList<>();
+        filterEntities.add(filterEntity);
+
+        List<User> foundUsers = repository.findSlice(User.class, new Page(0), new ArrayList<>(), filterEntities);
+        if (foundUsers.size() > 1) {
+            String message = "Found more than 1 user with the same unique attribute(id=" + attrId + "): " + value;
+            IllegalStateException exception = new IllegalStateException(message);
+            log.error(message, exception);
+            throw exception;
+        } else if (foundUsers.size() == 0) {
+            return null;
         } else {
-            throw new EntityExistsException("User with this email already exists");
+            return foundUsers.get(0);
         }
     }
 
-    public User logIn(UserDTO user) {
-        return usersRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword());
-    }
-
-    public User editUser(User user) {
-        return usersRepository.save(user);
-    }
-
-    public void deleteUser(long id) {
-        usersRepository.deleteById(id);
-    }
-
-    public List<User> getTenUsers(int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(PageRequest.of(page - 1, 10));
-        return pageOfUsers.getContent();
-    }
-
-    public ResponseFilteringWrapper search(String searchString, int page) {
-        Page<User> pageOfUsers = usersRepository.findAll(searchString, PageRequest.of(page - 1, 10));
-        List<Object> entities = new ArrayList<>(pageOfUsers.getContent());
-        return new ResponseFilteringWrapper(entities, BigInteger.valueOf(pageOfUsers.getTotalPages()));
-    }
-
-    public Long getUsersAmount() {
-        return usersRepository.count();
-    }
-
-    public List<User> sortUsersByFieldAsc(String field) {
-        if (field.equals("firstname")) {
-            return usersRepository.findAllByOrderByFirstnameAsc();
-        } else if (field.equals("lastname")) {
-            return usersRepository.findAllByOrderByLastnameAsc();
-        } else if (field.equals("email")) {
-            return usersRepository.findAllByOrderByEmailAsc();
-        } else if (field.equals("phonenumber")) {
-            return usersRepository.findAllByOrderByPhonenumberAsc();
+    @Override
+    public User saveEntity(User entity) {
+        if (findByLogin(entity.getLogin()) != null) {
+            throw new PersistenceException("User with this login already exists", entity);
         }
-        return null;
-    }
-
-    public List<User> sortUsersByFieldDesc(String field) {
-        if (field.equals("firstname")) {
-            return usersRepository.findAllByOrderByFirstnameDesc();
-        } else if (field.equals("lastname")) {
-            return usersRepository.findAllByOrderByLastnameDesc();
-        } else if (field.equals("email")) {
-            return usersRepository.findAllByOrderByEmailDesc();
-        } else if (field.equals("phonenumber")) {
-            return usersRepository.findAllByOrderByPhonenumberDesc();
+        if (findByEmail(entity.getEmail()) != null) {
+            throw new PersistenceException("User with this email already exists", entity);
         }
-        return null;
-    }
 
+//        TODO IMPLEMENT ENABLING ACCOUNT
+        entity.setEnabled(true);
+        return super.saveEntity(entity);
+    }
 }

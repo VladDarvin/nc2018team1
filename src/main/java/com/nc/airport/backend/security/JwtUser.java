@@ -1,7 +1,8 @@
 package com.nc.airport.backend.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nc.airport.backend.model.entities.Authority;
+import com.nc.airport.backend.model.entities.model.users.Authority;
+import com.nc.airport.backend.model.entities.model.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,45 +12,22 @@ import java.util.List;
 
 public class JwtUser implements UserDetails {
 
-    private final Long id;
-    private final String username;
-    private final String firstname;
-    private final String lastname;
-    private final String password;
-    private final String email;
-    private final Authority authority;
-    private final boolean enabled;
-    private final String phonenumber;
+    private String login;
+    private String password;
+    private Boolean enabled;
+    private List<Authority> authorities = new ArrayList<>();
 
-    public JwtUser(
-            Long id,
-            String firstname,
-            String lastname,
-            String email,
-            String password,
-            Authority authority,
-            boolean enabled,
-            String phonenumber
-    ) {
-        this.id = id;
-        this.username = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.authority = authority;
-        this.enabled = enabled;
-        this.phonenumber = phonenumber;
-    }
 
-    @JsonIgnore
-    public Long getId() {
-        return id;
+    public JwtUser(User user) {
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+        this.enabled = user.getEnabled();
+        this.authorities.add(user.getAuthority());
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return login;
     }
 
     @JsonIgnore
@@ -70,16 +48,9 @@ public class JwtUser implements UserDetails {
         return true;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public String getEmail() {
-        return email;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @JsonIgnore
@@ -89,19 +60,7 @@ public class JwtUser implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<Authority> authorities = new ArrayList<>();
-        authorities.add(authority);
-        return authorities;
-    }
-
-    @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    @JsonIgnore
-    public String getPhonenumber() {
-        return phonenumber;
     }
 }

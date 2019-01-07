@@ -1,75 +1,59 @@
 package com.nc.airport.backend.controller;
 
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
-import com.nc.airport.backend.model.entities.Authority;
-import com.nc.airport.backend.model.entities.User;
+import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
+import com.nc.airport.backend.model.entities.model.users.User;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
-
 
 @RestController
 @CrossOrigin
+@RequestMapping("/users")
 public class UserController {
+//    TODO add register-user
 
-    private UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getAllUsers() {
-        return userService.getUsers();
-    }
+    private UserService service;
 
-    @RequestMapping(value = "/registrate", method = RequestMethod.POST)
-    public User registrateNewUser(@RequestBody User user) {
-        user.setAuthority(new Authority(2L, "ROLE_USER"));
-        return userService.addUser(user);
-    }
-
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public User addNewUser(@RequestBody User user) {
-        return userService.addUser(user);
-    }
-
-
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
-    public User editUser(@PathVariable(name = "id") long id, @RequestBody User user) {
-        user.setObjectId(id);
-        return userService.editUser(user);
-    }
-
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable(name = "id") long id) {
-        userService.deleteUser(id);
-    }
-
-    @RequestMapping(value = "/users/page={page}", method = RequestMethod.GET)
+    @GetMapping("/page={page}")
     public List<User> getTenUsers(@PathVariable(name = "page") int page) {
-        return userService.getTenUsers(page);
+        return service.getTenEntities(page);
     }
 
-    @RequestMapping(value = "/users/search={searchString}/page={page}", method = RequestMethod.GET)
-    public ResponseFilteringWrapper searchUsers(@PathVariable(name = "searchString") String searchString, @PathVariable(name = "page") int page) {
-        return userService.search(searchString, page);
+    @PostMapping
+    public User addNewUser(@RequestBody User entity) {
+        return service.saveEntity(entity);
     }
 
-    @RequestMapping(value = "/users/count", method = RequestMethod.GET)
-    public Long getCountOfUsers() {
-        return userService.getUsersAmount();
+    @PutMapping
+    public User editUser(@RequestBody User entity) {
+        return service.saveEntity(entity);
     }
 
-    @RequestMapping(value = "/users/sortAscBy={field}", method = RequestMethod.GET)
-    public List<User> sortUserAscBy(@PathVariable(name = "field") String field) {
-        return userService.sortUsersByFieldAsc(field);
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable(name = "id") BigInteger id) {
+        service.deleteEntity(id);
     }
 
-    @RequestMapping(value = "/users/sortDescBy={field}", method = RequestMethod.GET)
-    public List<User> sortUserDescBy(@PathVariable(name = "field") String field) {
-        return userService.sortUsersByFieldDesc(field);
+    @GetMapping("/count")
+    public BigInteger getCountOfUsers() {
+        return service.getEntitiesAmount();
     }
 
+    @GetMapping("/count/search={searchString}")
+    public BigInteger getCountOfUsersByFilter(@PathVariable(name = "searchString") String searchString) {
+        return service.getAmountOfFilteredEntities(searchString);
+    }
+
+    @PostMapping("/search/page={page}")
+    public ResponseFilteringWrapper searchUsers(@PathVariable(name = "page") int page,
+                                                    @RequestBody SortingFilteringWrapper wrapper) {
+        return service.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
+    }
 }

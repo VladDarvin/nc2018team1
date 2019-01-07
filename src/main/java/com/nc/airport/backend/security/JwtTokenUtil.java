@@ -1,6 +1,6 @@
 package com.nc.airport.backend.security;
 
-import com.nc.airport.backend.model.entities.Authority;
+import com.nc.airport.backend.model.entities.model.users.Authority;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
