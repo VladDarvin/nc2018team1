@@ -115,11 +115,12 @@ class WidePickyDBFetcher {
     List<Mutable> getMutablesByParentId(List<BigInteger> values,
                               List<BigInteger> dateValues,
                               List<BigInteger> listValues,
-                              List<BigInteger> references,
+                              List<BigInteger> references, int pagingFrom, int pagingTo,
                               BigInteger parentId) {
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
+        PagingDescriptor paging = new PagingDescriptor();
 
         values = ensureNonNullSecurity(values);
         dateValues = ensureNonNullSecurity(dateValues);
@@ -128,10 +129,11 @@ class WidePickyDBFetcher {
 
         StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        String fullQuery = paging.getPaging(basicQuery, pagingFrom, pagingTo);
 
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
-            statement = connection.prepareStatement(basicQuery.toString());
+            log.log(Level.INFO, "Executing sequence:\n" + fullQuery.toString());
+            statement = connection.prepareStatement(fullQuery.toString());
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();

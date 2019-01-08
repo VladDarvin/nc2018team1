@@ -282,9 +282,10 @@ public class Mutable2Query {
     public List<Mutable> getMutablesFromDBByParentId(List<BigInteger> values,
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
-                                           List<BigInteger> references, BigInteger parentId) {
+                                           List<BigInteger> references,
+                                         int pagingFrom, int pagingTo, BigInteger parentId) {
         return new WidePickyDBFetcher(connection)
-                .getMutablesByParentId(values, dateValues, listValues, references, parentId);
+                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId);
     }
 
 

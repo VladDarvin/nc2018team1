@@ -109,6 +109,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getDateFieldIds(childClass),
                 ReflectionHelper.getListFieldIds(childClass),
                 ReflectionHelper.getReferenceFieldIds(childClass),
+                page.getFirstRow(),
+                page.getLastRow(),
                 parentId);
 
         List<T> entities = new ArrayList<>();
