@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping
     public User addNewUser(@RequestBody User entity) {
-        return service.saveEntity(entity);
+        return service.saveNewUser(entity);
     }
 
     @PutMapping

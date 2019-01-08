@@ -22,6 +22,6 @@ public class RegistrationController {
         user.setAuthority(Authority.ROLE_USER);
 //        TODO IMPLEMENT PROPERLY
         user.setEnabled(true);
-        return service.saveEntity(user);
+        return service.saveNewUser(user);
     }
 }
