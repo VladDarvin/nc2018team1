@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 
 @ControllerAdvice
 @Log4j2
@@ -24,6 +25,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /*
      * App related exceptions handlers
      */
+
+    @ExceptionHandler(PersistenceException.class)
+    protected ResponseEntity<Object> notUniqueAttributes(PersistenceException ex) {
+        log.error(ex);
+
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
 
     /**
      * Handle exception when entity already exist.

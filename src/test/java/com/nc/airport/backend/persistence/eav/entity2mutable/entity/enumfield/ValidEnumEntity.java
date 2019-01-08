@@ -13,6 +13,10 @@ public class ValidEnumEntity extends ValidNoFieldsEntity {
     @ListField(ID = "123")
     protected TestType type = TestType.STATE1;
 
+    @ListField(ID = "124")
+    protected TestType type2 = TestType.STATE2;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

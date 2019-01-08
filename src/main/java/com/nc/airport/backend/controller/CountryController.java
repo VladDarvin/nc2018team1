@@ -13,45 +13,45 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/countries")
 public class CountryController {
-    private CountryService countryService;
+    private CountryService service;
 
-    public CountryController(CountryService countryService) {
-        this.countryService = countryService;
+    public CountryController(CountryService service) {
+        this.service = service;
     }
 
     @GetMapping("/page={page}")
     public List<Country> getTenCountries(@PathVariable(name = "page") int page) {
-        return countryService.getTenEntities(page);
+        return service.getTenEntities(page);
     }
 
     @PostMapping
     public Country addNewCountry(@RequestBody Country country) {
-        return countryService.saveEntity(country);
+        return service.saveEntity(country);
     }
 
     @PutMapping
     public Country editCountry(@RequestBody Country country) {
-        return countryService.saveEntity(country);
+        return service.saveEntity(country);
     }
 
     @DeleteMapping("/{id}")
     public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
-        countryService.deleteEntity(id);
+        service.deleteEntity(id);
     }
 
     @GetMapping("/count")
     public BigInteger getCountOfCountries() {
-        return countryService.getEntitiesAmount();
+        return service.getEntitiesAmount();
     }
 
     @GetMapping("/count/search={searchString}")
     public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return countryService.getAmountOfFilteredEntities(searchString);
+        return service.getAmountOfFilteredEntities(searchString);
     }
 
     @PostMapping("/search/page={page}")
     public ResponseFilteringWrapper searchCountries(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
-        return countryService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
+        return service.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }

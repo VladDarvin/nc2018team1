@@ -150,4 +150,6 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
     boolean existsById(@NotNull BigInteger objectId);
+
+
 }

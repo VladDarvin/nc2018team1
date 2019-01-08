@@ -2,13 +2,11 @@ package com.nc.airport.backend.model.entities.model.users;
 
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
-import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
+import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.math.BigInteger;
 
 @ObjectType(ID = "15")
 @Getter
@@ -31,6 +29,9 @@ public class User extends BaseEntity {
     @ValueField(ID = "48")
     private String nickname;
 
-    @ReferenceField(ID = "49")
-    private BigInteger userRoleId;
+    @ListField(ID = "49")
+    private Authority authority;
+
+    @ValueField(ID = "59")
+    private Boolean enabled;
 }
