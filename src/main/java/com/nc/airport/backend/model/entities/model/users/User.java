@@ -24,7 +24,7 @@ public class User extends BaseEntity {
     private String email;
 
     @ValueField(ID = "47")
-    private String phone;
+    private String phoneNumber;
 
     @ValueField(ID = "48")
     private String nickname;
