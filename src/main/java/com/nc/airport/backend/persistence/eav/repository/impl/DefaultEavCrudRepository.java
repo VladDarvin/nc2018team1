@@ -100,7 +100,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<BaseEntity> findSliceOfChildren(@NotNull T entity, Page page) {
+    public <CC extends BaseEntity>  List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page) {
         return null;
     }
 
@@ -127,7 +127,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findSliceOfChildren(@NotNull T entity, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
+    public <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
         return null;
     }
 
