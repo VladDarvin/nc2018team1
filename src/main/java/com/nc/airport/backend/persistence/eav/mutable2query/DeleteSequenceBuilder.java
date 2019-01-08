@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class DeleteSequenceBuilder extends SequenceBuilder {
-    private BigInteger objectId;
-
     DeleteSequenceBuilder(Connection connection) {
         super(connection);
         this.connection = connection;
@@ -17,13 +15,12 @@ class DeleteSequenceBuilder extends SequenceBuilder {
 
     @Override
     public Mutable build(Mutable mutable) {
-        objectId = mutable.getObjectId();
-        deleteObject();
+        deleteObject(mutable.getObjectId());
         return mutable;
     }
 
     public Mutable build(BigInteger objectId) {
-        deleteObject();
+        deleteObject(objectId);
         Mutable mutable = new Mutable();
         mutable.setObjectId(objectId);
         return mutable;
@@ -33,7 +30,7 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         logSQLError(e, inTable, "Deletion");
     }
 
-    void deleteObject() {
+    void deleteObject(BigInteger objectId) {
         try {
             PreparedStatement query = connection.prepareStatement(
                     "DELETE FROM OBJECTS WHERE OBJECT_ID = ?");
