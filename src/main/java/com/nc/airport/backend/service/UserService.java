@@ -68,8 +68,13 @@ public class UserService extends AbstractService<User> {
         }
     }
 
-    @Override
-    public User saveEntity(User entity) {
+    /**
+     * Checks that login and email are unique
+     *
+     * @param entity saved entity
+     * @return updated user
+     */
+    public User saveNewUser(User entity) {
         if (findByLogin(entity.getLogin()) != null) {
             throw new PersistenceException("User with this login already exists", entity);
         }
