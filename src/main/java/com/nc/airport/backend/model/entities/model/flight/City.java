@@ -10,18 +10,15 @@ import lombok.ToString;
 
 import java.math.BigInteger;
 
-@ObjectType(ID = "2")
+@ObjectType(ID = "19")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Airport extends BaseEntity {
+public class City extends BaseEntity {
 
-    @ValueField(ID = "2")
+    @ValueField(ID = "60")
     private String name;
 
-    @ReferenceField(ID = "3")
-    private BigInteger cityId;
-
-    @ValueField(ID = "4")
-    private String address;
+    @ReferenceField(ID = "61")
+    private BigInteger countryId;
 }
