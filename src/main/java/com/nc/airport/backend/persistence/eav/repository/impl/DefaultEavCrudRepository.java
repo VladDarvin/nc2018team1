@@ -100,8 +100,22 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public <CC extends BaseEntity>  List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page) {
-        return null;
+    public List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page) {
+        checkNull(parentId);
+        checkNull(parentId);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesFromDBByParentId(ReflectionHelper.getValueFieldIds(childClass),
+                ReflectionHelper.getDateFieldIds(childClass),
+                ReflectionHelper.getListFieldIds(childClass),
+                ReflectionHelper.getReferenceFieldIds(childClass),
+                parentId);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, childClass));
+        }
+        return entities;
     }
 
     @Override

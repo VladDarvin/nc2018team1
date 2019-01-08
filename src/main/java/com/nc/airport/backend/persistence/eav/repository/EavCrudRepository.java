@@ -66,11 +66,12 @@ public interface EavCrudRepository<T extends BaseEntity> {
     /**
      * Returns list of entities that are children of given entity
      *
-     * @param entity parent of searched children
+     * @param parentId objectId of parent class
+     * @param childClass searched child
      * @param page   zero-based
      * @return list of entity's children
      */
-    <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page);
+    List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page);
 
     /**
      * Returns all instances of given class that are within row range, filtered and sortered.
@@ -151,6 +152,5 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
     boolean existsById(@NotNull BigInteger objectId);
-
 
 }

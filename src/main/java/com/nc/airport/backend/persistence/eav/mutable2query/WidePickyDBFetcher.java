@@ -112,6 +112,43 @@ class WidePickyDBFetcher {
         return countOfItems;
     }
 
+    List<Mutable> getMutablesByParentId(List<BigInteger> values,
+                              List<BigInteger> dateValues,
+                              List<BigInteger> listValues,
+                              List<BigInteger> references,
+                              BigInteger parentId) {
+        List<Mutable> mutables = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        values = ensureNonNullSecurity(values);
+        dateValues = ensureNonNullSecurity(dateValues);
+        listValues = ensureNonNullSecurity(listValues);
+        references = ensureNonNullSecurity(references);
+
+        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+
+        try {
+            log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
+            statement = connection.prepareStatement(basicQuery.toString());
+            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+            while (result.next()) {
+                Mutable mutable = new Mutable();
+                pullGeneralInfo(result, mutable);
+                pullAttributes(result, mutable, values, dateValues, listValues, references);
+                mutables.add(mutable);
+            }
+        }catch (SQLException e) {
+            log.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
+        } finally {
+            closeResultSetAndStatement(result, statement);
+        }
+        return mutables;
+
+    }
+
     /*  SELECT * FROM
             ( SELECT a.*, rownum rnum
                 FROM

@@ -278,6 +278,16 @@ public class Mutable2Query {
         return BigInteger.valueOf(countOfItems == 0 ? 1 : (int)Math.ceil((double)countOfItems / (double)10));
     }
 
+
+    public List<Mutable> getMutablesFromDBByParentId(List<BigInteger> values,
+                                           List<BigInteger> dateValues,
+                                           List<BigInteger> listValues,
+                                           List<BigInteger> references, BigInteger parentId) {
+        return new WidePickyDBFetcher(connection)
+                .getMutablesByParentId(values, dateValues, listValues, references, parentId);
+    }
+
+
     /**     UNSUPPORTED
      * Returns a single mutable with specified object id and all possible attributes
      *
