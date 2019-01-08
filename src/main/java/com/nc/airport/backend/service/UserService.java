@@ -6,6 +6,7 @@ import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
 import com.nc.airport.backend.service.exception.PersistenceException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -83,6 +84,7 @@ public class UserService extends AbstractService<User> {
         }
 
 //        TODO IMPLEMENT ENABLING ACCOUNT
+        entity.setPassword(new BCryptPasswordEncoder().encode(entity.getPassword()));
         entity.setEnabled(true);
         return super.saveEntity(entity);
     }
