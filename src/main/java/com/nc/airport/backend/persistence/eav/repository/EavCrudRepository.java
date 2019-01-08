@@ -42,12 +42,12 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @return the entity with the given id or {@literal Optional#empty()} if none found
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
-    Optional<T> findById(@NotNull BigInteger objectId,@NotNull Class<T> entityClass);
+    Optional<T> findById(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 
     /**
      * Returns all instances with the given object_ids.
      *
-     * @param objectIds ids instances of which are searched for. All the object_ids must be of a single type
+     * @param objectIds   ids instances of which are searched for. All the object_ids must be of a single type
      * @param entityClass specifies the type of instances
      * @return all instances of given type and given objectIds
      */
@@ -58,7 +58,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
-     * @param page zero-based
+     * @param page        zero-based
      * @return slice of items that are found within specified rows
      */
     List<T> findSlice(@NotNull Class<T> entityClass, Page page);
@@ -67,19 +67,19 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns list of entities that are children of given entity
      *
      * @param entity parent of searched children
-     * @param page zero-based
+     * @param page   zero-based
      * @return list of entity's children
      */
-    List<BaseEntity> findSliceOfChildren(@NotNull T entity, Page page);
+    <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page);
 
     /**
      * Returns all instances of given class that are within row range, filtered and sortered.
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
-     * @param page zero-based
-     * @param sortBy sorting criteria
-     * @param filterBy filtering criteria
+     * @param page        zero-based
+     * @param sortBy      sorting criteria
+     * @param filterBy    filtering criteria
      * @return slice of entities that are found and ordered with criterias
      */
     List<T> findSlice(@NotNull Class<T> entityClass,
@@ -91,16 +91,17 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns all children of given entity that are within row range, filtered and sortered.
      * Consider found instances form a list (this is where rows are from)
      *
-     * @param entity search criteria
-     * @param page zero-based
-     * @param sortBy sorting criteria
+     * @param entity   search criteria
+     * @param page     zero-based
+     * @param sortBy   sorting criteria
      * @param filterBy filtering criteria
      * @return slice of entities that are found and ordered with criterias
      */
-    List<T> findSliceOfChildren(@NotNull T entity,
-                      Page page,
-                      List<SortEntity> sortBy,
-                      List<FilterEntity> filterBy);
+    <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity,
+                                CC childClass,
+                                Page page,
+                                List<SortEntity> sortBy,
+                                List<FilterEntity> filterBy);
 
     /**
      * Deletes a given entity.
@@ -137,7 +138,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns the number of entities available, filtered by criteria. Entity is specified by its class.
      *
      * @param entityClass class that specifies what object is being searched. Must be not null
-     * @param filterBy filtering criteria
+     * @param filterBy    filtering criteria
      * @return the number of entities
      */
     BigInteger count(@NotNull Class<T> entityClass, List<FilterEntity> filterBy);
