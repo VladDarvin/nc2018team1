@@ -13,13 +13,12 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/users")
 public class UserController {
-//    TODO add register-user
+
+    private UserService service;
 
     public UserController(UserService service) {
         this.service = service;
     }
-
-    private UserService service;
 
     @GetMapping("/page={page}")
     public List<User> getTenUsers(@PathVariable(name = "page") int page) {
@@ -53,7 +52,7 @@ public class UserController {
 
     @PostMapping("/search/page={page}")
     public ResponseFilteringWrapper searchUsers(@PathVariable(name = "page") int page,
-                                                    @RequestBody SortingFilteringWrapper wrapper) {
+                                                @RequestBody SortingFilteringWrapper wrapper) {
         return service.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }
