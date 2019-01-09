@@ -20,5 +20,5 @@ public class ExtraType extends BaseEntity {
     private String descr;
 
     @ValueField(ID = "22")
-    private double baseCost;
+    private Double baseCost;
 }
