@@ -100,27 +100,6 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page) {
-        checkNull(parentId);
-        checkNull(parentId);
-
-        List<Mutable> mutables;
-        mutables = m2db.getMutablesFromDBByParentId(ReflectionHelper.getValueFieldIds(childClass),
-                ReflectionHelper.getDateFieldIds(childClass),
-                ReflectionHelper.getListFieldIds(childClass),
-                ReflectionHelper.getReferenceFieldIds(childClass),
-                page.getFirstRow(),
-                page.getLastRow(),
-                parentId);
-
-        List<T> entities = new ArrayList<>();
-        for (Mutable mutable : mutables) {
-            entities.add(e2m.convertMutableToEntity(mutable, childClass));
-        }
-        return entities;
-    }
-
-    @Override
     public List<T> findSlice(@NotNull Class<T> entityClass, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
         checkNull(entityClass);
 
@@ -138,6 +117,26 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
             entities.add(e2m.convertMutableToEntity(mutable, entityClass));
+        }
+        return entities;
+    }
+
+    @Override
+    public List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page) {
+        checkNull(parentId);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesFromDBByParentId(ReflectionHelper.getValueFieldIds(childClass),
+                ReflectionHelper.getDateFieldIds(childClass),
+                ReflectionHelper.getListFieldIds(childClass),
+                ReflectionHelper.getReferenceFieldIds(childClass),
+                page.getFirstRow(),
+                page.getLastRow(),
+                parentId);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, childClass));
         }
         return entities;
     }

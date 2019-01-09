@@ -132,8 +132,8 @@ class WidePickyDBFetcher {
         String fullQuery = paging.getPaging(basicQuery, pagingFrom, pagingTo);
 
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + fullQuery.toString());
-            statement = connection.prepareStatement(fullQuery.toString());
+            log.log(Level.INFO, "Executing sequence:\n" + fullQuery);
+            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();

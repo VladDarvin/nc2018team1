@@ -64,17 +64,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
     List<T> findSlice(@NotNull Class<T> entityClass, Page page);
 
     /**
-     * Returns list of entities that are children of given entity
-     *
-     * @param parentId objectId of parent class
-     * @param childClass searched child
-     * @param page   zero-based
-     * @return list of entity's children
-     */
-    List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page);
-
-    /**
-     * Returns all instances of given class that are within row range, filtered and sortered.
+     * Returns all instances of given class that are within row range, filtered and sorted.
      * Consider found instances form a list (this is where rows are from)
      *
      * @param entityClass search criteria
@@ -89,20 +79,31 @@ public interface EavCrudRepository<T extends BaseEntity> {
                       List<FilterEntity> filterBy);
 
     /**
-     * Returns all children of given entity that are within row range, filtered and sortered.
+     * Returns list of entities that are children of given entity
+     *
+     * @param parentId      objectId of parent class
+     * @param childClass    searched child
+     * @param page          zero-based
+     * @return list of entity's children
+     */
+    List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page);
+
+    /**
+     * Returns all children of given entity that are within row range, filtered and sorted.
      * Consider found instances form a list (this is where rows are from)
      *
-     * @param entity   search criteria
-     * @param page     zero-based
-     * @param sortBy   sorting criteria
-     * @param filterBy filtering criteria
+     * @param entity        search criteria
+     * @param childClass    searched child
+     * @param page          zero-based
+     * @param sortBy        sorting criteria
+     * @param filterBy      filtering criteria
      * @return slice of entities that are found and ordered with criterias
      */
     <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity,
-                                CC childClass,
-                                Page page,
-                                List<SortEntity> sortBy,
-                                List<FilterEntity> filterBy);
+                                                         CC childClass,
+                                                         Page page,
+                                                         List<SortEntity> sortBy,
+                                                         List<FilterEntity> filterBy);
 
     /**
      * Deletes a given entity.
