@@ -73,15 +73,25 @@ class UpdateSequenceBuilder extends SequenceBuilder{
     private void updateValues(Map<BigInteger, ?> values, String valueType) {
         if (noSuchElementsInObject(values)) return;
         StringBuilder sql =
-        new StringBuilder("MERGE INTO ATTRIBUTES A ")
-        .append("USING (SELECT ? new_value, ? ATTR_ID, ").append(objectId).append(" OBJECT_ID FROM dual) B ")
+        new StringBuilder("MERGE INTO ATTRIBUTES A ");
+        if (valueType.equals("DATE_VALUE ")) {
+            sql.append("USING (SELECT TO_DATE(?,'yyyy.MM.dd\"T\"HH24:MI') new_value, ? ATTR_ID, ");
+        } else {
+            sql.append("USING (SELECT ? new_value, ? ATTR_ID, ");
+        }
+        sql.append(objectId).append(" OBJECT_ID FROM dual) B ")
         .append("ON (A.ATTR_ID = B.ATTR_ID AND A.OBJECT_ID = B.OBJECT_ID) ")
         .append("WHEN MATCHED THEN UPDATE SET A.").append(valueType).append(" = B.new_value ")
         .append("WHEN NOT MATCHED THEN INSERT (ATTR_ID, OBJECT_ID, ").append(valueType).append(") ")
         .append("VALUES (B.ATTR_ID, B.OBJECT_ID, B.new_value)");
         try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             for (Map.Entry<BigInteger, ?> entry : values.entrySet()) {
-                statement.setObject(1, entry.getValue());
+                System.err.println(entry.getValue());
+                if (valueType.equals("DATE_VALUE ")) {
+                    statement.setObject(1, entry.getValue().toString());
+                } else {
+                    statement.setObject(1, entry.getValue());
+                }
                 statement.setObject(2, entry.getKey());
                 statement.addBatch();
             }
