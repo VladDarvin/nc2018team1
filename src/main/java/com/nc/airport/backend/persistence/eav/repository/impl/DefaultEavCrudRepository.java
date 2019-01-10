@@ -101,7 +101,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
 
     @Override
     public List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page) {
-        checkNull(parentId);
+        checkNull(childClass);
         checkNull(parentId);
 
         List<Mutable> mutables;
@@ -143,10 +143,43 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity, CC childClass, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
-        return null;
+    public List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page, List<SortEntity> sortBy, List<FilterEntity> filterBy) {
+        checkNull(childClass);
+        checkNull(parentId);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesFromDBByParentId(ReflectionHelper.getValueFieldIds(childClass),
+                ReflectionHelper.getDateFieldIds(childClass),
+                ReflectionHelper.getListFieldIds(childClass),
+                ReflectionHelper.getReferenceFieldIds(childClass),
+                page.getFirstRow(),
+                page.getLastRow(),
+                parentId,
+                sortBy,
+                filterBy);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, childClass));
+        }
+        return entities;
     }
 
+    @Override
+    public T findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass) {
+        checkNull(entityClass);
+
+        Mutable mutable;
+        mutable = m2db.getSingleMutableByReference(
+                ReflectionHelper.getValueFieldIds(entityClass),
+                ReflectionHelper.getDateFieldIds(entityClass),
+                ReflectionHelper.getListFieldIds(entityClass),
+                ReflectionHelper.getReferenceFieldIds(entityClass), objectId);
+
+        T entity = e2m.convertMutableToEntity(mutable, entityClass);
+
+        return entity;
+    }
 
     @Override
     public void delete(T entity) {

@@ -288,6 +288,26 @@ public class Mutable2Query {
                 .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId);
     }
 
+    public List<Mutable> getMutablesFromDBByParentId(List<BigInteger> values,
+                                                     List<BigInteger> dateValues,
+                                                     List<BigInteger> listValues,
+                                                     List<BigInteger> references,
+                                                     int pagingFrom, int pagingTo, BigInteger parentId,
+                                                     List<SortEntity> sortBy,
+                                                     List<FilterEntity> filterBy) {
+        return new WidePickyDBFetcher(connection)
+                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId, sortBy, filterBy);
+    }
+
+    public Mutable getSingleMutableByReference(List<BigInteger> values,
+                                                         List<BigInteger> dateValues,
+                                                         List<BigInteger> listValues,
+                                                         List<BigInteger> references,
+                                                         BigInteger objectId) {
+        return new WidePickyDBFetcher(connection)
+                .getMutableByReference(values, dateValues, listValues, references, objectId);
+    }
+
 
     /**     UNSUPPORTED
      * Returns a single mutable with specified object id and all possible attributes

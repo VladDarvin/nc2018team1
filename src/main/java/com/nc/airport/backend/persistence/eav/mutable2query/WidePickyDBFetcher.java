@@ -148,8 +148,91 @@ class WidePickyDBFetcher {
             closeResultSetAndStatement(result, statement);
         }
         return mutables;
-
     }
+
+    List<Mutable> getMutablesByParentId(List<BigInteger> values,
+                                        List<BigInteger> dateValues,
+                                        List<BigInteger> listValues,
+                                        List<BigInteger> references, int pagingFrom, int pagingTo,
+                                        BigInteger parentId, List<SortEntity> sortBy,
+                                        List<FilterEntity> filterBy) {
+        List<Mutable> mutables = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        PagingDescriptor paging = new PagingDescriptor();
+        FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
+                new FilteringToSortingDescriptor.DescriptorBuilder();
+
+        values = ensureNonNullSecurity(values);
+        dateValues = ensureNonNullSecurity(dateValues);
+        listValues = ensureNonNullSecurity(listValues);
+        references = ensureNonNullSecurity(references);
+
+        if (!Collections.isEmpty(filterBy))
+            descBuilder.filter(filterBy);
+        if (!Collections.isEmpty(sortBy))
+            descBuilder.sort(sortBy);
+
+        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        StringBuilder filteredSortedQuery = new StringBuilder("SELECT * FROM (").append(basicQuery).append(") ");
+        filteredSortedQuery.append(descBuilder.build().getQueryBuilder());
+        String fullQuery = paging.getPaging(filteredSortedQuery, pagingFrom, pagingTo);
+
+        try {
+            log.log(Level.INFO, "Executing sequence:\n" + fullQuery);
+            statement = connection.prepareStatement(fullQuery);
+            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
+            while (result.next()) {
+                Mutable mutable = new Mutable();
+                pullGeneralInfo(result, mutable);
+                pullAttributes(result, mutable, values, dateValues, listValues, references);
+                mutables.add(mutable);
+            }
+        }catch (SQLException e) {
+            log.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
+        } finally {
+            closeResultSetAndStatement(result, statement);
+        }
+        return mutables;
+    }
+
+    //TODO refactor
+    Mutable getMutableByReference(List<BigInteger> values,
+                                        List<BigInteger> dateValues,
+                                        List<BigInteger> listValues,
+                                        List<BigInteger> references,
+                                        BigInteger objectId) {
+        Mutable mutable = new Mutable();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        values = ensureNonNullSecurity(values);
+        dateValues = ensureNonNullSecurity(dateValues);
+        listValues = ensureNonNullSecurity(listValues);
+        references = ensureNonNullSecurity(references);
+
+        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        basicQuery.append("JOIN objreference oref ON oref.reference = O.OBJECT_ID and oref.object_id =").append(objectId);
+
+        try {
+            log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
+            statement = connection.prepareStatement(basicQuery.toString());
+            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+            while (result.next()) {
+                pullGeneralInfo(result, mutable);
+                pullAttributes(result, mutable, values, dateValues, listValues, references);
+            }
+        }catch (SQLException e) {
+            log.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
+        } finally {
+            closeResultSetAndStatement(result, statement);
+        }
+        return mutable;
+    }
+
 
     /*  SELECT * FROM
             ( SELECT a.*, rownum rnum
