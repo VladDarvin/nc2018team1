@@ -20,7 +20,7 @@ public abstract class AbstractService<T extends BaseEntity> {
         this.repository = repository;
     }
 
-    private List<FilterEntity> makeFilterList(String search, Class<T> entityClass) {
+    List<FilterEntity> makeFilterList(String search, Class<T> entityClass) {
         String searchString = "%" + search + "%";
         List<BigInteger> attributeIds = ReflectionHelper.getAttributeIds(entityClass);
         Map<BigInteger, Set<Object>> filtering = new HashMap<>();
