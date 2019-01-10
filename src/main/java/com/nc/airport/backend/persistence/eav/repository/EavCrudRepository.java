@@ -92,14 +92,14 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns all children of given entity that are within row range, filtered and sortered.
      * Consider found instances form a list (this is where rows are from)
      *
-     * @param entity   search criteria
+     * @param parentId objectId of parent class
+     * @param childClass searched child
      * @param page     zero-based
      * @param sortBy   sorting criteria
      * @param filterBy filtering criteria
      * @return slice of entities that are found and ordered with criterias
      */
-    <CC extends BaseEntity> List<CC> findSliceOfChildren(@NotNull T entity,
-                                CC childClass,
+    List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass,
                                 Page page,
                                 List<SortEntity> sortBy,
                                 List<FilterEntity> filterBy);
@@ -152,5 +152,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
     boolean existsById(@NotNull BigInteger objectId);
+
+    T findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 
 }
