@@ -17,7 +17,7 @@ public class PassportController {
     }
 
     @RequestMapping(value = "/passports/objectId={objectId}", method = RequestMethod.GET)
-    public Passport getAllPassengers(@PathVariable BigInteger objectId) {
+    public Passport getPassportById(@PathVariable BigInteger objectId) {
         return passportService.findPassportByReference(objectId);
     }
 }

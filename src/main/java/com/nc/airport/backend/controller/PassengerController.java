@@ -48,7 +48,7 @@ public class PassengerController {
 
     @PostMapping(value = "/passengers/userLogin={userLogin}/search/page={page}")
     public ResponseFilteringWrapper searchPassengers(@PathVariable(name = "userLogin") String userLogin, @PathVariable(name = "page") int page,
-                                                                   @RequestBody SortingFilteringWrapper wrapper) {
+                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return passengerService.filterAndSortEntitiesByUserLogin(userLogin, page, wrapper.getSearchString(), wrapper.getSortList());
     }
 

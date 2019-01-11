@@ -1,6 +1,7 @@
 package com.nc.airport.backend.model.entities.model.flight;
 
 
+import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Flight {
+public class Flight extends BaseEntity {
 
     @DateField(ID = "6")
     private LocalDateTime departureDatetime;

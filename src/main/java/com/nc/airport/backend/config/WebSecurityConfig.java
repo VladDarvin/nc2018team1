@@ -100,12 +100,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/airplanes/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/airplanes/**").hasAuthority("ROLE_ADMIN")
                 //Countries access
-                .antMatchers(HttpMethod.GET, "/country").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.POST, "/country").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.POST, "/country/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/country/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.PUT, "/country/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/country/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/countries").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/countries").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/countries/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/countries/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/countries/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/countries/**").hasAuthority("ROLE_ADMIN")
                 //Passengers access
                 .antMatchers(HttpMethod.GET, "/passengers").hasAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.POST, "/passengers").hasAuthority("ROLE_USER")

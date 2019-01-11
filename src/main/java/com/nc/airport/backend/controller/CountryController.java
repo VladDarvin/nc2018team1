@@ -24,6 +24,16 @@ public class CountryController {
         return service.getTenEntities(page);
     }
 
+    @GetMapping("/count")
+    public BigInteger getCountOfCountries() {
+        return service.getEntitiesAmount();
+    }
+
+    @GetMapping("/count/search={searchString}")
+    public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
+        return service.getAmountOfFilteredEntities(searchString);
+    }
+
     @PostMapping
     public Country addNewCountry(@RequestBody Country country) {
         return service.saveEntity(country);
@@ -37,16 +47,6 @@ public class CountryController {
     @DeleteMapping("/{id}")
     public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
         service.deleteEntity(id);
-    }
-
-    @GetMapping("/count")
-    public BigInteger getCountOfCountries() {
-        return service.getEntitiesAmount();
-    }
-
-    @GetMapping("/count/search={searchString}")
-    public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
-        return service.getAmountOfFilteredEntities(searchString);
     }
 
     @PostMapping("/search/page={page}")

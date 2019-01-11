@@ -32,7 +32,7 @@ public class UserService extends AbstractService<User> {
      */
     public User findByLogin(String login) {
         BigInteger loginAttrId = new BigInteger("44");
-        return findByAttr(login, loginAttrId);
+        return findUserByAttr(login, loginAttrId);
     }
 
     /**
@@ -44,29 +44,21 @@ public class UserService extends AbstractService<User> {
      */
     public User findByEmail(String email) {
         BigInteger emailAttrId = new BigInteger("46");
-        return findByAttr(email, emailAttrId);
+        return findUserByAttr(email, emailAttrId);
     }
 
-    private User findByAttr(String value, BigInteger attrId) {
-//        TODO IMPLEMENT ATTR_ID PARSING
-        Set<Object> searchSet = new HashSet<>();
-        searchSet.add(value);
-        FilterEntity filterEntity = new FilterEntity(attrId, searchSet);
-
-        List<FilterEntity> filterEntities = new ArrayList<>();
-        filterEntities.add(filterEntity);
-
-        List<User> foundUsers = repository.findSlice(User.class, new Page(0), new ArrayList<>(), filterEntities);
-        if (foundUsers.size() > 1) {
+    private User findUserByAttr(String value, BigInteger attrId) {
+        User foundUser;
+        try {
+            foundUser = findByAttr(value, attrId, User.class);
+        } catch (IllegalStateException e) {
             String message = "Found more than 1 user with the same unique attribute(id=" + attrId + "): " + value;
             IllegalStateException exception = new IllegalStateException(message);
             log.error(message, exception);
             throw exception;
-        } else if (foundUsers.size() == 0) {
-            return null;
-        } else {
-            return foundUsers.get(0);
         }
+
+        return foundUser;
     }
 
     /**
