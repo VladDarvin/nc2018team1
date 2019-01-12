@@ -19,7 +19,7 @@ public class SeatType extends BaseEntity {
     private String name;
 
     @ValueField(ID = "28")
-    private String descr;
+    private String description;
 
     @ValueField(ID = "29")
     private double baseCost;
@@ -32,6 +32,6 @@ public class SeatType extends BaseEntity {
         SeatType seatType = (SeatType) o;
         return Double.compare(seatType.baseCost, baseCost) == 0 &&
                 Objects.equals(name, seatType.name) &&
-                Objects.equals(descr, seatType.descr);
+                Objects.equals(description, seatType.description);
     }
 }
