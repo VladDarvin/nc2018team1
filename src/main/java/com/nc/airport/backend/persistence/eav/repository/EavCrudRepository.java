@@ -153,6 +153,8 @@ public interface EavCrudRepository<T extends BaseEntity> {
      */
     boolean existsById(@NotNull BigInteger objectId);
 
-    T findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
+    List<T> findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
+
+    T findEntityByReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 
 }

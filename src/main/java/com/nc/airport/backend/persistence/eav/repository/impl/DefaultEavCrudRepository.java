@@ -61,10 +61,10 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         checkNull(objectId);
         checkNull(entityClass);
 
-        Optional<Mutable> optMutable = m2db.getSingleMutable(objectId);
+        Mutable optMutable = m2db.getSingleMutable(objectId, ReflectionHelper.getAttributeIds(entityClass));
         T searchedEntity = null;
-        if (optMutable.isPresent()) {
-            searchedEntity = e2m.convertMutableToEntity(optMutable.get(), entityClass);
+        if (optMutable != null) {
+            searchedEntity = e2m.convertMutableToEntity(optMutable, entityClass);
         }
         return Optional.ofNullable(searchedEntity);
     }
@@ -166,8 +166,27 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public T findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass) {
+    public List<T> findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass) {
         checkNull(entityClass);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesByReference(
+                ReflectionHelper.getValueFieldIds(entityClass),
+                ReflectionHelper.getDateFieldIds(entityClass),
+                ReflectionHelper.getListFieldIds(entityClass),
+                ReflectionHelper.getReferenceFieldIds(entityClass), objectId);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, entityClass));
+        }
+        return entities;
+    }
+
+    @Override
+    public T findEntityByReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass) {
+        checkNull(entityClass);
+        checkNull(objectId);
 
         Mutable mutable;
         mutable = m2db.getSingleMutableByReference(
@@ -176,9 +195,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getListFieldIds(entityClass),
                 ReflectionHelper.getReferenceFieldIds(entityClass), objectId);
 
-        T entity = e2m.convertMutableToEntity(mutable, entityClass);
-
-        return entity;
+        return e2m.convertMutableToEntity(mutable, entityClass);
     }
 
     @Override
