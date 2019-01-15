@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class Flight extends BaseEntity {
     private BigInteger airplaneId;
 
     @ValueField(ID = "9")
-    private double baseCost;
+    private BigDecimal baseCost;
 
     @ReferenceField(ID = "10")
     private BigInteger arrivalAirportId;
