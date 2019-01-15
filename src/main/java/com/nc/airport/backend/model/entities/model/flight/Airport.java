@@ -20,8 +20,11 @@ public class Airport extends BaseEntity {
     private String name;
 
     @ReferenceField(ID = "3")
-    private BigInteger cityId;
+    private BigInteger countryId;
 
     @ValueField(ID = "4")
     private String address;
+
+    @ValueField(ID = "5")
+    private String city;
 }
