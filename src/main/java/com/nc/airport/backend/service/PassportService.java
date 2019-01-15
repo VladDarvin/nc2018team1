@@ -13,6 +13,6 @@ public class PassportService extends AbstractService<Passport> {
     }
 
     public Passport findPassportByReference(BigInteger objectId) {
-        return repository.findSliceOfReference(objectId, Passport.class);
+        return repository.findEntityByReference(objectId, Passport.class);
     }
 }
