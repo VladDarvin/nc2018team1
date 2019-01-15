@@ -305,7 +305,16 @@ public class Mutable2Query {
                                                          List<BigInteger> references,
                                                          BigInteger objectId) {
         return new WidePickyDBFetcher(connection)
-                .getMutableByReference(values, dateValues, listValues, references, objectId);
+                .getSingleMutableByReference(values, dateValues, listValues, references, objectId);
+    }
+
+    public List<Mutable> getMutablesByReference(List<BigInteger> values,
+                                                      List<BigInteger> dateValues,
+                                                      List<BigInteger> listValues,
+                                                      List<BigInteger> references,
+                                                      BigInteger objectId) {
+        return new WidePickyDBFetcher(connection)
+                .getMutablesByReference(values, dateValues, listValues, references, objectId);
     }
 
 
