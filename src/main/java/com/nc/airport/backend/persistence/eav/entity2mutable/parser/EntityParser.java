@@ -42,4 +42,13 @@ public interface EntityParser {
      * @return idsToValues of fields. If field has null value it is skipped
      */
     Map<BigInteger, BigInteger> parseReferences(BaseEntity entity);
+
+    /**
+     * Generates object name based on entity class name and entity hashcode. <br>
+     * Format is <code>entity.BaseEntity@123123123</code>
+     *
+     * @param entity generated name is based on class and hashcode
+     * @return generated Object name
+     */
+    String generateObjectName(BaseEntity entity);
 }

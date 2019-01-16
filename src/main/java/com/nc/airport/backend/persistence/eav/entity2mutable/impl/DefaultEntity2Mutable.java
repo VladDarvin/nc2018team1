@@ -31,8 +31,9 @@ public class DefaultEntity2Mutable implements Entity2Mutable {
         mutable.setObjectId(entity.getObjectId());
         mutable.setObjectTypeId(entityParser.parseObjectTypeId(entity));
         mutable.setParentId(entity.getParentId());
-        mutable.setObjectName(entity.getObjectName());
+        mutable.setObjectName(entityParser.generateObjectName(entity));
         mutable.setObjectDescription(entity.getObjectDescription());
+
         mutable.setValues(entityParser.parseValues(entity));
         mutable.setDateValues(entityParser.parseDateValues(entity));
         mutable.setListValues(entityParser.parseListValues(entity));

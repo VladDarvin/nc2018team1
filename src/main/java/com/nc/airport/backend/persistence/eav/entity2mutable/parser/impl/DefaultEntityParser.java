@@ -161,6 +161,11 @@ public class DefaultEntityParser implements EntityParser {
         return idToReference;
     }
 
+    @Override
+    public String generateObjectName(BaseEntity entity) {
+        return entity.getClass().getName() + '@' + entity.hashCode();
+    }
+
     /**
      * Skips fields that are empty
      *
