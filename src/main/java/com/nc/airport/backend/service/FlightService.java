@@ -10,6 +10,7 @@ import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
 import com.nc.airport.backend.model.entities.model.users.TicketHistory;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -27,7 +28,7 @@ public class FlightService extends AbstractService {
 
     public List<FlightDTO> findAllFlightsByUserId(BigInteger userId, int page) {
         List<FlightDTO> flights = new ArrayList<>();
-        List<TicketHistory> ticketsHistory = getTicketsHistoryByUserId(userId);
+        List<TicketHistory> ticketsHistory = getTicketsHistoryByUserId(userId, page);
         List<Ticket> tickets = new ArrayList<>();
         Set<Flight> flightSet = new HashSet<>();
         for (TicketHistory ticketHistory:
@@ -70,8 +71,8 @@ public class FlightService extends AbstractService {
         return flights;
     }
 
-    private List<TicketHistory> getTicketsHistoryByUserId(BigInteger userId) {
-        return repository.findSliceOfReference(userId, TicketHistory.class);
+    private List<TicketHistory> getTicketsHistoryByUserId(BigInteger userId, int page) {
+        return repository.findSliceOfChildren(userId, TicketHistory.class, new Page(page - 1));
     }
 
     private Optional<Ticket> getTicketById(BigInteger ticketId) {
