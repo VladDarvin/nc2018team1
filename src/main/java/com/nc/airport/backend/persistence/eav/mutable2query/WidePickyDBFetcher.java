@@ -20,7 +20,7 @@ import java.util.*;
 class WidePickyDBFetcher {
     private Connection connection;
 
-    public WidePickyDBFetcher(Connection connection) {
+    WidePickyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
@@ -277,22 +277,22 @@ class WidePickyDBFetcher {
                 FROM
                 (SELECT * FROM
                     (
-                    SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION,
-                        A1.VALUE ATTR51,
-                        A2.DATE_VALUE ATTR50,
-                        A3.LIST_VALUE_ID ATTR45,
-                        A4.REFERENCE ATTR55
-                    FROM OBJECTS O
-                    JOIN ATTRIBUTES A1
-                      ON A1.ATTR_ID = 51 AND A1.OBJECT_ID = O.OBJECT_ID
-                    JOIN ATTRIBUTES A2
-                      ON A2.ATTR_ID = 50 AND A2.OBJECT_ID = O.OBJECT_ID
-                    JOIN ATTRIBUTES A3
-                      ON A3.ATTR_ID = 45 AND A3.OBJECT_ID = O.OBJECT_ID
-                    JOIN OBJREFERENCE A4
-                      ON A4.ATTR_ID = 55 AND A4.OBJECT_ID = O.OBJECT_ID
-                    )
-                  WHERE (ATTR45 = 1 OR ATTR45 = 2) ORDER BY ATTR50 DESC
+                        SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION,
+                               A1.VALUE ATTR51,
+                               A2.DATE_VALUE ATTR50,
+                               A3.LIST_VALUE_ID ATTR45,
+                               A4.REFERENCE ATTR55
+                        FROM OBJECTS O
+                               LEFT JOIN ATTRIBUTES A1
+                                    ON A1.ATTR_ID = 51 AND A1.OBJECT_ID = O.OBJECT_ID
+                               LEFT JOIN ATTRIBUTES A2
+                                    ON A2.ATTR_ID = 50 AND A2.OBJECT_ID = O.OBJECT_ID
+                               LEFT JOIN ATTRIBUTES A3
+                                    ON A3.ATTR_ID = 45 AND A3.OBJECT_ID = O.OBJECT_ID
+                               LEFT JOIN OBJREFERENCE A4
+                                    ON A4.ATTR_ID = 55 AND A4.OBJECT_ID = O.OBJECT_ID
+                      )
+                     WHERE (ATTR45 = 1 OR ATTR45 = 2) ORDER BY ATTR50 DESC;
                   ) a
                 WHERE rownum <= 2)
             WHERE rnum >= 1                                                                                 */
@@ -353,7 +353,7 @@ class WidePickyDBFetcher {
 
         for (int j = 0; j < attrs.size(); j++) {
             String alias = " A" + (i++);
-            transferTo.append(" JOIN ").append(attrTableType).append(alias)
+            transferTo.append(" LEFT JOIN ").append(attrTableType).append(alias)
                     .append(" ON").append(alias).append(".ATTR_ID = ?")
                     .append(" AND").append(alias).append(".OBJECT_ID = O.OBJECT_ID ");
         }
