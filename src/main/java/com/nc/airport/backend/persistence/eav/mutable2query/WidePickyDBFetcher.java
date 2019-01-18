@@ -214,7 +214,13 @@ class WidePickyDBFetcher {
         references = ensureNonNullSecurity(references);
 
         StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
-        //basicQuery.append("JOIN objreference oref ON oref.reference = O.OBJECT_ID and oref.object_id =").append(objectId);
+        basicQuery.append("WHERE ");
+        for (int i = 1; i <= references.size(); i++) {
+            basicQuery.append("A").append(i).append(".REFERENCE = ").append(objectId);
+            if (i != references.size()) {
+                basicQuery.append(" OR ");
+            }
+        }
 
         try {
             log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
