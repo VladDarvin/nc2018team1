@@ -31,38 +31,47 @@ public class FlightService extends AbstractService {
         List<TicketHistory> ticketsHistory = getTicketsHistoryByUserId(userId);
         List<Ticket> tickets = new ArrayList<>();
         Set<Flight> flightSet = new HashSet<>();
-        for (TicketHistory ticketHistory:
-             ticketsHistory) {
-            Ticket ticket = getTicketById(ticketHistory.getTicketId()).get();
-            tickets.add(ticket);
+        for (TicketHistory ticketHistory :
+                ticketsHistory) {
+            Optional<Ticket> ticket = getTicketById(ticketHistory.getTicketId());
+            ticket.ifPresent(tickets::add);
         }
-        for (Ticket ticket:
-             tickets) {
-            Flight flight = getFlightById(ticket.getFlightId()).get();
-            flightSet.add(flight);
-
+        for (Ticket ticket :
+                tickets) {
+            Optional<Flight> flight = getFlightById(ticket.getFlightId());
+            flight.ifPresent(flightSet::add);
         }
         List<Ticket> newTickets = new ArrayList<>();
         List<Passenger> newPassengers = new ArrayList<>();
         List<Passport> passports = new ArrayList<>();
-        for (Flight flight:
-             flightSet) {
-            for (Ticket ticket:
-                 tickets) {
+        for (Flight flight :
+                flightSet) {
+            for (Ticket ticket :
+                    tickets) {
                 BigInteger id1 = ticket.getFlightId();
                 BigInteger id2 = flight.getObjectId();
                 if (id1.equals(id2)) {
                     newTickets.add(ticket);
-                    newPassengers.add(getPassengerById(ticket.getPassengerId()).get());
+                    Optional<Passenger> passenger = getPassengerById(ticket.getPassengerId());
+                    passenger.ifPresent(newPassengers::add);
                     Passport passport = passportService.findPassportByReference(ticket.getPassengerId());
                     passports.add(passport);
                 }
             }
-            Airport arrivalAirport = getAirportById(flight.getArrivalAirportId()).get();
-            Airport departureAirport = getAirportById(flight.getDepartureAirportId()).get();
-            Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
-            Airline airline = getAirlineById(airplane.getAirlineId()).get();
-            flights.add(new FlightDTO(flight, newTickets, newPassengers, passports, arrivalAirport, departureAirport, airplane, airline));
+
+            Optional<Airport> arrivalAirport = getAirportById(flight.getArrivalAirportId());
+            Optional<Airport> departureAirport = getAirportById(flight.getDepartureAirportId());
+            Optional<Airplane> airplane = getAirplaneById(flight.getAirplaneId());
+            Optional<Airline> airline = Optional.empty();
+            if (airplane.isPresent()) {
+                airline = getAirlineById(airplane.get().getAirlineId());
+            }
+            if (arrivalAirport.isPresent() &&
+                    departureAirport.isPresent() &&
+                    airplane.isPresent() &&
+                    airline.isPresent())
+                flights.add(new FlightDTO(flight, newTickets, newPassengers, passports,
+                                        arrivalAirport.get(), departureAirport.get(), airplane.get(), airline.get()));
             newTickets = new ArrayList<>();
             newPassengers = new ArrayList<>();
             passports = new ArrayList<>();
