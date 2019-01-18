@@ -10,6 +10,7 @@ import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
 import com.nc.airport.backend.model.entities.model.users.TicketHistory;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -96,5 +97,20 @@ public class FlightService extends AbstractService {
 
     private Optional<Airline> getAirlineById(BigInteger airportId) {
         return repository.findById(airportId, Airline.class);
+    }
+
+    // --------------------------
+
+    public List<FlightDTO> getAllFlights(int page) {
+        List<Flight> flights = repository.findSlice(Flight.class, new Page(page));
+        List<FlightDTO> flightDTOs = new ArrayList<>();
+        for (Flight flight : flights) {
+            Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
+            Airline airline = getAirlineById(airplane.getAirlineId()).get();
+            Airport depAirport = getAirportById(flight.getDepartureAirportId()).get(),
+                    arrAirport = getAirportById(flight.getArrivalAirportId()).get();
+            flightDTOs.add(new FlightDTO(flight, null, null, null, arrAirport, depAirport, airplane, airline));
+        }
+        return flightDTOs;
     }
 }

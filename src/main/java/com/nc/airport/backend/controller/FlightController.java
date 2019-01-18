@@ -15,15 +15,21 @@ public class FlightController {
     private UserService userService;
 
     @Autowired
-    public FlightController(FlightService flightService,
-                               UserService userService) {
+    public FlightController(FlightService flightService, UserService userService) {
         this.flightService = flightService;
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/flights/userLogin={userLogin}/page={page}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user-flights/userLogin={userLogin}/page={page}", method = RequestMethod.GET)
     public List<FlightDTO> getAllFlights(@PathVariable String userLogin, @PathVariable int page) {
         User parentUser = userService.findByLogin(userLogin);
         return flightService.findAllFlightsByUserId(parentUser.getObjectId(), page);
+    }
+
+    // --------------------------
+
+    @RequestMapping(value = "/flights/page={page}", method = RequestMethod.GET)
+    public List<FlightDTO> getAllFlights(@PathVariable int page) {
+        return flightService.getAllFlights(page);
     }
 }

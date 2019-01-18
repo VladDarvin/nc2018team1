@@ -4,6 +4,7 @@ package com.nc.airport.backend.model.entities.model.flight;
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.DateField;
+import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
 import lombok.Getter;
@@ -19,6 +20,9 @@ import java.time.LocalDateTime;
 @Setter
 @ToString(callSuper = true)
 public class Flight extends BaseEntity {
+
+    @ValueField(ID = "62")
+    private BigInteger flightNumber;
 
     @DateField(ID = "6")
     private LocalDateTime departureDatetime;
@@ -37,4 +41,7 @@ public class Flight extends BaseEntity {
 
     @ReferenceField(ID = "11")
     private BigInteger departureAirportId;
+
+    @ListField(ID = "63")
+    private FlightStatus status;
 }

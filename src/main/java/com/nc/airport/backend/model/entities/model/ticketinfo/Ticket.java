@@ -28,6 +28,8 @@ public class Ticket extends BaseEntity {
     @ListField(ID = "33")
     private TicketStatus ticketStatus;
 
-    @ListField(ID = "11")
-    private BigInteger ticketExtra;
+//   ?
+
+//    @ListField(ID = "11")
+//    private BigInteger ticketExtra;
 }

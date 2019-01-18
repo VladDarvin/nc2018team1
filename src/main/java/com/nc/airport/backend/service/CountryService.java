@@ -17,13 +17,14 @@ public class CountryService extends AbstractService<Country>{
 
     public Country findByName(String name) {
         BigInteger nameAttrId = new BigInteger("1");
-        Country foundCountry = null;
+        Country foundCountry;
         try {
             foundCountry = findByAttr(name, nameAttrId, Country.class);
         } catch (IllegalStateException e) {
             String message = "Found more than 1 country with the same unique attribute(id=" + nameAttrId + "): " + name;
             IllegalStateException exception = new IllegalStateException(message);
             log.error(message, exception);
+            throw exception;
         }
 
         return foundCountry;

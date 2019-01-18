@@ -2,11 +2,25 @@ package com.nc.airport.backend.model.entities.model.ticketinfo;
 
 import com.nc.airport.backend.persistence.eav.annotations.enums.ListValue;
 
-public enum  TicketStatus{
+public enum TicketStatus {
+
+    @ListValue(ID = "6")
+    NEW("New"),
+
     @ListValue(ID = "7")
-    NEW,
+    BOUGHT("Bought"),
+
     @ListValue(ID = "8")
-    BOUGHT,
-    @ListValue(ID = "9")
-    ARCHIVED
+    ARCHIVED("Archived");
+
+
+    private String statusName;
+
+    TicketStatus(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
 }

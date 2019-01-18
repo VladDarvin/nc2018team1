@@ -51,8 +51,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Handle exception when entity doesn't exist.
      */
     @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
-            EntityNotFoundException ex) {
+    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
         log.error(ex);
 
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
