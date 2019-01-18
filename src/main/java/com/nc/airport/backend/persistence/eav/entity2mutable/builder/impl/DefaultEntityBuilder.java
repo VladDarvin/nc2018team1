@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -51,6 +52,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillReferenceFields(T entity, Mutable mutable) {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
+        if (references == null)
+            return;
+
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
         for (Map.Entry<BigInteger, BigInteger> idToRef : references.entrySet()) {
@@ -62,21 +66,28 @@ public class DefaultEntityBuilder implements EntityBuilder {
             Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, ReferenceField.class, id);
             if (entityField != null) {
                 ReflectionHelper.setFieldValue(entity, entityField, referenceId);
+            } else {
+                String message = getMessageNoFieldAnnotated(idToRef.getKey(), ReferenceField.class);
+                logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
             }
         }
     }
 
 
     // FIXME: 23.11.2018 implement
+
     private <T extends BaseEntity> void fillListFields(T entity, Mutable mutable) {
         Map<BigInteger, BigInteger> listValues = mutable.getListValues();
+        if (listValues == null)
+            return;
+
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
-        for (Map.Entry<BigInteger, BigInteger> pair : listValues.entrySet()) {
+        for (Map.Entry<BigInteger, BigInteger> idToEnumId : listValues.entrySet()) {
 //            LISTS.ATTR_ID - @ListField(ID = "123")
-            BigInteger id = pair.getKey();
+            BigInteger id = idToEnumId.getKey();
 //            LISTS.LIST_VALUE_ID - corresponding id is inside of @ListValue(ID = "123") annotation
-            BigInteger enumId = pair.getValue();
+            BigInteger enumId = idToEnumId.getValue();
 
             Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, ListField.class, id);
             if (entityField != null) {
@@ -100,6 +111,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
                     }
                 }
                 ReflectionHelper.setFieldValue(entity, entityField, enumValue);
+            } else {
+                String message = getMessageNoFieldAnnotated(idToEnumId.getKey(), ListValue.class);
+                logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
             }
         }
     }
@@ -107,23 +121,31 @@ public class DefaultEntityBuilder implements EntityBuilder {
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillDateFields(T entity, Mutable mutable) {
         Map<BigInteger, LocalDateTime> dateValues = mutable.getDateValues();
+        if (dateValues == null)
+            return;
+
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
-        for (Map.Entry<BigInteger, LocalDateTime> pair : dateValues.entrySet()) {
-            BigInteger id = pair.getKey();
-            LocalDateTime date = pair.getValue();
+        for (Map.Entry<BigInteger, LocalDateTime> idToDate : dateValues.entrySet()) {
+            BigInteger id = idToDate.getKey();
+            LocalDateTime date = idToDate.getValue();
 
             Field entityField = ReflectionHelper.getFieldByAnnotationId(entityClass, DateField.class, id);
             if (entityField != null) {
                 ReflectionHelper.setFieldValue(entity, entityField, date);
+            } else {
+                String message = getMessageNoFieldAnnotated(idToDate.getKey(), DateField.class);
+                logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
             }
         }
     }
 
     // TODO: 23.11.2018 refactor
-
     private <T extends BaseEntity> void fillValueFields(T entity, Mutable mutable) {
         Map<BigInteger, String> mutableValues = mutable.getValues();
+        if (mutableValues == null)
+            return;
+
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
         for (Map.Entry<BigInteger, String> idToVal : mutableValues.entrySet()) {
@@ -134,7 +156,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
                 Object injectableValue = newStringConstructorInstance(fieldClass, idToVal.getValue());
                 ReflectionHelper.setFieldValue(entity, entityField, injectableValue);
             } else {
-                String message = "No field annotated with @ValueField with id " + idToVal.getKey() + ". Therefore it is skipped.";
+                String message = getMessageNoFieldAnnotated(idToVal.getKey(), ValueField.class);
                 logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
             }
         }
@@ -156,6 +178,11 @@ public class DefaultEntityBuilder implements EntityBuilder {
             logAndThrowDataLossEx(message, e);
         }
         return newInstance;
+    }
+
+    private String getMessageNoFieldAnnotated(BigInteger id, Class<? extends Annotation> annotationClass) {
+        return "No field annotated with @" + annotationClass.getSimpleName() + " with id " + id + ". " +
+                "Therefore it is skipped.";
     }
 
     private <T extends BaseEntity> T newEntity(Class<T> clazz) {

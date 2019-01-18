@@ -25,8 +25,7 @@ public abstract class BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         BaseEntity that = (BaseEntity) o;
         return Objects.equals(objectId, that.objectId) &&
-                Objects.equals(parentId, that.parentId) &&
-                Objects.equals(objectName, that.objectName);
+                Objects.equals(parentId, that.parentId);
     }
 
     @Override

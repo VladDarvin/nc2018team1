@@ -150,7 +150,7 @@ class TallLazyDBFetcher {
             while (result.next()){
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
-                pullAttributes(result, mutable);
+                pullAttributes(result, mutable, attributesId.size());
                 mutables.add(mutable);
             }
         } catch (SQLException e) {
@@ -230,12 +230,12 @@ class TallLazyDBFetcher {
         Map<BigInteger, BigInteger> references = new LinkedHashMap<>();
 
         try {
-            BigInteger startRow = applyBigInt(11, result);
+            int attrIterator = 1;
             do {
                 pullAttr(result, values, references, listValues, dateValues);
-                if (isLastAttrOfObject(startRow, applyBigInt(11, result), objectAttributesAmount)) {
+                attrIterator++;
+                if(attrIterator > objectAttributesAmount)
                     break;
-                }
             } while (result.next());
         } catch (SQLException e) {
             logger.error(e);
@@ -264,9 +264,9 @@ class TallLazyDBFetcher {
         setMutableAttributes(mutable, values, dateValues, listValues, references);
     }
 
-    private boolean isLastAttrOfObject(BigInteger startRow, BigInteger currentRow, int objAttrSize) {
-        return (currentRow.subtract(startRow).add(BigInteger.ONE).equals(BigInteger.valueOf(objAttrSize)));
-    }
+//    private boolean isLastAttrOfObject(BigInteger startRow, BigInteger currentRow, int objAttrSize) {
+//        return (currentRow.subtract(startRow).add(BigInteger.ONE).equals(BigInteger.valueOf(objAttrSize)));
+//    }
 
     private void setMutableAttributes(Mutable mutable,
                                       Map<BigInteger, String> values,
@@ -297,7 +297,13 @@ class TallLazyDBFetcher {
                 BigInteger listValue = applyBigInt(9, result);
                 if (listValue != null)
                     listValues.put(applyBigInt(6, result), listValue);
-                else dateValues.put(applyBigInt(6, result), result.getTimestamp(8).toLocalDateTime());
+                else{
+                    Timestamp dateValueTimeStamp = result.getTimestamp(8);
+                    if (dateValueTimeStamp != null) {
+                        LocalDateTime dateValue = dateValueTimeStamp.toLocalDateTime();
+                        dateValues.put(applyBigInt(6, result), dateValue);
+                    }
+                }
             }
         }
     }
