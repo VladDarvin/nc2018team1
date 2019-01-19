@@ -11,31 +11,25 @@ public enum FlightStatus {
     CHECK_IN("Check in"),
 
     @ListValue(ID = "11")
-    GATE_OPEN("Gate open"),
-
-    @ListValue(ID = "12")
-    GATE_CLOSING("Gate closing"),
-
-    @ListValue(ID = "13")
-    GATE_CLOSED("Gate closed"),
-
-    @ListValue(ID = "14")
     BOARDING("Boarding"),
 
-    @ListValue(ID = "15")
+    @ListValue(ID = "12")
     DEPARTED("Departed"),
 
-    @ListValue(ID = "16")
-    EXPECTING("Expecting"),
+    @ListValue(ID = "13")
+    EXPECTING("Expected"),
 
-    @ListValue(ID = "17")
+    @ListValue(ID = "14")
     LANDED("Landed"),
 
-    @ListValue(ID = "18")
+    @ListValue(ID = "15")
     DELAYED("Delayed"),
 
-    @ListValue(ID = "19")
-    CANCELED("Canceled");
+    @ListValue(ID = "16")
+    CANCELED("Canceled"),
+
+    @ListValue(ID = "17")
+    REDIRECTED("Redirected");
 
 
     private String statusName;

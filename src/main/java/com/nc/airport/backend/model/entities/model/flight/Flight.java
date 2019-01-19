@@ -24,11 +24,17 @@ public class Flight extends BaseEntity {
     @ValueField(ID = "62")
     private BigInteger flightNumber;
 
+    @DateField(ID = "64")
+    private LocalDateTime expectedDepartureDatetime;
+
     @DateField(ID = "6")
-    private LocalDateTime departureDatetime;
+    private LocalDateTime actualDepartureDatetime;
+
+    @DateField(ID = "65")
+    private LocalDateTime expectedArrivalDatetime;
 
     @DateField(ID = "7")
-    private LocalDateTime arrivalDatetime;
+    private LocalDateTime actualArrivalDatetime;
 
     @ReferenceField(ID = "8")
     private BigInteger airplaneId;
