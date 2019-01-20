@@ -34,7 +34,7 @@ public class FlightController {
     // --------------------------
 
     @GetMapping(value = "/flights/page={page}")
-    public List<FlightDTO> getAllFlights(@PathVariable int page) {
+    public List<FlightDTO> getTenFlights(@PathVariable int page) {
         return flightService.getAllFlights(page);
     }
 

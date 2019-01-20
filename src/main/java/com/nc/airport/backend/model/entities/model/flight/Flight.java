@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class Flight extends BaseEntity {
 
     @ValueField(ID = "62")
-    private BigInteger flightNumber;
+    private String flightNumber;
 
     @DateField(ID = "64")
     private LocalDateTime expectedDepartureDatetime;
