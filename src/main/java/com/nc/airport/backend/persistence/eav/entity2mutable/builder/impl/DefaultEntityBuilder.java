@@ -173,11 +173,11 @@ public class DefaultEntityBuilder implements EntityBuilder {
             try {
                 newInstance = constructor.newInstance(initArg);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                String message = "Cannot create an instance of " + classToCreate;
+                String message = "Cannot create an instance of " + classToCreate + "; argument: " + initArg;
                 logAndThrowDataLossEx(message, e);
             }
         } catch (NoSuchMethodException e) {
-            String message = "No constructor (String) for " + classToCreate;
+            String message = "No constructor " + classToCreate.getName() +"(String)";
             logAndThrowDataLossEx(message, e);
         }
         return newInstance;
