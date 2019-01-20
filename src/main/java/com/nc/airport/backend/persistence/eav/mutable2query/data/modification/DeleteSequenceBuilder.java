@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.modification;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
 
@@ -7,8 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-class DeleteSequenceBuilder extends SequenceBuilder {
-    DeleteSequenceBuilder(Connection connection) {
+public class DeleteSequenceBuilder extends SequenceBuilder {
+    public DeleteSequenceBuilder(Connection connection) {
         super(connection);
         this.connection = connection;
     }
@@ -26,11 +26,11 @@ class DeleteSequenceBuilder extends SequenceBuilder {
         return mutable;
     }
 
-    protected void logSQLError(SQLException e, String inTable) {
+    private void logSQLError(SQLException e, String inTable) {
         logSQLError(e, inTable, "Deletion");
     }
 
-    void deleteObject(BigInteger objectId) {
+    private void deleteObject(BigInteger objectId) {
         try {
             PreparedStatement query = connection.prepareStatement(
                     "DELETE FROM OBJECTS WHERE OBJECT_ID = ?");

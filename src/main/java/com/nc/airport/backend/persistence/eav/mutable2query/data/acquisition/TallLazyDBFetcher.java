@@ -1,10 +1,9 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.paging.PagingDescriptor;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,77 +12,26 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-class TallLazyDBFetcher {
+public class TallLazyDBFetcher {
     private Logger logger = LogManager.getLogger(TallLazyDBFetcher.class.getSimpleName());
     private Connection connection;
 
-    TallLazyDBFetcher(Connection connection) {
+    public TallLazyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
-    /*
-        SELECT * FROM
-          (
-            SELECT a.*, rownum rnum FROM
-            (
-              WITH OBJECT_ATTRIBUTES AS
-            (
-              SELECT ATTR_ID
-              FROM ATTRTYPE ATTRT
-              JOIN OBJTYPE OBJT
-                ON ATTRT.OBJECT_TYPE_ID = OBJT.OBJECT_TYPE_ID
-              START WITH OBJT.OBJECT_TYPE_ID = 8
-              CONNECT BY OBJT.OBJECT_TYPE_ID = PRIOR PARENT_ID
-              GROUP BY ATTR_ID
-            )
-            SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ATTRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE
-              FROM OBJECTS O
-            JOIN OBJECT_ATTRIBUTES ATTRT
-                ON O.OBJECT_TYPE_ID = 8
-            LEFT JOIN ATTRIBUTES A
-                ON ATTRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID
-            LEFT JOIN OBJREFERENCE R
-                ON ATTRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID
-            WHERE O.OBJECT_ID = 21
-                AND ATTRT.ATTR_ID IN (45, 50, 55, 43, 48)
-            ORDER BY O.OBJECT_ID, A.ATTR_ID
-            ) a
-          WHERE rownum <= 6)
-        WHERE rnum >= 1;
-     */
-    private StringBuilder createSQLQuery(String objectTypeId, String whereClause) {
-        return new StringBuilder
-                ("WITH OBJECT_ATTRIBUTES AS ")
-                .append("(SELECT ATTR_ID")
-                .append(" FROM ATTRTYPE ATTRT")
-                .append(" JOIN OBJTYPE OBJT")
-                .append("   ON ATTRT.OBJECT_TYPE_ID = OBJT.OBJECT_TYPE_ID")
-                .append(" START WITH OBJT.OBJECT_TYPE_ID = ").append(objectTypeId)
-                .append(" CONNECT BY OBJT.OBJECT_TYPE_ID = PRIOR PARENT_ID ")
-                .append(" GROUP BY ATTR_ID) ")
-
-                .append("SELECT O.OBJECT_ID, PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, DESCRIPTION, ")
-                .append("ATTRT.ATTR_ID, VALUE, DATE_VALUE, LIST_VALUE_ID, REFERENCE ")
-                .append("FROM OBJECTS O ")
-                .append(" JOIN OBJECT_ATTRIBUTES ATTRT ")
-                .append("  ON O.OBJECT_TYPE_ID = ").append(objectTypeId)
-                .append(" LEFT JOIN ATTRIBUTES A ")
-                .append("  ON ATTRT.ATTR_ID = A.ATTR_ID AND O.OBJECT_ID = A.OBJECT_ID ")
-                .append(" LEFT JOIN OBJREFERENCE R ")
-                .append("  ON ATTRT.ATTR_ID = R.ATTR_ID AND O.OBJECT_ID = R.OBJECT_ID ")
-                .append(whereClause)
-                .append("ORDER BY O.OBJECT_ID, A.ATTR_ID");
-    }
-
-    Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
+    public Mutable getMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
+        QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        String fullQuery = createSQLQuery(getObjTypeIdInQuery(objectId.toString()),
+        String fullQuery = queryCreator.createTallLazyQuery(getObjTypeIdInQuery(objectId.toString()),
                 "WHERE O.OBJECT_ID = " + objectId + " AND " + transferAttributesId(attributesId.size()))
                 .toString();
-        logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
+
+        queryCreator.logSequence(logger, fullQuery);
+
         try {
             statement = connection.prepareStatement(fullQuery);
             result = resultSingleMutable(attributesId, statement);
@@ -100,21 +48,24 @@ class TallLazyDBFetcher {
         return mutable;
     }
 
-    List<Mutable> getMutables(BigInteger objType, Collection<BigInteger> attributesId,
+    public List<Mutable> getMutables(BigInteger objType, Collection<BigInteger> attributesId,
                               int pagingFrom, int pagingTo) {
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
 
-        StringBuilder basicQuery = createSQLQuery(objType.toString(),
+        StringBuilder basicQuery = queryCreator.createTallLazyQuery(objType.toString(),
                 "WHERE "+transferAttributesId(attributesId.size()));
 
         String fullQuery = paging.getPaging(basicQuery,
                 getObjectivePage(pagingFrom, attributesId.size()),
                 getObjectivePage(pagingTo + 1, attributesId.size()) - 1);
+
+        queryCreator.logSequence(logger, fullQuery);
+
         try {
-            logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(attributesId, statement);
             while (result.next()){
@@ -132,20 +83,22 @@ class TallLazyDBFetcher {
         return mutables;
     }
 
-    List<Mutable> getMutables(List<BigInteger> objectsId,
+    public List<Mutable> getMutables(List<BigInteger> objectsId,
                               Collection<BigInteger> attributesId) {
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
 
-        String fullQuery = createSQLQuery(getObjTypeIdInQuery(objectsId.get(0).toString()),
+        String fullQuery = queryCreator.createTallLazyQuery(getObjTypeIdInQuery(objectsId.get(0).toString()),
                 "WHERE " + transferObjectsId(objectsId.size()) +
                         " AND " + transferAttributesId(attributesId.size()))
                         .toString();
 
+        queryCreator.logSequence(logger, fullQuery);
+
         try {
             statement = connection.prepareStatement(fullQuery);
-            logger.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             result = resultMultipleMutables(objectsId, attributesId, statement);
             while (result.next()){
                 Mutable mutable = new Mutable();
@@ -181,8 +134,8 @@ class TallLazyDBFetcher {
     }
 
     /*
-    For each object lazy statement has multiple rows each for one attribute or reference
-    thus, if pageFrom - pageTo represents number of objects retrieved, we have to convert
+    For each object lazy statement has multiple rows each for one attribute or reference/
+    Thus, if pageFrom - pageTo represents number of objects retrieved, we have to convert
     dull number of object into number of row from which this object starts
      */
     private static int getObjectivePage(int dullPage, int rowsPerObject) {

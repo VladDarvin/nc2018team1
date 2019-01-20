@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
@@ -17,14 +17,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Log4j2
-class WidePickyDBFetcher {
+public class WidePickyDBFetcher {
     private Connection connection;
 
-    WidePickyDBFetcher(Connection connection) {
+    public WidePickyDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
-    List<Mutable> getMutables(List<BigInteger> values,
+    public List<Mutable> getMutables(List<BigInteger> values,
                               List<BigInteger> dateValues,
                               List<BigInteger> listValues,
                               List<BigInteger> references,
@@ -32,6 +32,7 @@ class WidePickyDBFetcher {
                               List<SortEntity> sortBy,
                               List<FilterEntity> filterBy) {
 
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -49,13 +50,14 @@ class WidePickyDBFetcher {
         if (!Collections.isEmpty(sortBy))
             descBuilder.sort(sortBy);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         StringBuilder filteredSortedQuery = new StringBuilder("SELECT * FROM (").append(basicQuery).append(") ");
         filteredSortedQuery.append(descBuilder.build().getQueryBuilder());
         String fullQuery = paging.getPaging(filteredSortedQuery, pagingFrom, pagingTo);
 
+        queryCreator.logSequence(log, fullQuery);
+
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
@@ -73,12 +75,13 @@ class WidePickyDBFetcher {
         return mutables;
     }
 
-    int getCountOfMutables(List<BigInteger> values,
+    public int getCountOfMutables(List<BigInteger> values,
                                   List<BigInteger> dateValues,
                                   List<BigInteger> listValues,
                                   List<BigInteger> references,
                                   List<FilterEntity> filterBy) {
 
+        QueryCreator queryCreator = new QueryCreator();
         PreparedStatement statement = null;
         ResultSet result = null;
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
@@ -93,12 +96,15 @@ class WidePickyDBFetcher {
         if (!Collections.isEmpty(filterBy))
             descBuilder.filter(filterBy);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         StringBuilder countFilteredSortedQuery = new StringBuilder("SELECT COUNT(*) AS total FROM (").append(basicQuery).append(") ");
         countFilteredSortedQuery.append(descBuilder.build().getQueryBuilder());
+        String fullQuery = countFilteredSortedQuery.toString();
+
+        queryCreator.logSequence(log, fullQuery);
+
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + countFilteredSortedQuery);
-            statement = connection.prepareStatement(countFilteredSortedQuery.toString());
+            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 countOfItems = result.getInt("total");
@@ -112,11 +118,13 @@ class WidePickyDBFetcher {
         return countOfItems;
     }
 
-    List<Mutable> getMutablesByParentId(List<BigInteger> values,
+    public List<Mutable> getMutablesByParentId(List<BigInteger> values,
                               List<BigInteger> dateValues,
                               List<BigInteger> listValues,
                               List<BigInteger> references, int pagingFrom, int pagingTo,
                               BigInteger parentId) {
+
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -127,12 +135,13 @@ class WidePickyDBFetcher {
         listValues = ensureNonNullSecurity(listValues);
         references = ensureNonNullSecurity(references);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
         String fullQuery = paging.getPaging(basicQuery, pagingFrom, pagingTo);
 
+        queryCreator.logSequence(log, fullQuery);
+
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
@@ -150,12 +159,14 @@ class WidePickyDBFetcher {
         return mutables;
     }
 
-    List<Mutable> getMutablesByParentId(List<BigInteger> values,
+    public List<Mutable> getMutablesByParentId(List<BigInteger> values,
                                         List<BigInteger> dateValues,
                                         List<BigInteger> listValues,
                                         List<BigInteger> references, int pagingFrom, int pagingTo,
                                         BigInteger parentId, List<SortEntity> sortBy,
                                         List<FilterEntity> filterBy) {
+
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -173,14 +184,15 @@ class WidePickyDBFetcher {
         if (!Collections.isEmpty(sortBy))
             descBuilder.sort(sortBy);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
         StringBuilder filteredSortedQuery = new StringBuilder("SELECT * FROM (").append(basicQuery).append(") ");
         filteredSortedQuery.append(descBuilder.build().getQueryBuilder());
         String fullQuery = paging.getPaging(filteredSortedQuery, pagingFrom, pagingTo);
 
+        queryCreator.logSequence(log, fullQuery);
+
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + fullQuery);
             statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
@@ -199,11 +211,13 @@ class WidePickyDBFetcher {
     }
 
     //TODO refactor
-    List<Mutable> getMutablesByReference(List<BigInteger> values,
+    public List<Mutable> getMutablesByReference(List<BigInteger> values,
                                               List<BigInteger> dateValues,
                                               List<BigInteger> listValues,
                                               List<BigInteger> references,
                                               BigInteger objectId) {
+
+        QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -213,7 +227,7 @@ class WidePickyDBFetcher {
         listValues = ensureNonNullSecurity(listValues);
         references = ensureNonNullSecurity(references);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE ");
         for (int i = 1; i <= references.size(); i++) {
             basicQuery.append("A").append(i).append(".REFERENCE = ").append(objectId);
@@ -221,10 +235,12 @@ class WidePickyDBFetcher {
                 basicQuery.append(" OR ");
             }
         }
+        String fullQuery = basicQuery.toString();
+
+        queryCreator.logSequence(log, fullQuery);
 
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
-            statement = connection.prepareStatement(basicQuery.toString());
+            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -241,11 +257,13 @@ class WidePickyDBFetcher {
         return mutables;
     }
 
-    Mutable getSingleMutableByReference(List<BigInteger> values,
+    public Mutable getSingleMutableByReference(List<BigInteger> values,
                                          List<BigInteger> dateValues,
                                          List<BigInteger> listValues,
                                          List<BigInteger> references,
                                          BigInteger objectId) {
+
+        QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -255,12 +273,14 @@ class WidePickyDBFetcher {
         listValues = ensureNonNullSecurity(listValues);
         references = ensureNonNullSecurity(references);
 
-        StringBuilder basicQuery = createSQLQuery(values, dateValues, listValues, references);
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("JOIN objreference oref ON oref.reference = O.OBJECT_ID and oref.object_id =").append(objectId);
+        String fullQuery = basicQuery.toString();
+
+        queryCreator.logSequence(log, fullQuery);
 
         try {
-            log.log(Level.INFO, "Executing sequence:\n" + basicQuery.toString());
-            statement = connection.prepareStatement(basicQuery.toString());
+            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 pullGeneralInfo(result, mutable);
@@ -273,97 +293,6 @@ class WidePickyDBFetcher {
             closeResultSetAndStatement(result, statement);
         }
         return mutable;
-    }
-
-
-
-
-    /*  SELECT * FROM
-            ( SELECT a.*, rownum rnum
-                FROM
-                (SELECT * FROM
-                    (
-                        SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION,
-                               A1.VALUE ATTR51,
-                               A2.DATE_VALUE ATTR50,
-                               A3.LIST_VALUE_ID ATTR45,
-                               A4.REFERENCE ATTR55
-                        FROM OBJECTS O
-                               LEFT JOIN ATTRIBUTES A1
-                                    ON A1.ATTR_ID = 51 AND A1.OBJECT_ID = O.OBJECT_ID
-                               LEFT JOIN ATTRIBUTES A2
-                                    ON A2.ATTR_ID = 50 AND A2.OBJECT_ID = O.OBJECT_ID
-                               LEFT JOIN ATTRIBUTES A3
-                                    ON A3.ATTR_ID = 45 AND A3.OBJECT_ID = O.OBJECT_ID
-                               LEFT JOIN OBJREFERENCE A4
-                                    ON A4.ATTR_ID = 55 AND A4.OBJECT_ID = O.OBJECT_ID
-                      )
-                     WHERE (ATTR45 = 1 OR ATTR45 = 2) ORDER BY ATTR50 DESC;
-                  ) a
-                WHERE rownum <= 2)
-            WHERE rnum >= 1                                                                                 */
-    private StringBuilder createSQLQuery(List<BigInteger> values,
-                                         List<BigInteger> dateValues,
-                                         List<BigInteger> listValues,
-                                         List<BigInteger> references) {
-        StringBuilder query = new StringBuilder
-                ("  SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION, ");
-                transferAttributesSelection(query, values, dateValues, listValues, references);
-                query.append(" FROM OBJECTS O ");
-                transferAttributesJoin(query, values, dateValues, listValues, references);
-
-        return query;
-    }
-
-    private void transferAttributesSelection(StringBuilder transferTo,
-                                             List<BigInteger> values,
-                                             List<BigInteger> dateValues,
-                                             List<BigInteger> listValues,
-                                             List<BigInteger> references) {
-        int i = 1;
-        i = selectEachAttr(values, "VALUE", transferTo, i);
-        i = selectEachAttr(dateValues, "DATE_VALUE", transferTo, i);
-        i = selectEachAttr(listValues, "LIST_VALUE_ID", transferTo, i);
-            selectEachAttr(references, "REFERENCE", transferTo, i);
-        transferTo.delete(transferTo.lastIndexOf(","), transferTo.length() - 1);
-    }
-
-    private int selectEachAttr(List<BigInteger> attrs,
-                               String attrColumnType,
-                               StringBuilder transferTo,
-                               int i) {
-
-        for (BigInteger attr : attrs) {
-            transferTo.append("A").append(i++).append(".").append(attrColumnType)
-                    .append(" ATTR").append(attr).append(", ");
-        }
-        return i;
-    }
-
-    private void transferAttributesJoin(StringBuilder transferTo,
-                                        List<BigInteger> values,
-                                        List<BigInteger> dateValues,
-                                        List<BigInteger> listValues,
-                                        List<BigInteger> references) {
-        int i = 1;
-        i = joinEachAttr(values, "ATTRIBUTES", transferTo, i);
-        i = joinEachAttr(dateValues, "ATTRIBUTES", transferTo, i);
-        i = joinEachAttr(listValues, "ATTRIBUTES", transferTo, i);
-            joinEachAttr(references, "OBJREFERENCE", transferTo, i);
-    }
-
-    private int joinEachAttr(List<BigInteger> attrs,
-                             String attrTableType,
-                             StringBuilder transferTo,
-                             int i) {
-
-        for (int j = 0; j < attrs.size(); j++) {
-            String alias = " A" + (i++);
-            transferTo.append(" LEFT JOIN ").append(attrTableType).append(alias)
-                    .append(" ON").append(alias).append(".ATTR_ID = ?")
-                    .append(" AND").append(alias).append(".OBJECT_ID = O.OBJECT_ID ");
-        }
-        return i;
     }
 
     private void closeResultSetAndStatement(ResultSet result, Statement statement) {

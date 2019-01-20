@@ -3,6 +3,13 @@ package com.nc.airport.backend.persistence.eav.mutable2query;
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition.MetaDataDBFetcher;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition.TallLazyDBFetcher;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition.WidePickyDBFetcher;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.modification.DeleteSequenceBuilder;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.modification.InsertSequenceBuilder;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.modification.SequenceBuilder;
+import com.nc.airport.backend.persistence.eav.mutable2query.data.modification.UpdateSequenceBuilder;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 //                          TODO MAKE PAGES BIG INTS
 @Component
 public class Mutable2Query {
@@ -317,14 +323,4 @@ public class Mutable2Query {
                 .getMutablesByReference(values, dateValues, listValues, references, objectId);
     }
 
-
-    /**     UNSUPPORTED
-     * Returns a single mutable with specified object id and all possible attributes
-     *
-     * @param objectId search criteria
-     * @return the mutable with given objectId or {@literal Optional#empty()} if none found
-     */
-    public Optional<Mutable> getSingleMutable(BigInteger objectId) {
-        throw new UnsupportedOperationException("Mutable getSingleMutable(BigInteger objectId) is not supported yet");
-    }
 }

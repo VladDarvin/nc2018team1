@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.modification;
 
 
 import com.nc.airport.backend.persistence.eav.Mutable;
@@ -9,11 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-class UpdateSequenceBuilder extends SequenceBuilder{
+public class UpdateSequenceBuilder extends SequenceBuilder {
     private Mutable mutable;
     private BigInteger objectId;
 
-    UpdateSequenceBuilder(Connection connection) {
+    public UpdateSequenceBuilder(Connection connection) {
         super(connection);
         this.connection = connection;
     }

@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.acquisition;
 
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
@@ -11,14 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Log4j2
-class MetaDataDBFetcher {
+public class MetaDataDBFetcher {
     private Connection connection;
 
-    MetaDataDBFetcher(Connection connection) {
+    public MetaDataDBFetcher(Connection connection) {
         this.connection = connection;
     }
 
-     boolean existsByObjId(BigInteger objectId) {
+     public boolean existsByObjId(BigInteger objectId) {
         if (objectId == null)
             return false;
 
@@ -41,7 +41,7 @@ class MetaDataDBFetcher {
         }
     }
 
-    BigInteger countById(BigInteger objTypeId) {
+    public BigInteger countById(BigInteger objTypeId) {
         if (objTypeId == null)
             return new BigInteger("0");
 

@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.modification;
 
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-abstract class SequenceBuilder {
+public abstract class SequenceBuilder {
     protected final Logger LOGGER = LogManager.getLogger(this.getClass());
     protected Connection connection;
 
@@ -20,7 +20,7 @@ abstract class SequenceBuilder {
         this.connection = connection;
     }
 
-    abstract Mutable build (Mutable mutable);
+    public abstract Mutable build (Mutable mutable);
 
     boolean noSuchElementsInObject(Map map) {
         return map == null || map.size() == 0;

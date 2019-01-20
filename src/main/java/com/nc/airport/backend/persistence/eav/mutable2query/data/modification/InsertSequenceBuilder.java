@@ -1,4 +1,4 @@
-package com.nc.airport.backend.persistence.eav.mutable2query;
+package com.nc.airport.backend.persistence.eav.mutable2query.data.modification;
 
 
 import com.nc.airport.backend.persistence.eav.Mutable;
@@ -10,12 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-class InsertSequenceBuilder extends SequenceBuilder {
+public class InsertSequenceBuilder extends SequenceBuilder {
     private org.apache.logging.log4j.Logger logger = LogManager.getLogger(InsertSequenceBuilder.class.getSimpleName());
     private Mutable mutable;
     private BigInteger objectId;
 
-    InsertSequenceBuilder(Connection connection) {
+    public InsertSequenceBuilder(Connection connection) {
         super(connection);
         this.connection = connection;
     }
