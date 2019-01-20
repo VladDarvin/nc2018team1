@@ -165,6 +165,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     private Object newStringConstructorInstance(Class classToCreate, String initArg) {
         Object newInstance = null;
+        if(initArg == null)
+            initArg = "";
+
         try {
             Constructor<?> constructor = classToCreate.getConstructor(String.class);
             try {
