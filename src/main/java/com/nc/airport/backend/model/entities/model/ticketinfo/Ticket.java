@@ -25,8 +25,8 @@ public class Ticket extends BaseEntity {
     @ReferenceField(ID = "32")
     private BigInteger passengerId;
 
-    @ReferenceField(ID = "33")
-    private BigInteger ticketStatus;
+    @ListField(ID = "33")
+    private TicketStatus ticketStatus;
 
 //   ?
 
