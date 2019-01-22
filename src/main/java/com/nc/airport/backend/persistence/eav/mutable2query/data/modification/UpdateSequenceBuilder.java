@@ -86,7 +86,6 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
         .append("VALUES (B.ATTR_ID, B.OBJECT_ID, B.new_value)");
         try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             for (Map.Entry<BigInteger, ?> entry : values.entrySet()) {
-                System.err.println(entry.getValue());
                 if (valueType.equals("DATE_VALUE ")) {
                     statement.setObject(1, entry.getValue().toString());
                 } else {
