@@ -15,7 +15,7 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
 
     public UpdateSequenceBuilder(Connection connection) {
         super(connection);
-        this.connection = connection;
+        //this.connection = connection;
     }
 
     @Override

@@ -39,32 +39,32 @@ public class FlightController {
     }
 
     @GetMapping("/flights/count")
-    public BigInteger getCountOfCountries() {
+    public BigInteger getCountOfFlights() {
         return flightService.getEntitiesAmount();
     }
 
     @PutMapping("/flights")
-    public Flight editCountry(@RequestBody Flight flight) {
+    public Flight editFlight(@RequestBody Flight flight) {
         return (Flight) flightService.saveEntity(flight);
     }
 
     @PostMapping("/flights")
-    public Flight addNewCountry(@RequestBody Flight flight) {
+    public Flight addNewFlight(@RequestBody Flight flight) {
         return (Flight) flightService.saveEntity(flight);
     }
 
     @DeleteMapping("/flights/{id}")
-    public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
+    public void deleteFlight(@PathVariable(name = "id") BigInteger id) {
         flightService.deleteEntity(id);
     }
 
     @GetMapping("/flights/count/search={searchString}")
-    public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
+    public BigInteger getCountOfFlightsByFilter(@PathVariable(name = "searchString") String searchString) {
         return flightService.getAmountOfFilteredEntities(searchString);
     }
 
     @PostMapping("/flights/search/page={page}")
-    public ResponseFilteringWrapper searchCountries(@PathVariable(name = "page") int page,
+    public ResponseFilteringWrapper searchFlights(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return flightService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }

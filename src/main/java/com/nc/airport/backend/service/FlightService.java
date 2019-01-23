@@ -111,7 +111,7 @@ public class FlightService extends AbstractService {
     // --------------------------
 
     public List<FlightDTO> getAllFlights(int page) {
-        List<Flight> flights = repository.findSlice(Flight.class, new Page(page));
+        List<Flight> flights = repository.findSlice(Flight.class, new Page(page - 1));
         List<FlightDTO> flightDTOs = new ArrayList<>();
         for (Flight flight : flights) {
             Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
