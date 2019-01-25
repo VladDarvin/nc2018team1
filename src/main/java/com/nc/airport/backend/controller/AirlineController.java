@@ -27,12 +27,12 @@ public class AirlineController {
 
     @PostMapping
     public Airline addNewAirline(@RequestBody Airline airline) {
-        return airlineService.saveEntity(airline);
+        return airlineService.updateEntity(airline);
     }
 
     @PutMapping
     public Airline editAirline(@RequestBody Airline airline) {
-        return airlineService.saveEntity(airline);
+        return airlineService.updateEntity(airline);
     }
 
     @DeleteMapping("/{id}")

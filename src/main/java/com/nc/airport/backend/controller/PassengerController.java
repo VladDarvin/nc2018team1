@@ -37,12 +37,12 @@ public class PassengerController {
     @PostMapping(value = "/passengers/userLogin={userLogin}")
     public PassengerPassportDTO addNewPassenger(@PathVariable String userLogin, @RequestBody PassengerPassportDTO dto) {
         Passport passport = dto.getPassport();
-        passport = passportService.saveEntity(passport);
+        passport = passportService.updateEntity(passport);
         User user = userService.findByLogin(userLogin);
         Passenger passenger = dto.getPassenger();
         passenger.setPassportId(passport.getObjectId());
         passenger.setParentId(user.getObjectId());
-        passenger = passengerService.saveEntity(passenger);
+        passenger = passengerService.updateEntity(passenger);
         return new PassengerPassportDTO(passenger, passport);
     }
 

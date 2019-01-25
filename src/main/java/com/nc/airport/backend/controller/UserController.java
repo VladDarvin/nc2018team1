@@ -45,7 +45,7 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
             user.setPassword(encoder.encode(passwordDTO.getNewPassword()));
-            service.saveEntity(user);
+            service.updateEntity(user);
             return true;
         } else {
             return false;
@@ -54,7 +54,7 @@ public class UserController {
 
     @PutMapping
     public User editUser(@RequestBody User entity) {
-        return service.saveEntity(entity);
+        return service.updateEntity(entity);
     }
 
     @DeleteMapping("/{id}")

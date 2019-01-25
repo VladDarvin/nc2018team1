@@ -45,12 +45,12 @@ public class FlightController {
 
     @PutMapping("/flights")
     public Flight editFlight(@RequestBody Flight flight) {
-        return (Flight) flightService.saveEntity(flight);
+        return (Flight) flightService.updateEntity(flight);
     }
 
     @PostMapping("/flights")
     public Flight addNewFlight(@RequestBody Flight flight) {
-        return (Flight) flightService.saveEntity(flight);
+        return (Flight) flightService.updateEntity(flight);
     }
 
     @DeleteMapping("/flights/{id}")
