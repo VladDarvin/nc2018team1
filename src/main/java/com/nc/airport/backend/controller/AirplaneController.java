@@ -25,6 +25,11 @@ public class AirplaneController {
         return airplaneService.getTenEntities(page);
     }
 
+    @GetMapping("/objectId={objectId}")
+    public Airplane getAirplaneById(@PathVariable(name = "objectId") BigInteger objectId) {
+        return airplaneService.findAirplaneByObjectId(objectId);
+    }
+
     @PostMapping
     public Airplane addNewAirplane(@RequestBody Airplane airplane) {
         return airplaneService.updateEntity(airplane);
