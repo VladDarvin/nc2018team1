@@ -23,8 +23,11 @@ public class Seat extends BaseEntity {
     private BigInteger seatTypeId;
 
     @ValueField(ID = "25")
-    private int row;
+    private Integer row;
 
     @ValueField(ID = "26")
-    private int col;
+    private Integer col;
+
+    @ValueField(ID = "66")
+    private Double modifier;
 }

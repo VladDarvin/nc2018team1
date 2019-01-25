@@ -22,5 +22,5 @@ public class TicketExtra extends BaseEntity {
     private BigInteger extraId;
 
     @ReferenceField(ID = "36")
-    private int quantity;
+    private Integer quantity;
 }
