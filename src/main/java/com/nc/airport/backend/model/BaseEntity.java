@@ -1,5 +1,6 @@
 package com.nc.airport.backend.model;
 
+import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,11 +26,13 @@ public abstract class BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         BaseEntity that = (BaseEntity) o;
         return Objects.equals(objectId, that.objectId) &&
-                Objects.equals(parentId, that.parentId);
+                Objects.equals(parentId, that.parentId) &&
+                Objects.equals(ReflectionHelper.getObjTypeId(this.getClass()),
+                        ReflectionHelper.getObjTypeId(that.getClass()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(objectId, parentId);
+        return Objects.hash(objectId);
     }
 }
