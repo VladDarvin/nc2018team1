@@ -32,16 +32,28 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public <S extends T> S save(S entity) {
+    public <S extends T> S update(S entity) {
         Mutable mutable = e2m.convertEntityToMutable(entity);
         S updatedEntity;
 
-        Mutable updatedMutable;
-        updatedMutable = m2db.sqlUpdate(mutable);
+        Mutable updatedMutable = m2db.sqlUpdate(mutable);
         updatedEntity = (S) e2m.convertMutableToEntity(updatedMutable, entity.getClass());
-        log.info("Saved. Got an updated entity back : {}", updatedEntity);
+        log.info("Updated. Got an updated entity back : {}", updatedEntity);
 
         return updatedEntity;
+    }
+
+    @Override
+    public <S extends T> S insert(S entity) {
+        entity.setObjectId(m2db.getNewObjectId());
+        Mutable mutable = e2m.convertEntityToMutable(entity);
+        S insertedEntity;
+
+        Mutable insertedMutable = m2db.sqlInsert(mutable);
+        insertedEntity = (S) e2m.convertMutableToEntity(insertedMutable, entity.getClass());
+        log.info("Inserted. Got an inserted entity back : {}", insertedEntity);
+
+        return insertedEntity;
     }
 
     @Override
@@ -50,7 +62,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         List<S> updatedEntities = new ArrayList<>();
         for (S entity : entities) {
             if (entity != null)
-                updatedEntities.add(save(entity));
+                updatedEntities.add(this.update(entity));
         }
 
         return updatedEntities;
@@ -261,6 +273,5 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
             throw exception;
         }
     }
-
 
 }

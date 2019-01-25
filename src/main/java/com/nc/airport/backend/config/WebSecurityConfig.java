@@ -134,6 +134,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/tickets/**").hasAuthority("ROLE_CASHIER")
                 .antMatchers(HttpMethod.PUT, "/tickets/**").hasAuthority("ROLE_CASHIER")
                 .antMatchers(HttpMethod.DELETE, "/tickets/**").hasAuthority("ROLE_CASHIER")
+
                 .anyRequest().authenticated();
 
         http

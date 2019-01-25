@@ -36,10 +36,6 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
         return mutable;
     }
 
-    protected void logSQLError(SQLException e, String inTable) {
-        logSQLError(e, inTable, "update");
-    }
-
     /**
      * This method has a restriction to not change Object_ID or Object_Type_ID
      * for security purposes.
@@ -126,5 +122,9 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
         } catch (SQLException e) {
             logSQLError(e, "References");
         }
+    }
+
+    protected void logSQLError(SQLException e, String inTable) {
+        logSQLError(e, inTable, "update");
     }
 }

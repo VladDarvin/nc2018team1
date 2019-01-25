@@ -17,13 +17,13 @@ public class InsertSequenceBuilder extends SequenceBuilder {
 
     public InsertSequenceBuilder(Connection connection) {
         super(connection);
-        this.connection = connection;
+//        this.connection = connection;
     }
 
     @Override
     public Mutable build(Mutable mutable) {
         this.mutable = mutable;
-        objectId = getNewObjectId();
+//        objectId = getNewObjectId();
 
         insertIntoObjects();
         insertIntoAttributes();
@@ -35,17 +35,13 @@ public class InsertSequenceBuilder extends SequenceBuilder {
         return mutable;
     }
 
-    private void logSQLError(SQLException e, String inTable) {
-        logSQLError(e, inTable, "insertion");
-    }
-
     private void insertIntoObjects() {
         try (PreparedStatement statement
                      = connection.prepareStatement(
                 "INSERT INTO OBJECTS " +
                         "(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?, ?)")) {
 
-            statement.setObject(1, objectId);
+            statement.setObject(1, mutable.getObjectId());
             statement.setObject(2, mutable.getParentId());
             statement.setObject(3, mutable.getObjectTypeId());
             statement.setString(4, mutable.getObjectName());
@@ -65,7 +61,7 @@ public class InsertSequenceBuilder extends SequenceBuilder {
     private void insertValues(Map<BigInteger, ?> values, String valueType) {
         if (noSuchElementsInObject(values)) return;
 
-        String sql = "INSERT INTO ATTRIBUTES (attr_id, " + valueType + ", object_id) VALUES (?,?, " + objectId + ")";
+        String sql = "INSERT INTO ATTRIBUTES (attr_id, " + valueType + ", object_id) VALUES (?,?, " + mutable.getObjectId() + ")";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Map.Entry<BigInteger, ?> entry : values.entrySet()) {
                 statement.setObject(1, entry.getKey());
@@ -94,5 +90,9 @@ public class InsertSequenceBuilder extends SequenceBuilder {
         } catch (SQLException e) {
             logSQLError(e, "References");
         }
+    }
+
+    private void logSQLError(SQLException e, String inTable) {
+        logSQLError(e, inTable, "insertion");
     }
 }

@@ -18,14 +18,24 @@ import java.util.Optional;
 public interface EavCrudRepository<T extends BaseEntity> {
 
     /**
-     * Saves a given entity.
-     * Use the returned instance for further operations as the save operation might
+     * Updates a given entity.
+     * Use the returned instance for further operations as the update operation might
      * have changed the entity instance completely.
      *
      * @param entity must not be null
-     * @return the saved entity will never be null.
+     * @return the updated entity will never be null.
      */
-    <S extends T> S save(@NotNull S entity);
+    <S extends T> S update(@NotNull S entity);
+
+    /**
+     * Inserts a given entity.
+     * Use the returned instance for further operations as the insert operation might
+     * have changed the entity instance completely.
+     *
+     * @param entity must not be null
+     * @return the inserted entity will never be null.
+     */
+    <S extends T> S insert(@NotNull S entity);
 
     /**
      * Saves all given entities.

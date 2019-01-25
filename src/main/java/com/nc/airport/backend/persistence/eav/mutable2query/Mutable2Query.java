@@ -323,4 +323,7 @@ public class Mutable2Query {
                 .getMutablesByReference(values, dateValues, listValues, references, objectId);
     }
 
+    public BigInteger getNewObjectId() {
+        return new InsertSequenceBuilder(connection).getNewObjectId();
+    }
 }
