@@ -25,6 +25,11 @@ public class AirlineController {
         return airlineService.getTenEntities(page);
     }
 
+    @GetMapping("/objectId={objectId}")
+    public Airline getAirlineById(@PathVariable(name = "objectId") BigInteger objectId) {
+        return airlineService.findAirlineByObjectId(objectId);
+    }
+
     @PostMapping
     public Airline addNewAirline(@RequestBody Airline airline) {
         return airlineService.saveEntity(airline);
