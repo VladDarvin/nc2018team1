@@ -123,7 +123,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getReferenceFieldIds(childClass),
                 page.getFirstRow(),
                 page.getLastRow(),
-                parentId);
+                parentId,
+                ReflectionHelper.getObjTypeId(childClass));
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
@@ -167,6 +168,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 page.getFirstRow(),
                 page.getLastRow(),
                 parentId,
+                ReflectionHelper.getObjTypeId(childClass),
                 sortBy,
                 filterBy);
 

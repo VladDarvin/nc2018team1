@@ -122,7 +122,7 @@ public class WidePickyDBFetcher {
                               List<BigInteger> dateValues,
                               List<BigInteger> listValues,
                               List<BigInteger> references, int pagingFrom, int pagingTo,
-                              BigInteger parentId) {
+                              BigInteger parentId, BigInteger objectTypeId) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -136,7 +136,7 @@ public class WidePickyDBFetcher {
         references = ensureNonNullSecurity(references);
 
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
-        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId).append(" AND O.OBJECT_TYPE_ID = ").append(objectTypeId);
         String fullQuery = paging.getPaging(basicQuery, pagingFrom, pagingTo);
 
         queryCreator.logSequence(log, fullQuery);
@@ -163,7 +163,7 @@ public class WidePickyDBFetcher {
                                         List<BigInteger> dateValues,
                                         List<BigInteger> listValues,
                                         List<BigInteger> references, int pagingFrom, int pagingTo,
-                                        BigInteger parentId, List<SortEntity> sortBy,
+                                        BigInteger parentId, BigInteger objectTypeId, List<SortEntity> sortBy,
                                         List<FilterEntity> filterBy) {
 
         QueryCreator queryCreator = new QueryCreator();
@@ -185,7 +185,7 @@ public class WidePickyDBFetcher {
             descBuilder.sort(sortBy);
 
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
-        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId).append(" AND O.OBJECT_TYPE_ID = ").append(objectTypeId);
         StringBuilder filteredSortedQuery = new StringBuilder("SELECT * FROM (").append(basicQuery).append(") ");
         filteredSortedQuery.append(descBuilder.build().getQueryBuilder());
         String fullQuery = paging.getPaging(filteredSortedQuery, pagingFrom, pagingTo);

@@ -289,20 +289,20 @@ public class Mutable2Query {
                                            List<BigInteger> dateValues,
                                            List<BigInteger> listValues,
                                            List<BigInteger> references,
-                                         int pagingFrom, int pagingTo, BigInteger parentId) {
+                                         int pagingFrom, int pagingTo, BigInteger parentId, BigInteger objectTypeId) {
         return new WidePickyDBFetcher(connection)
-                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId);
+                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId, objectTypeId);
     }
 
     public List<Mutable> getMutablesFromDBByParentId(List<BigInteger> values,
                                                      List<BigInteger> dateValues,
                                                      List<BigInteger> listValues,
                                                      List<BigInteger> references,
-                                                     int pagingFrom, int pagingTo, BigInteger parentId,
+                                                     int pagingFrom, int pagingTo, BigInteger parentId, BigInteger objectTypeId,
                                                      List<SortEntity> sortBy,
                                                      List<FilterEntity> filterBy) {
         return new WidePickyDBFetcher(connection)
-                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId, sortBy, filterBy);
+                .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId, objectTypeId, sortBy, filterBy);
     }
 
     public Mutable getSingleMutableByReference(List<BigInteger> values,
