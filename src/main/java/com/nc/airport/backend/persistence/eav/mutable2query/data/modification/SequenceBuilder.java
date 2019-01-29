@@ -40,7 +40,7 @@ public abstract class SequenceBuilder {
             nextVal.next();
             return new BigInteger(nextVal.getString(1));
         } catch (SQLException e) {
-            LOGGER.error("Failed to get new object id from sequence", e);
+            LOGGER.error("Failed to generate new object id ", e);
             throw new DatabaseConnectionException("Failed to fetch vacant objectId", e);
         }
     }

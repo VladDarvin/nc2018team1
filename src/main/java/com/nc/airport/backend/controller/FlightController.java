@@ -50,7 +50,7 @@ public class FlightController {
 
     @PostMapping("/flights")
     public Flight addNewFlight(@RequestBody Flight flight) {
-        return (Flight) flightService.updateEntity(flight);
+        return (Flight) flightService.insertEntity(flight);
     }
 
     @DeleteMapping("/flights/{id}")

@@ -66,7 +66,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -109,7 +109,7 @@ public class WidePickyDBFetcher {
             while (result.next()) {
                 countOfItems = result.getInt("total");
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -150,7 +150,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -201,7 +201,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -250,7 +250,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -288,7 +288,7 @@ public class WidePickyDBFetcher {
                 pullGeneralInfo(result, mutable);
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
