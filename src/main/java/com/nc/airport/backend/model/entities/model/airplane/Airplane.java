@@ -1,6 +1,7 @@
 package com.nc.airport.backend.model.entities.model.airplane;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.model.entities.model.airplane.dto.AirplaneDto;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
@@ -21,4 +22,13 @@ public class Airplane extends BaseEntity {
 
     @ReferenceField(ID = "17")
     private BigInteger airlineId;
+
+    public Airplane() {
+    }
+
+    public Airplane(AirplaneDto airplaneDto) {
+        super(airplaneDto);
+        this.model = airplaneDto.getModel();
+        this.airlineId = airplaneDto.getAirline().getObjectId();
+    }
 }

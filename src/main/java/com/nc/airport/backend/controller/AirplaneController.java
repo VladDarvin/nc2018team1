@@ -3,6 +3,7 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
+import com.nc.airport.backend.model.entities.model.airplane.dto.AirplaneDto;
 import com.nc.airport.backend.service.AirplaneService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +32,13 @@ public class AirplaneController {
     }
 
     @PostMapping
-    public Airplane addNewAirplane(@RequestBody Airplane airplane) {
-        return airplaneService.updateEntity(airplane);
+    public Airplane addNewAirplane(@RequestBody AirplaneDto airplaneDto) {
+        return airplaneService.updateEntity(new Airplane(airplaneDto));
     }
 
     @PutMapping
-    public Airplane editAirplane(@RequestBody Airplane airplane) {
-        return airplaneService.updateEntity(airplane);
+    public Airplane editAirplane(@RequestBody AirplaneDto airplaneDto) {
+        return airplaneService.updateEntity(new Airplane(airplaneDto));
     }
 
     @DeleteMapping("/{id}")
