@@ -9,7 +9,6 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.pa
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import io.jsonwebtoken.lang.Collections;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 
 import java.math.BigInteger;
 import java.sql.*;

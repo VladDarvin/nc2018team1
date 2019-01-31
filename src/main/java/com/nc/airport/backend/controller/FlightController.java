@@ -3,6 +3,8 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.model.dto.FlightDTO;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
+import com.nc.airport.backend.model.entities.model.airplane.Airplane;
+import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.Flight;
 import com.nc.airport.backend.model.entities.model.users.User;
 import com.nc.airport.backend.service.FlightService;
@@ -35,7 +37,7 @@ public class FlightController {
 
     @GetMapping(value = "/flights/page={page}")
     public List<FlightDTO> getTenFlights(@PathVariable int page) {
-        return flightService.getAllFlights(page);
+        return flightService.getTenFlights(page);
     }
 
     @GetMapping("/flights/count")
@@ -69,4 +71,13 @@ public class FlightController {
         return flightService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
+    @GetMapping(value = "/flights/airports")
+    public List<Airport> getAllAirports() {
+        return flightService.getAllAirports();
+    }
+
+    @GetMapping(value = "/flights/airportId={airportId}")
+    public List<Airplane> getAllAirplanesByAirport(@PathVariable(name = "airportId") BigInteger airportId) {
+        return flightService.getAllAirplanesByAirport(airportId);
+    }
 }
