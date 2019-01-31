@@ -27,7 +27,7 @@ public class SeatTypeController {
 
     @GetMapping
     public List<SeatType> getAllSeatTypes() {
-        return seatTypeService.findAllSeatTypes();
+        return seatTypeService.getAll();
     }
 
     @GetMapping("/page={page}")
