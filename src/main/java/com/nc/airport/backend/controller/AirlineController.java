@@ -61,4 +61,9 @@ public class AirlineController {
         return airlineService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
+    @GetMapping
+    public List<Airline> getAll() {
+        return airlineService.getAll();
+    }
+
 }
