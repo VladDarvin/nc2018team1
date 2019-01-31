@@ -20,7 +20,7 @@ public abstract class SequenceBuilder {
         this.connection = connection;
     }
 
-    public abstract Mutable build (Mutable mutable);
+    public abstract Mutable build(Mutable mutable);
 
     boolean noSuchElementsInObject(Map map) {
         return map == null || map.size() == 0;
@@ -28,19 +28,19 @@ public abstract class SequenceBuilder {
 
     protected void logSQLError(SQLException e, String inTable, String operation) {
         LOGGER.log(Level.ERROR, e);
-        throw new DatabaseConnectionException("Invalid values in mutable for "+operation+" in "+inTable, e);
+        throw new DatabaseConnectionException("Invalid values in mutable for " + operation + " in " + inTable, e);
     }
 
-    protected BigInteger getNewObjectId() {
+    public BigInteger getNewObjectId() {
         try {
             ResultSet nextVal = connection.createStatement()
-                    .executeQuery("SELECT COALESCE(MIN(O1.OBJECT_ID+1), 1)\n" +
+                    .executeQuery("SELECT COALESCE(MIN(O1.OBJECT_ID + 1), 1)\n" +
                             "  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID\n" +
                             "  WHERE O2.OBJECT_ID IS NULL");
             nextVal.next();
             return new BigInteger(nextVal.getString(1));
         } catch (SQLException e) {
-            LOGGER.error("Failed to get new object id from sequence", e);
+            LOGGER.error("Failed to generate new object id ", e);
             throw new DatabaseConnectionException("Failed to fetch vacant objectId", e);
         }
     }

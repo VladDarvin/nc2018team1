@@ -9,7 +9,6 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.pa
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import io.jsonwebtoken.lang.Collections;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 
 import java.math.BigInteger;
 import java.sql.*;
@@ -66,7 +65,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -109,7 +108,7 @@ public class WidePickyDBFetcher {
             while (result.next()) {
                 countOfItems = result.getInt("total");
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -122,7 +121,7 @@ public class WidePickyDBFetcher {
                               List<BigInteger> dateValues,
                               List<BigInteger> listValues,
                               List<BigInteger> references, int pagingFrom, int pagingTo,
-                              BigInteger parentId) {
+                              BigInteger parentId, BigInteger objectTypeId) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -136,7 +135,7 @@ public class WidePickyDBFetcher {
         references = ensureNonNullSecurity(references);
 
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
-        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId).append(" AND O.OBJECT_TYPE_ID = ").append(objectTypeId);
         String fullQuery = paging.getPaging(basicQuery, pagingFrom, pagingTo);
 
         queryCreator.logSequence(log, fullQuery);
@@ -150,7 +149,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -163,7 +162,7 @@ public class WidePickyDBFetcher {
                                         List<BigInteger> dateValues,
                                         List<BigInteger> listValues,
                                         List<BigInteger> references, int pagingFrom, int pagingTo,
-                                        BigInteger parentId, List<SortEntity> sortBy,
+                                        BigInteger parentId, BigInteger objectTypeId, List<SortEntity> sortBy,
                                         List<FilterEntity> filterBy) {
 
         QueryCreator queryCreator = new QueryCreator();
@@ -185,7 +184,7 @@ public class WidePickyDBFetcher {
             descBuilder.sort(sortBy);
 
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
-        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId);
+        basicQuery.append("WHERE O.PARENT_ID = ").append(parentId).append(" AND O.OBJECT_TYPE_ID = ").append(objectTypeId);
         StringBuilder filteredSortedQuery = new StringBuilder("SELECT * FROM (").append(basicQuery).append(") ");
         filteredSortedQuery.append(descBuilder.build().getQueryBuilder());
         String fullQuery = paging.getPaging(filteredSortedQuery, pagingFrom, pagingTo);
@@ -201,7 +200,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -230,7 +229,9 @@ public class WidePickyDBFetcher {
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE ");
         for (int i = 1; i <= references.size(); i++) {
-            basicQuery.append("A").append(i).append(".REFERENCE = ").append(objectId);
+            int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR"+references.get(i-1));
+            String attrNumber = basicQuery.substring(indexOfAttrNumber-1, indexOfAttrNumber);
+            basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectId);
             if (i != references.size()) {
                 basicQuery.append(" OR ");
             }
@@ -248,7 +249,7 @@ public class WidePickyDBFetcher {
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
                 mutables.add(mutable);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
@@ -286,7 +287,7 @@ public class WidePickyDBFetcher {
                 pullGeneralInfo(result, mutable);
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {

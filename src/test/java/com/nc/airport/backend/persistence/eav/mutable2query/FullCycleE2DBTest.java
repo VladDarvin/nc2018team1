@@ -41,7 +41,7 @@ public class FullCycleE2DBTest extends TestCase {
         Mutable initialMutable = e2m.convertEntityToMutable(initialAirplane);
 
         log.info("inserting m2db");
-        m2q.sqlInsert(initialMutable);
+        m2q.sqlUpdate(initialMutable);
         log.info("initial mutable : {}", initialMutable);
 
         List<BigInteger> attrIds = new ArrayList<>();

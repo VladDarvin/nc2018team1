@@ -32,16 +32,23 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public <S extends T> S save(S entity) {
+    public <S extends T> S update(S entity) {
         Mutable mutable = e2m.convertEntityToMutable(entity);
         S updatedEntity;
 
-        Mutable updatedMutable;
-        updatedMutable = m2db.sqlUpdate(mutable);
+        Mutable updatedMutable = m2db.sqlUpdate(mutable);
         updatedEntity = (S) e2m.convertMutableToEntity(updatedMutable, entity.getClass());
-        log.info("Saved. Got an updated entity back : {}", updatedEntity);
+        log.info("Updated. Got an updated entity back : {}", updatedEntity);
 
         return updatedEntity;
+    }
+
+    @Override
+    public <S extends T> S insert(S entity) {
+        S insertedEntity = update(entity);
+        log.info("Inserted. Got an inserted entity back : {}", insertedEntity);
+
+        return insertedEntity;
     }
 
     @Override
@@ -50,7 +57,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
         List<S> updatedEntities = new ArrayList<>();
         for (S entity : entities) {
             if (entity != null)
-                updatedEntities.add(save(entity));
+                updatedEntities.add(this.update(entity));
         }
 
         return updatedEntities;
@@ -111,7 +118,8 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getReferenceFieldIds(childClass),
                 page.getFirstRow(),
                 page.getLastRow(),
-                parentId);
+                parentId,
+                ReflectionHelper.getObjTypeId(childClass));
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
@@ -155,6 +163,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 page.getFirstRow(),
                 page.getLastRow(),
                 parentId,
+                ReflectionHelper.getObjTypeId(childClass),
                 sortBy,
                 filterBy);
 
@@ -261,6 +270,5 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
             throw exception;
         }
     }
-
 
 }

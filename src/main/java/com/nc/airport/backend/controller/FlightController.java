@@ -3,6 +3,8 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.model.dto.FlightDTO;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
+import com.nc.airport.backend.model.entities.model.airplane.Airplane;
+import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.Flight;
 import com.nc.airport.backend.model.entities.model.users.User;
 import com.nc.airport.backend.service.FlightService;
@@ -34,39 +36,48 @@ public class FlightController {
     // --------------------------
 
     @GetMapping(value = "/flights/page={page}")
-    public List<FlightDTO> getAllFlights(@PathVariable int page) {
-        return flightService.getAllFlights(page);
+    public List<FlightDTO> getTenFlights(@PathVariable int page) {
+        return flightService.getTenFlights(page);
     }
 
     @GetMapping("/flights/count")
-    public BigInteger getCountOfCountries() {
+    public BigInteger getCountOfFlights() {
         return flightService.getEntitiesAmount();
     }
 
     @PutMapping("/flights")
-    public Flight editCountry(@RequestBody Flight flight) {
-        return (Flight) flightService.saveEntity(flight);
+    public Flight editFlight(@RequestBody Flight flight) {
+        return (Flight) flightService.updateEntity(flight);
     }
 
     @PostMapping("/flights")
-    public Flight addNewCountry(@RequestBody Flight flight) {
-        return (Flight) flightService.saveEntity(flight);
+    public Flight addNewFlight(@RequestBody Flight flight) {
+        return (Flight) flightService.insertEntity(flight);
     }
 
     @DeleteMapping("/flights/{id}")
-    public void deleteCountry(@PathVariable(name = "id") BigInteger id) {
+    public void deleteFlight(@PathVariable(name = "id") BigInteger id) {
         flightService.deleteEntity(id);
     }
 
     @GetMapping("/flights/count/search={searchString}")
-    public BigInteger getCountOfCountriesByFilter(@PathVariable(name = "searchString") String searchString) {
+    public BigInteger getCountOfFlightsByFilter(@PathVariable(name = "searchString") String searchString) {
         return flightService.getAmountOfFilteredEntities(searchString);
     }
 
     @PostMapping("/flights/search/page={page}")
-    public ResponseFilteringWrapper searchCountries(@PathVariable(name = "page") int page,
+    public ResponseFilteringWrapper searchFlights(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return flightService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
+    @GetMapping(value = "/flights/airports")
+    public List<Airport> getAllAirports() {
+        return flightService.getAllAirports();
+    }
+
+    @GetMapping(value = "/flights/airportId={airportId}")
+    public List<Airplane> getAllAirplanesByAirport(@PathVariable(name = "airportId") BigInteger airportId) {
+        return flightService.getAllAirplanesByAirport(airportId);
+    }
 }

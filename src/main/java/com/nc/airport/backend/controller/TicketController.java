@@ -39,12 +39,12 @@ public class TicketController {
     @PutMapping("/tickets")
     public TicketDTO editTicketsInfo(@RequestBody TicketDTO ticketDTO) {
         Passport passport = ticketDTO.getPassport();
-        passport = passportService.saveEntity(passport);
+        passport = passportService.updateEntity(passport);
         Passenger passenger = ticketDTO.getPassenger();
         passenger.setPassportId(passport.getObjectId());
-        passenger = passengerService.saveEntity(passenger);
+        passenger = passengerService.updateEntity(passenger);
         Ticket ticket = ticketDTO.getTicket();
-        ticket = (Ticket) ticketService.saveEntity(ticket);
+        ticket = (Ticket) ticketService.updateEntity(ticket);
         ticketDTO.setPassport(passport);
         ticketDTO.setPassenger(passenger);
         ticketDTO.setTicket(ticket);

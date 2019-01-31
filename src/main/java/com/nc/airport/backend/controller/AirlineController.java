@@ -25,14 +25,19 @@ public class AirlineController {
         return airlineService.getTenEntities(page);
     }
 
+    @GetMapping("/objectId={objectId}")
+    public Airline getAirlineById(@PathVariable(name = "objectId") BigInteger objectId) {
+        return airlineService.findAirlineByObjectId(objectId);
+    }
+
     @PostMapping
     public Airline addNewAirline(@RequestBody Airline airline) {
-        return airlineService.saveEntity(airline);
+        return airlineService.updateEntity(airline);
     }
 
     @PutMapping
     public Airline editAirline(@RequestBody Airline airline) {
-        return airlineService.saveEntity(airline);
+        return airlineService.updateEntity(airline);
     }
 
     @DeleteMapping("/{id}")
@@ -54,6 +59,11 @@ public class AirlineController {
     public ResponseFilteringWrapper searchAirlines(@PathVariable(name = "page") int page,
                                                    @RequestBody SortingFilteringWrapper wrapper) {
         return airlineService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
+    }
+
+    @GetMapping
+    public List<Airline> getAll() {
+        return airlineService.getAll();
     }
 
 }

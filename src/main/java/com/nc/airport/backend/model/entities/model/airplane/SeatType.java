@@ -22,7 +22,7 @@ public class SeatType extends BaseEntity {
     private String description;
 
     @ValueField(ID = "29")
-    private double baseCost;
+    private Double modifier;
 
     @Override
     public boolean equals(Object o) {
@@ -30,7 +30,7 @@ public class SeatType extends BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         SeatType seatType = (SeatType) o;
-        return Double.compare(seatType.baseCost, baseCost) == 0 &&
+        return Double.compare(seatType.modifier, modifier) == 0 &&
                 Objects.equals(name, seatType.name) &&
                 Objects.equals(description, seatType.description);
     }

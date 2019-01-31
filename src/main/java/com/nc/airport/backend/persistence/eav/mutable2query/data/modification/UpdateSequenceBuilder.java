@@ -15,7 +15,7 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
 
     public UpdateSequenceBuilder(Connection connection) {
         super(connection);
-        this.connection = connection;
+        //this.connection = connection;
     }
 
     @Override
@@ -34,10 +34,6 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
         updateAttributes();
         updateReferencesOfObjReferences();
         return mutable;
-    }
-
-    protected void logSQLError(SQLException e, String inTable) {
-        logSQLError(e, inTable, "update");
     }
 
     /**
@@ -126,5 +122,9 @@ public class UpdateSequenceBuilder extends SequenceBuilder {
         } catch (SQLException e) {
             logSQLError(e, "References");
         }
+    }
+
+    protected void logSQLError(SQLException e, String inTable) {
+        logSQLError(e, inTable, "update");
     }
 }

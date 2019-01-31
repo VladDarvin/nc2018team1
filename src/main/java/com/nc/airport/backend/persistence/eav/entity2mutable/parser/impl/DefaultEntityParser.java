@@ -17,10 +17,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Does NOT check if annotated field is of correct type
@@ -163,7 +160,8 @@ public class DefaultEntityParser implements EntityParser {
 
     @Override
     public String generateObjectName(BaseEntity entity) {
-        return entity.getClass().getName() + '@' + entity.hashCode();
+        Random rng = new Random();
+        return entity.getClass().getSimpleName() + '@' + Long.toHexString(rng.nextLong());
     }
 
     /**

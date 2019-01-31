@@ -1,19 +1,13 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.entities.model.users.User;
-import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
-import com.nc.airport.backend.persistence.eav.repository.Page;
 import com.nc.airport.backend.service.exception.PersistenceException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @Log4j2
@@ -78,6 +72,6 @@ public class UserService extends AbstractService<User> {
 //        TODO IMPLEMENT ENABLING ACCOUNT
         entity.setPassword(new BCryptPasswordEncoder().encode(entity.getPassword()));
         entity.setEnabled(true);
-        return super.saveEntity(entity);
+        return super.updateEntity(entity);
     }
 }

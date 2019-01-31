@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- *
+ *  TODO javadoc
  */
 @Log4j2
 @Component
@@ -162,7 +162,6 @@ public class DefaultEntityBuilder implements EntityBuilder {
         }
     }
 
-
     private Object newStringConstructorInstance(Class classToCreate, String initArg) {
         Object newInstance = null;
         if(initArg == null)
@@ -183,11 +182,6 @@ public class DefaultEntityBuilder implements EntityBuilder {
         return newInstance;
     }
 
-    private String getMessageNoFieldAnnotated(BigInteger id, Class<? extends Annotation> annotationClass) {
-        return "No field annotated with @" + annotationClass.getSimpleName() + " with id " + id + ". " +
-                "Therefore it is skipped.";
-    }
-
     private <T extends BaseEntity> T newEntity(Class<T> clazz) {
         try {
             return clazz.newInstance();
@@ -196,6 +190,11 @@ public class DefaultEntityBuilder implements EntityBuilder {
             logAndThrowDataLossEx(message, e);
         }
         return null;
+    }
+
+    private String getMessageNoFieldAnnotated(BigInteger id, Class<? extends Annotation> annotationClass) {
+        return "No field annotated with @" + annotationClass.getSimpleName() + " with id " + id + ". " +
+                "Therefore it is skipped.";
     }
 
     private void logAndThrowDataLossEx(String message, Throwable e) throws RuntimeException {

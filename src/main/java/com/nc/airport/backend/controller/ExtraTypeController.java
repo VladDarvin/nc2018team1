@@ -26,12 +26,12 @@ public class ExtraTypeController {
 
     @PostMapping
     public ExtraType addNewExtraType(@RequestBody ExtraType airplane) {
-        return extraTypeService.saveEntity(airplane);
+        return extraTypeService.updateEntity(airplane);
     }
 
     @PutMapping
     public ExtraType editExtraType(@RequestBody ExtraType airplane) {
-        return extraTypeService.saveEntity(airplane);
+        return extraTypeService.updateEntity(airplane);
     }
 
     @DeleteMapping("/{id}")

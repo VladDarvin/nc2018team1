@@ -36,12 +36,12 @@ public class CountryController {
 
     @PostMapping
     public Country addNewCountry(@RequestBody Country country) {
-        return service.saveEntity(country);
+        return service.insertEntity(country);
     }
 
     @PutMapping
     public Country editCountry(@RequestBody Country country) {
-        return service.saveEntity(country);
+        return service.updateEntity(country);
     }
 
     @DeleteMapping("/{id}")
