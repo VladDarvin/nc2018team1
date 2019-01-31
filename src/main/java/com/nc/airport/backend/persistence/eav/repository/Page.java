@@ -16,7 +16,6 @@ public class Page {
     /**
      * Page is zero-based. If page is less than 0 it is set to 0<br>
      * Size cannot be 0. If size is 0 it is set to 10.<br>
-     * Default size is 10.
      */
     public Page(int size, int page) {
         if (size < 1) {
@@ -34,7 +33,6 @@ public class Page {
 
     /**
      * Page is zero-based. If page is less than 0 it is set to 0<br>
-     * Size cannot be 0. If size is 0 it is set to 10.<br>
      * Default size is 10.
      */
     public Page(int page) {
