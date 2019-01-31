@@ -108,10 +108,7 @@ public class FlightService extends AbstractService {
         return repository.findById(airportId, Airline.class);
     }
 
-    // --------------------------
-
-    public List<FlightDTO> getTenFlights(int page) {
-        List<Flight> flights = repository.findSlice(Flight.class, new Page(page - 1));
+    private List<FlightDTO> formFlightDTOs(List<Flight> flights) {
         List<FlightDTO> flightDTOs = new ArrayList<>();
         for (Flight flight : flights) {
             Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
@@ -121,6 +118,13 @@ public class FlightService extends AbstractService {
             flightDTOs.add(new FlightDTO(flight, null, null, null, arrAirport, depAirport, airplane, airline));
         }
         return flightDTOs;
+    }
+
+    // --------------------------
+
+    public List<FlightDTO> getTenFlights(int page) {
+        List<Flight> flights = repository.findSlice(Flight.class, new Page(page - 1));
+        return formFlightDTOs(flights);
     }
 
     public List<Airport> getAllAirports() {
@@ -137,5 +141,10 @@ public class FlightService extends AbstractService {
     public List<Airplane> getAllAirplanesByAirport(BigInteger airportId) {
         List<Airplane> airplanes = repository.findSliceOfReference(airportId, Airplane.class);
         return airplanes;
+    }
+
+    // method for FlightBooking
+    public List<FlightDTO> getAllFlightsByListOfFlights(List<Flight> flights) {
+        return formFlightDTOs(flights);
     }
 }
