@@ -45,12 +45,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
 
     @Override
     public <S extends T> S insert(S entity) {
-        entity.setObjectId(m2db.getNewObjectId());
-        Mutable mutable = e2m.convertEntityToMutable(entity);
-        S insertedEntity;
-
-        Mutable insertedMutable = m2db.sqlInsert(mutable);
-        insertedEntity = (S) e2m.convertMutableToEntity(insertedMutable, entity.getClass());
+        S insertedEntity = update(entity);
         log.info("Inserted. Got an inserted entity back : {}", insertedEntity);
 
         return insertedEntity;
