@@ -20,6 +20,15 @@ public abstract class BaseEntity {
     private String objectName;
     private String objectDescription;
 
+    public BaseEntity() {}
+
+    public BaseEntity(BaseEntity entity) {
+        this.objectId = entity.getObjectId();
+        this.parentId = entity.getParentId();
+        this.objectName = entity.getObjectName();
+        this.objectDescription = entity.getObjectDescription();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
