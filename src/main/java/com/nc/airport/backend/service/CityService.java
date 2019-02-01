@@ -16,7 +16,7 @@ public class CityService extends AbstractService<City>{
     }
 
     public City findByName(String name) {
-        BigInteger nameAttrId = new BigInteger("19");
+        BigInteger nameAttrId = new BigInteger("60");
         City foundCity;
         try {
             foundCity = findByAttr(name, nameAttrId, City.class);
