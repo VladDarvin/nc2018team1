@@ -120,6 +120,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.PUT, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.DELETE, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
+                //Flight's access
+                .antMatchers(HttpMethod.GET, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.POST, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.POST, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.GET, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.PUT, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.DELETE, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 //Passengers access
                 .antMatchers(HttpMethod.GET, "/passengers").hasAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.POST, "/passengers").hasAuthority("ROLE_USER")
