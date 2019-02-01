@@ -1,6 +1,7 @@
 package com.nc.airport.backend.model.entities.model.airplane;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.model.entities.model.airplane.dto.SeatDto;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ValueField;
@@ -30,4 +31,15 @@ public class Seat extends BaseEntity {
 
     @ValueField(ID = "66")
     private Double modifier;
+
+    public Seat() {}
+
+    public Seat(SeatDto seatDto) {
+        super(seatDto);
+        airplaneId = seatDto.getAirplane().getObjectId();
+        seatTypeId = seatDto.getSeatType().getObjectId();
+        row = seatDto.getRow();
+        col = seatDto.getCol();
+        modifier = seatDto.getModifier();
+    }
 }
