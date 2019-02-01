@@ -4,6 +4,10 @@ import java.sql.SQLException;
 
 public class DatabaseConnectionException extends RuntimeException {
 
+    protected DatabaseConnectionException(String message) {
+        super(message);
+    }
+
     public DatabaseConnectionException(SQLException sqlException) {
         super(sqlException);
     }
