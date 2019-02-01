@@ -4,6 +4,7 @@ import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airplane.SeatType;
 import com.nc.airport.backend.service.SeatTypeService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/seat-type")
+@Log4j2
 public class SeatTypeController {
 
     private SeatTypeService seatTypeService;
@@ -27,7 +29,9 @@ public class SeatTypeController {
 
     @GetMapping
     public List<SeatType> getAllSeatTypes() {
-        return seatTypeService.getAll();
+        List<SeatType> seatTypes = seatTypeService.getAll();
+        log.debug(seatTypes);
+        return seatTypes;
     }
 
     @GetMapping("/page={page}")
