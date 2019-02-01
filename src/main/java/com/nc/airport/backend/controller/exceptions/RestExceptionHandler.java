@@ -1,5 +1,6 @@
 package com.nc.airport.backend.controller.exceptions;
 
+import com.nc.airport.backend.service.exception.FlightNotFoundException;
 import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
 import com.nc.airport.backend.security.controller.AuthenticationException;
 import lombok.extern.log4j.Log4j2;
@@ -73,11 +74,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidAnnotatedClassException.class)
     public ResponseEntity<Object> handleInvalidAnnotations(InvalidAnnotatedClassException ex) {
+        log.error(ex);
+
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
         apiError.setMessage(ex.getCauseClass() + " is probably poorly annotated, please check.");
         return buildResponseEntity(apiError);
     }
 
+    @ExceptionHandler(FlightNotFoundException.class)
+    public ResponseEntity<Object> handleFlightNotFoundException(FlightNotFoundException ex) {
+        log.error(ex);
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
 
     /*
      * Common exceptions handlers
