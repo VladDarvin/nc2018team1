@@ -1,11 +1,10 @@
-package com.nc.airport.backend.util.print.entities;
+package com.nc.airport.backend.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 
@@ -16,11 +15,11 @@ import java.time.LocalDateTime;
 public class PrintableTicket {
     private String passengerFirstName;
     private String passengerLastName;
-    private int cost;
+    private double cost;
     private String seatType;
     private int seatColumn;
     private int seatRow;
-    private BigInteger flightNumber;
+    private String flightNumber;
     private LocalDateTime expectedDepartureDatetime;
     private String departureAirportName;
     private String departureCountry;
