@@ -2,11 +2,9 @@ package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.entities.model.airplane.SeatType;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
-import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,9 +15,5 @@ public class SeatTypeService extends AbstractService<SeatType> {
 
     public Optional<SeatType> getSeatTypeById(BigInteger objectId) {
         return repository.findById(objectId, SeatType.class);
-    }
-
-    public List<SeatType> findAllSeatTypes() {
-        return repository.findSlice(SeatType.class, new Page(0));
     }
 }

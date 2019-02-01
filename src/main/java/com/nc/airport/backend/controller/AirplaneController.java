@@ -5,6 +5,7 @@ import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.model.entities.model.airplane.dto.AirplaneDto;
 import com.nc.airport.backend.service.AirplaneService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/airplanes")
+@Log4j2
 public class AirplaneController {
     private AirplaneService airplaneService;
 
@@ -28,7 +30,9 @@ public class AirplaneController {
 
     @GetMapping("/objectId={objectId}")
     public Airplane getAirplaneById(@PathVariable(name = "objectId") BigInteger objectId) {
-        return airplaneService.findAirplaneByObjectId(objectId);
+        Airplane airplane = airplaneService.findAirplaneByObjectId(objectId);
+        log.debug(airplane);
+        return airplane;
     }
 
     @PostMapping

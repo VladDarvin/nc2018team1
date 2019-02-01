@@ -64,8 +64,7 @@ public class Page {
         if (page == 0) {
             log.warn("Tried to access prev page which is -1. Set to 0");
             return this;
-        }
-        else {
+        } else {
             page--;
             return this;
         }

@@ -141,6 +141,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/seat-type/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.PUT, "/seat-type/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/seat-type/**").hasAuthority("ROLE_ADMIN")
+//                SEATS
+                .antMatchers(HttpMethod.GET, "/seats").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/seats").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/seats/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/seats;**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/seats/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/seats/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated();
 
         http

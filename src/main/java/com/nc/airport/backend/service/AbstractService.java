@@ -87,4 +87,15 @@ public abstract class AbstractService<T extends BaseEntity> {
             return foundUsers.get(0);
         }
     }
+
+    /**
+     * <h3>WARNING</h3>
+     * <p>The number of items returned is restricted to 2^32</p>
+     * @return list of all items up to 2^32
+     */
+    public List<T> getAll() {
+        int quantity = repository.count(domainClass).intValue();
+        Page page = new Page(quantity, 0);
+        return repository.findSlice(domainClass, page);
+    }
 }

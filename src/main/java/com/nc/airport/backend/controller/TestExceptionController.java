@@ -42,13 +42,14 @@ public class TestExceptionController {
 
     @GetMapping("/{id}")
     public void throwException(@PathVariable int id) {
+        id--;
         if (exceptions.size() > id) {
             throw exceptions.get(id);
         }
     }
 
     @GetMapping
-    public Map<Integer, String> getAll(){
+    public Map<Integer, String> getAll() {
         return idToName;
     }
 }
