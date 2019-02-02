@@ -34,8 +34,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
     @Override
     public <T extends BaseEntity> T build(Class<T> clazz, Mutable mutable) {
         T entity = newEntity(clazz);
-        if (entity == null)
+        if (entity == null) {
             return null;
+        }
 
         entity.setObjectId(mutable.getObjectId());
         entity.setParentId(mutable.getParentId());
@@ -52,8 +53,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillReferenceFields(T entity, Mutable mutable) {
         Map<BigInteger, BigInteger> references = mutable.getReferences();
-        if (references == null)
+        if (references == null) {
             return;
+        }
 
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
@@ -78,8 +80,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     private <T extends BaseEntity> void fillListFields(T entity, Mutable mutable) {
         Map<BigInteger, BigInteger> listValues = mutable.getListValues();
-        if (listValues == null)
+        if (listValues == null) {
             return;
+        }
 
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
@@ -121,8 +124,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillDateFields(T entity, Mutable mutable) {
         Map<BigInteger, LocalDateTime> dateValues = mutable.getDateValues();
-        if (dateValues == null)
+        if (dateValues == null) {
             return;
+        }
 
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
@@ -143,8 +147,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
     // TODO: 23.11.2018 refactor
     private <T extends BaseEntity> void fillValueFields(T entity, Mutable mutable) {
         Map<BigInteger, String> mutableValues = mutable.getValues();
-        if (mutableValues == null)
+        if (mutableValues == null) {
             return;
+        }
 
         Class<? extends BaseEntity> entityClass = entity.getClass();
 
@@ -164,8 +169,9 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     private Object newStringConstructorInstance(Class classToCreate, String initArg) {
         Object newInstance = null;
-        if(initArg == null)
+        if(initArg == null) {
             initArg = "";
+        }
 
         try {
             Constructor<?> constructor = classToCreate.getConstructor(String.class);
