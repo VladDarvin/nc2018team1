@@ -158,8 +158,10 @@ public class DefaultEntityBuilder implements EntityBuilder {
                     entityClass, ValueField.class, idToVal.getKey());
             if (entityField != null) {
                 Class fieldClass = entityField.getType();
-                Object injectableValue = newStringConstructorInstance(fieldClass, idToVal.getValue());
-                ReflectionHelper.setFieldValue(entity, entityField, injectableValue);
+                if (idToVal.getValue() != null) {
+                    Object injectableValue = newStringConstructorInstance(fieldClass, idToVal.getValue());
+                    ReflectionHelper.setFieldValue(entity, entityField, injectableValue);
+                }
             } else {
                 String message = getMessageNoFieldAnnotated(idToVal.getKey(), ValueField.class);
                 logAndThrowDataLossEx(message, new InvalidAnnotatedClassException(message, entityClass));
