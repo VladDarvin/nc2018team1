@@ -3,6 +3,7 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airplane.Seat;
+import com.nc.airport.backend.model.entities.model.airplane.dto.SeatDto;
 import com.nc.airport.backend.service.SeatService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
@@ -58,11 +59,18 @@ public class SeatsController {
         return service.getAll();
     }
 
+
     @GetMapping("/airplaneId={id}")
-    public List<Seat> getByPlaneId(@PathVariable BigInteger id) {
-        List<Seat> seats = service.getByPlaneId(id);
+    public List<SeatDto> getByPlaneId(@PathVariable BigInteger id) {
+        List<SeatDto> seats = service.getByPlaneId(id);
         log.debug(seats);
         return seats;
     }
 
+    @PostMapping("/airplaneId={id}")
+    public List<SeatDto> saveAll(@RequestBody List<SeatDto> seats, @PathVariable(name = "id") BigInteger id) {
+        List<SeatDto> updatedSeats = service.saveAll(seats, id);
+        log.debug("updated seats: " + updatedSeats);
+        return updatedSeats;
+    }
 }
