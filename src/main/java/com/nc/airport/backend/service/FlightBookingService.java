@@ -32,10 +32,18 @@ public class FlightBookingService extends AbstractService {
     public List<FlightDTO> findOneWayFlights (int page, String departureCity, String arrivalCity, LocalDateTime departureDate) {
 
         City foundDepartureCity = this.cityService.findByName(departureCity);
+        if (foundDepartureCity == null) {
+//            FIXME MAKE CONVENIENT EXCEPTION
+            throw new RuntimeException("city(departure) not found: " + departureCity);
+        }
         /*if(foundDepartureCity == null || foundDepartureCity.getName().equals("")) {
             throw new FlightNotFoundException("Can't find " + departureCity + " City");
         }*/
         City foundArrivalCity = this.cityService.findByName(arrivalCity);
+        if (foundArrivalCity == null) {
+//            FIXME MAKE CONVENIENT EXCEPTION
+            throw new RuntimeException("city(arrival) not found: " + arrivalCity);
+        }
 
         //found airport(s) of departure city
         List<Airport> airportsOfDepartureCity = makeAirportFilterList(page, foundDepartureCity);
@@ -45,7 +53,7 @@ public class FlightBookingService extends AbstractService {
 
         //found flights that begins in the departure airport(s)
         List<FilterEntity> filterFlights = new ArrayList<>();
-        for(Airport airport: airportsOfDepartureCity) {
+        for (Airport airport : airportsOfDepartureCity) {
             FilterEntity filterFlight = new FilterEntity(BigInteger.valueOf(11), Collections.singleton(airport.getObjectId()));
             filterFlights.add(filterFlight);
         }
@@ -53,27 +61,27 @@ public class FlightBookingService extends AbstractService {
 
         //sort all flights by needed arrival airports
         boolean cityHasAirport;
-        for (Flight flight: allFlightsFromDepartureCity) {
+        for (Flight flight : allFlightsFromDepartureCity) {
             cityHasAirport = false;
-            for(Airport airport: airportsOfArrivalCity) {
-                if(flight.getArrivalAirportId().equals(airport.getObjectId())) {
+            for (Airport airport : airportsOfArrivalCity) {
+                if (flight.getArrivalAirportId().equals(airport.getObjectId())) {
                     cityHasAirport = true;
                     break;
                 }
             }
-            if(!cityHasAirport) {
+            if (!cityHasAirport) {
                 allFlightsFromDepartureCity.remove(flight);
             }
         }
-        
+
         //sort all left flights by departure date
-        for (Flight flight: allFlightsFromDepartureCity) {
+        for (Flight flight : allFlightsFromDepartureCity) {
             if (!flight.getExpectedDepartureDatetime().equals(departureDate)) {
                 allFlightsFromDepartureCity.remove(flight);
             }
         }
 
-        if(allFlightsFromDepartureCity.isEmpty()) {
+        if (allFlightsFromDepartureCity.isEmpty()) {
                         //TODO
         }
 
@@ -86,7 +94,7 @@ public class FlightBookingService extends AbstractService {
         FilterEntity filterPassedCity = new FilterEntity(BigInteger.valueOf(5), Collections.singleton(city.getName()));
         List<FilterEntity> filterPassedCities = new ArrayList<>();
         filterPassedCities.add(filterPassedCity);
-        List<Airport> airportsOfPassedCity = repository.findSlice(Airport.class,  new Page(page), new ArrayList<>(), filterPassedCities);
+        List<Airport> airportsOfPassedCity = repository.findSlice(Airport.class, new Page(page), new ArrayList<>(), filterPassedCities);
         return airportsOfPassedCity;
     }
 
