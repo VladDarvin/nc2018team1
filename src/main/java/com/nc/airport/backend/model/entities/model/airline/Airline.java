@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigInteger;
+
 @ObjectType(ID = "4")
 @Getter
 @Setter
@@ -24,4 +26,11 @@ public class Airline extends BaseEntity {
 
     @ValueField(ID = "15")
     private String email;
+
+    public Airline() {
+    }
+
+    public Airline(BigInteger objectId) {
+        super(objectId);
+    }
 }

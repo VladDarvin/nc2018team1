@@ -29,6 +29,10 @@ public abstract class BaseEntity {
         this.objectDescription = entity.getObjectDescription();
     }
 
+    public BaseEntity(BigInteger objectId) {
+        this.objectId = objectId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

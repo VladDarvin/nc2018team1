@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
 @ObjectType(ID = "9")
@@ -33,5 +34,12 @@ public class SeatType extends BaseEntity {
         return Double.compare(seatType.modifier, modifier) == 0 &&
                 Objects.equals(name, seatType.name) &&
                 Objects.equals(description, seatType.description);
+    }
+
+    public SeatType() {
+    }
+
+    public SeatType(BigInteger objectId) {
+        super(objectId);
     }
 }
