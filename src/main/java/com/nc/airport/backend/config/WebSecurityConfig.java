@@ -93,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/airlines/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/airlines/**").hasAuthority("ROLE_ADMIN")
                 //Airplanes access
-                .antMatchers(HttpMethod.GET, "/airplanes").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airplanes").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.POST, "/airplanes").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/airplanes/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.GET, "/airplanes/**").hasAuthority("ROLE_ADMIN")
@@ -113,13 +113,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user-flights/**").hasAnyAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.PUT, "/user-flights/**").hasAnyAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.DELETE, "/user-flights/**").hasAnyAuthority("ROLE_USER")
-                //Flight's access
-                .antMatchers(HttpMethod.GET, "/flights").hasAnyAuthority("ROLE_CONTROLLER")
-                .antMatchers(HttpMethod.POST, "/flights").hasAnyAuthority("ROLE_CONTROLLER")
-                .antMatchers(HttpMethod.POST, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
-                .antMatchers(HttpMethod.GET, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
-                .antMatchers(HttpMethod.PUT, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
-                .antMatchers(HttpMethod.DELETE, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER")
+                //Flights access
+                .antMatchers(HttpMethod.GET, "/flights").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/flights").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
+                 //Airports access
+                .antMatchers(HttpMethod.GET, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.POST, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.POST, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.GET, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.PUT, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
+                .antMatchers(HttpMethod.DELETE, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 //Passengers access
                 .antMatchers(HttpMethod.GET, "/passengers").hasAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.POST, "/passengers").hasAuthority("ROLE_USER")

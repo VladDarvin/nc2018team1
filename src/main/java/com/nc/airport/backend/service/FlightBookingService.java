@@ -4,11 +4,9 @@ import com.nc.airport.backend.model.dto.FlightDTO;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.City;
 import com.nc.airport.backend.model.entities.model.flight.Flight;
-import com.nc.airport.backend.service.exception.FlightNotFoundException;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -40,10 +38,10 @@ public class FlightBookingService extends AbstractService {
         City foundArrivalCity = this.cityService.findByName(arrivalCity);
 
         //found airport(s) of departure city
-        List<Airport> airportsOfDepartureCity = MakeAirportFilterList(page, foundDepartureCity);
+        List<Airport> airportsOfDepartureCity = makeAirportFilterList(page, foundDepartureCity);
 
         //found airport(s) of arrival city
-        List<Airport> airportsOfArrivalCity = MakeAirportFilterList(page, foundArrivalCity);
+        List<Airport> airportsOfArrivalCity = makeAirportFilterList(page, foundArrivalCity);
 
         //found flights that begins in the departure airport(s)
         List<FilterEntity> filterFlights = new ArrayList<>();
@@ -76,7 +74,7 @@ public class FlightBookingService extends AbstractService {
         }
 
         if(allFlightsFromDepartureCity.isEmpty()) {
-
+                        //TODO
         }
 
         return flightService.getAllFlightsByListOfFlights(allFlightsFromDepartureCity);
@@ -84,7 +82,7 @@ public class FlightBookingService extends AbstractService {
 
     //---------------------------
 
-    private List<Airport> MakeAirportFilterList(int page, City city) {
+    private List<Airport> makeAirportFilterList(int page, City city) {
         FilterEntity filterPassedCity = new FilterEntity(BigInteger.valueOf(5), Collections.singleton(city.getName()));
         List<FilterEntity> filterPassedCities = new ArrayList<>();
         filterPassedCities.add(filterPassedCity);

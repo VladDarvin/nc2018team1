@@ -71,7 +71,7 @@ public class FlightService extends AbstractService {
                     airplane.isPresent() &&
                     airline.isPresent())
                 flights.add(new FlightDTO(flight, newTickets, newPassengers, passports,
-                                        arrivalAirport.get(), departureAirport.get(), airplane.get(), airline.get()));
+                        arrivalAirport.get(), departureAirport.get(), airplane.get(), airline.get()));
             newTickets = new ArrayList<>();
             newPassengers = new ArrayList<>();
             passports = new ArrayList<>();
@@ -128,11 +128,12 @@ public class FlightService extends AbstractService {
     }
 
     public List<Airport> getAllAirports() {
-        List<Airport> airports = new ArrayList<>();
         int itemsCount = repository.count(Airport.class).intValue();
+        if (itemsCount == 0)
+            return new ArrayList<>();
         Page page = new Page(0);
-        airports.addAll(repository.findSlice(Airport.class, page));
-        while(airports.size() < itemsCount) {
+        List<Airport> airports = new ArrayList<>(repository.findSlice(Airport.class, page));
+        while (airports.size() < itemsCount) {
             airports.addAll(repository.findSlice(Airport.class, page.next()));
         }
         return airports;
