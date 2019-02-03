@@ -1,8 +1,8 @@
 package com.nc.airport.backend.controller.exceptions;
 
-import com.nc.airport.backend.service.exception.FlightNotFoundException;
 import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
 import com.nc.airport.backend.security.controller.AuthenticationException;
+import com.nc.airport.backend.service.exception.ItemNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -81,8 +81,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(FlightNotFoundException.class)
-    public ResponseEntity<Object> handleFlightNotFoundException(FlightNotFoundException ex) {
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<Object> handleFlightNotFoundException(ItemNotFoundException ex) {
         log.error(ex);
 
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);

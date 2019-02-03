@@ -37,7 +37,7 @@ public class FlightBookingService extends AbstractService {
             throw new RuntimeException("city(departure) not found: " + departureCity);
         }
         /*if(foundDepartureCity == null || foundDepartureCity.getName().equals("")) {
-            throw new FlightNotFoundException("Can't find " + departureCity + " City");
+            throw new ItemNotFoundException("Can't find " + departureCity + " City");
         }*/
         City foundArrivalCity = this.cityService.findByName(arrivalCity);
         if (foundArrivalCity == null) {
