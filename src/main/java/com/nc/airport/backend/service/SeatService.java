@@ -47,6 +47,7 @@ public class SeatService extends AbstractService<Seat> {
     }
 
     private Map<BigInteger, SeatType> getIdToSeatType(Set<BigInteger> seatTypeIdSet) {
+        //        THIS IS TO REDUCE THE NUMBER OF TIMES WE TALK TO DB
         Map<BigInteger, SeatType> idToSeatTypeMap = new HashMap<>();
         for (BigInteger id : seatTypeIdSet) {
             Optional<SeatType> result = seatTypeService.getSeatTypeById(id);
