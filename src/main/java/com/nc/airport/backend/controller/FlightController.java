@@ -68,7 +68,7 @@ public class FlightController {
     @PostMapping("/flights/search/page={page}")
     public ResponseFilteringWrapper searchFlights(@PathVariable(name = "page") int page,
                                                     @RequestBody SortingFilteringWrapper wrapper) {
-        return flightService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
+        return flightService.searchFlights(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
     @GetMapping(value = "/flights/airports")

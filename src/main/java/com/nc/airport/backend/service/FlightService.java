@@ -1,6 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.dto.FlightDTO;
+import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
@@ -9,6 +10,8 @@ import com.nc.airport.backend.model.entities.model.ticketinfo.Passenger;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
 import com.nc.airport.backend.model.entities.model.users.TicketHistory;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
@@ -125,6 +128,14 @@ public class FlightService extends AbstractService {
     public List<FlightDTO> getTenFlights(int page) {
         List<Flight> flights = repository.findSlice(Flight.class, new Page(page - 1));
         return formFlightDTOs(flights);
+    }
+
+    public ResponseFilteringWrapper searchFlights(int page, String searchRequest, List<SortEntity> sortEntities) {
+        List<FilterEntity> filterFlights = makeFilterList(searchRequest, Flight.class);
+        List<Flight> foundFlights = repository.findSlice(Flight.class, new Page(page - 1), sortEntities, filterFlights);
+        List<FlightDTO> flightDTOs = formFlightDTOs(foundFlights);
+        BigInteger countOfPages = repository.count(Flight.class, filterFlights);
+        return new ResponseFilteringWrapper<>(flightDTOs, countOfPages);
     }
 
     public List<Airport> getAllAirports() {
