@@ -35,5 +35,23 @@ public class AirplaneService extends AbstractService<Airplane> {
             throw ex;
         }
     }
+
+    public List<AirplaneDto> getTenDtoEntities(int page) {
+//        THIS IS TO REDUCE THE NUMBER OF TIMES WE TALK TO DB
+        Map<BigInteger, Airline> idToAirline = new HashMap<>();
+        List<AirplaneDto> airplaneDtos = new ArrayList<>();
+        List<Airplane> plainAirplanes = super.getTenEntities(page);
+
+        for (Airplane airplane : plainAirplanes) {
+            BigInteger airlineId = airplane.getAirlineId();
+            if (!idToAirline.containsKey(airlineId)) {
+                Airline foundAirline = airlineService.findAirlineByObjectId(airlineId);
+                idToAirline.put(airlineId, foundAirline);
+            }
+            AirplaneDto newAirplaneDto = new AirplaneDto(airplane, idToAirline.get(airlineId));
+            airplaneDtos.add(newAirplaneDto);
+        }
+        return airplaneDtos;
+    }
 }
 

@@ -24,8 +24,8 @@ public class AirplaneController {
 
 
     @GetMapping("/page={page}")
-    public List<Airplane> getTenAirplanes(@PathVariable(name = "page") int page) {
-        return airplaneService.getTenEntities(page);
+    public List<AirplaneDto> getTenAirplanes(@PathVariable(name = "page") int page) {
+        return airplaneService.getTenDtoEntities(page);
     }
 
     @GetMapping("/objectId={objectId}")

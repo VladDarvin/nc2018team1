@@ -25,6 +25,11 @@ public class AirplaneDto extends BaseEntity {
         this.airline = new Airline(airplane.getAirlineId());
     }
 
+    public AirplaneDto(Airplane airplane, Airline airline) {
+        this(airplane);
+        this.airline = airline;
+    }
+
     public AirplaneDto(BigInteger objectId) {
         super(objectId);
     }
