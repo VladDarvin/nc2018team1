@@ -43,9 +43,7 @@ public class PrintableTicketService {
 
         flight = getEntityById(ticket.getFlightId(), Flight.class);
         departureAirport = getEntityById(flight.getDepartureAirportId(), Airport.class);
-        departureCountry = getEntityById(departureAirport.getCountryId(), Country.class);
         arrivalAirport = getEntityById(flight.getArrivalAirportId(), Airport.class);
-        arrivalCountry = getEntityById(arrivalAirport.getCountryId(), Country.class);
         airplane = getEntityById(flight.getAirplaneId(), Airplane.class);
         airline = getEntityById(airplane.getAirlineId(), Airline.class);
         seat = getEntityById(ticket.getSeatId(), Seat.class);
@@ -54,21 +52,14 @@ public class PrintableTicketService {
 
         printableTicket.setPassengerFirstName(passenger.getFirstName());
         printableTicket.setPassengerLastName(passenger.getLastName());
-        printableTicket.setCost(calculateCost(flight, seat, seatType));
         printableTicket.setSeatType(seatType.getName());
         printableTicket.setSeatColumn(seat.getCol());
         printableTicket.setSeatRow(seat.getRow());
         printableTicket.setFlightNumber(flight.getFlightNumber());
         printableTicket.setExpectedDepartureDatetime(flight.getExpectedDepartureDatetime());
-        printableTicket.setDepartureAirportName(departureAirport.getName());
-        printableTicket.setDepartureCountry(departureCountry.getName());
         printableTicket.setDepartureCity(departureAirport.getCity());
-        printableTicket.setDepartureAirportAddress(departureAirport.getAddress());
         printableTicket.setExpectedArrivalDatetime(flight.getExpectedArrivalDatetime());
-        printableTicket.setArrivalAirportName(arrivalAirport.getName());
-        printableTicket.setArrivalCountry(arrivalCountry.getName());
         printableTicket.setArrivalCity(arrivalAirport.getCity());
-        printableTicket.setArrivalAirportAddress(arrivalAirport.getAddress());
         printableTicket.setAirlineName(airline.getName());
         printableTicket.setAirlineEmail(airline.getEmail());
         printableTicket.setAirlinePhoneNumber(airline.getPhoneNumber());
