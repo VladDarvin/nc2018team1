@@ -33,6 +33,7 @@ public class Mutable2Query {
     @Autowired
     public Mutable2Query(DataSource dataSource) {
         try {
+//            dataSource.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
             connection = dataSource.getConnection();
         } catch (SQLException e) {
             String message = "Cannot establish connection";
