@@ -8,6 +8,8 @@ import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,11 +34,31 @@ public class FlightBookingService extends AbstractService {
         List<Airport> arrivalAirportsByAttr = airportService.findItemsByAttr(wrapper.getDestinationCity(), BigInteger.valueOf(5), Airport.class);
         Set<Flight> flights = new HashSet<>();
         for (Airport depArr:
-                arrivalAirportsByAttr) {
+                departureAirportsByAttr) {
             List<Flight> flightOfReference = flightService.repository.findSliceOfReference(depArr.getObjectId(), Flight.class);
-            System.err.println(flightOfReference);
+            flights.addAll(flightOfReference);
         }
-        return null;
+
+        for (Airport arvArr:
+                arrivalAirportsByAttr) {
+            List<Flight> flightOfReference = flightService.repository.findSliceOfReference(arvArr.getObjectId(), Flight.class);
+            flights.addAll(flightOfReference);
+        }
+
+        Set<Flight> foundFlights = new HashSet<>();
+        for (Flight flight:
+             flights) {
+            String dateFromFlight = flight.getExpectedDepartureDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateFromSearch = wrapper.getDepartureDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            System.err.println(dateFromFlight);
+            System.err.println(dateFromSearch);
+            if (dateFromFlight.equals(dateFromSearch)) {
+                System.err.println("equals");
+                foundFlights.add(flight);
+            }
+        }
+        System.err.println(foundFlights);
+        return flightService.formFlightDTOs(new ArrayList<>(foundFlights));
     }
 
 //    public List<FlightDTO> findOneWayFlights (int page, String departureCity, String arrivalCity, LocalDateTime departureDate) {

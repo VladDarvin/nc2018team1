@@ -111,7 +111,7 @@ public class FlightService extends AbstractService {
         return repository.findById(airlineId, Airline.class);
     }
 
-    private List<FlightDTO> formFlightDTOs(List<Flight> flights) {
+    List<FlightDTO> formFlightDTOs(List<Flight> flights) {
         List<FlightDTO> flightDTOs = new ArrayList<>();
         Map<BigInteger, Airplane> airplanes = new HashMap<>();
         Map<BigInteger, Airline> airlines = new HashMap<>();
