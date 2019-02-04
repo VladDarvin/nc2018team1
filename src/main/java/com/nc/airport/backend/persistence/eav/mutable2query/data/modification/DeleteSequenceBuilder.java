@@ -31,18 +31,17 @@ public class DeleteSequenceBuilder extends SequenceBuilder {
     }
 
     private void deleteObject(BigInteger objectId) {
-        try {
-            PreparedStatement query = connection.prepareStatement(
-                    "DELETE FROM OBJECTS WHERE OBJECT_ID = ?");
+        try (PreparedStatement query = connection.prepareStatement(
+                "DELETE FROM OBJECTS WHERE OBJECT_ID = ?")) {
+
             query.setObject(1, objectId);
             query.executeUpdate();
         } catch (SQLException e) {
             logSQLError(e, "Objects");
         }
-    }
 
-    /* Old stuff that have been used to delete attributes and references before the object
-    *  Is convenient when foreign key constraint is set to ON RESTRICT*/
+        /* Old stuff that have been used to delete attributes and references before the object
+         *  Is convenient when foreign key constraint is set to ON RESTRICT*/
 //    private void deleteAttributes() {
 //        deleteValues(mutable.getValues());
 //        deleteValues(mutable.getDateValues());
@@ -75,4 +74,5 @@ public class DeleteSequenceBuilder extends SequenceBuilder {
 //            logSQLError(e, "References");
 //        }
 //    }
+    }
 }
