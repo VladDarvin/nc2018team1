@@ -30,5 +30,9 @@ public class CountryService extends AbstractService<Country>{
         return foundCountry;
     }
 
+    public Country findCountryByObjectId(BigInteger objectId) {
+        return repository.findById(objectId, Country.class).get();
+    }
+
 
 }
