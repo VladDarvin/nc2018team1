@@ -116,7 +116,7 @@ public class TicketDocument {
     private void fillMetaData() {
         document.addTitle("Boarding pass");
         document.addSubject("Ticket on flight " + ticket.getFlightNumber());
-        document.addKeywords("Flight, ticket, boarding, airport, " + ticket.getArrivalCountry() + ", " + ticket.getArrivalCity());
+        document.addKeywords("Flight, ticket, boarding, airport, " + ticket.getArrivalCity());
         document.addCreator(ticket.getAirlineName());
         document.addCreationDate();
     }
@@ -301,10 +301,29 @@ public class TicketDocument {
     }
 
     private PdfPCell createFooter() {
-        PdfPCell footer = new PdfPCell();
+        PdfPTable tableWrapper = new PdfPTable(new float[] {0.5f, 0.5f, 1});
+        Font footerFont = new Font(Font.FontFamily.HELVETICA, 7, Font.ITALIC);
+        footerFont.setColor(BaseColor.LIGHT_GRAY);
+
+        Phrase mailPhr = new Phrase(ticket.getAirlineEmail(), footerFont);
+        PdfPCell mail = new PdfPCell(mailPhr);
+
+        Phrase phonePhr = new Phrase(ticket.getAirlinePhoneNumber(), footerFont);
+        PdfPCell phone = new PdfPCell(phonePhr);
+
+        PdfPCell emptyCell = new PdfPCell();
+        disableAllCellsBorders(mail, phone, emptyCell);
+        tableWrapper.addCell(mail);
+        tableWrapper.addCell(phone);
+        tableWrapper.addCell(emptyCell);
+        PdfPCell cellWrapper = new PdfPCell(tableWrapper);
+        disableCellBorders(cellWrapper);
+        return cellWrapper;
+    }
+
+    private void setToFooterStyle(PdfPCell footer) {
         footer.setMinimumHeight(25);
         footer.setBackgroundColor(BaseColor.BLUE);
         disableCellBorders(footer);
-        return footer;
     }
 }
