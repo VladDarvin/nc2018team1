@@ -230,7 +230,7 @@ public class WidePickyDBFetcher {
         basicQuery.append("WHERE ");
         for (int i = 1; i <= references.size(); i++) {
             int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR"+references.get(i-1));
-            String numberString = "" + references.get(i-1);
+            String numberString = references.get(i-1).toString();
             String attrNumber = basicQuery.substring(indexOfAttrNumber-numberString.length(), indexOfAttrNumber);
             if (attrNumber.contains("A")) {
                 attrNumber = attrNumber.substring(1);
