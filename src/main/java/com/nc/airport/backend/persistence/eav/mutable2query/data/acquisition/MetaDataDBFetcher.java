@@ -22,22 +22,17 @@ public class MetaDataDBFetcher {
         if (objectId == null)
             return false;
 
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(
-                    "SELECT * FROM OBJECTS WHERE OBJECT_ID = ?"
-            );
+        try(PreparedStatement statement = connection
+                .prepareStatement("SELECT * FROM OBJECTS WHERE OBJECT_ID = ?")) {
+            setIdentificator(statement, objectId);
+            try {
+                return statement.executeUpdate() != 0;
+            } catch (SQLException e) {
+                return true;
+            }
         } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Couldn't prepare the statement", e);
-        }
-
-        setIdentificator(statement, objectId);
-
-        try {
-            return statement.executeUpdate() != 0;
-        } catch (SQLException e) {
-            return true;
         }
     }
 
