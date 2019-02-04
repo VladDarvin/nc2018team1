@@ -42,7 +42,7 @@ public class AirportService extends AbstractService<Airport> {
     private List<AirportDto> makeAirportDtos(List<Airport> plainAirports) {
         List<AirportDto> airportDtos = new ArrayList<>();
         for (Airport airport : plainAirports) {
-            BigInteger countryId = airport.getCountryId();
+            BigInteger countryId = airport.getCountry();
             Country country = countryService.findCountryByObjectId(countryId);
             AirportDto newAirportDto = new AirportDto(airport, country);
             airportDtos.add(newAirportDto);

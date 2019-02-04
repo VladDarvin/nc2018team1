@@ -155,6 +155,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/seats/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.PUT, "/seats/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/seats/**").hasAuthority("ROLE_ADMIN")
+//                FLIGHT-BOOKING
+                .antMatchers(HttpMethod.GET, "/flight-booking").permitAll()
+                .antMatchers(HttpMethod.POST, "/flight-booking").permitAll()
+                .antMatchers(HttpMethod.POST, "/flight-booking/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/flight-booking/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/flight-booking/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/flight-booking/**").permitAll()
                 .anyRequest().authenticated();
 
         http

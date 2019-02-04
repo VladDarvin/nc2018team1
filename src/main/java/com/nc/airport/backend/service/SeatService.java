@@ -78,12 +78,12 @@ public class SeatService extends AbstractService<Seat> {
         return repository.findSlice(Seat.class, maxSizePage, new ArrayList<>(), filterList);
     }*/
 
-    public List<SeatDto> saveAll(List<SeatDto> seats, BigInteger id) {
+    public List<SeatDto> saveAll(List<SeatDto> seats, BigInteger planeId) {
 //        check seats
         seatsAreOk(seats);
 
 //        delete all the seats of plane
-        deletePlaneSeats(id);
+        deletePlaneSeats(planeId);
 
 //        insert all the seats from query
         List<SeatDto> updatedSeats = new ArrayList<>();

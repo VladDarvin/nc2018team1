@@ -78,14 +78,27 @@ public abstract class AbstractService<T extends BaseEntity> {
         List<FilterEntity> filterEntities = new ArrayList<>();
         filterEntities.add(filterEntity);
 
-        List<T> foundUsers = repository.findSlice(clazz, new Page(0), new ArrayList<>(), filterEntities);
-        if (foundUsers.size() > 1) {
+        List<T> foundItems = repository.findSlice(clazz, new Page(0), new ArrayList<>(), filterEntities);
+        if (foundItems.size() > 1) {
             throw new IllegalStateException();
-        } else if (foundUsers.size() == 0) {
+        } else if (foundItems.size() == 0) {
             return null;
         } else {
-            return foundUsers.get(0);
+            return foundItems.get(0);
         }
+    }
+
+    public List<T> findItemsByAttr(String value, BigInteger attrId, Class<T> clazz) {
+//        TODO IMPLEMENT ATTR_ID PARSING
+        Set<Object> searchSet = new HashSet<>();
+        searchSet.add('%'+value+'%');
+        FilterEntity filterEntity = new FilterEntity(attrId, searchSet);
+
+        List<FilterEntity> filterEntities = new ArrayList<>();
+        filterEntities.add(filterEntity);
+
+        List<T> foundItems = repository.findSlice(clazz, new Page(0), new ArrayList<>(), filterEntities);
+        return foundItems;
     }
 
     /**

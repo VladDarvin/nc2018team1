@@ -36,8 +36,7 @@ public class InsertSequenceBuilder extends SequenceBuilder {
     }
 
     private void insertIntoObjects() {
-        try (PreparedStatement statement
-                     = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO OBJECTS " +
                         "(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?, ?)")) {
 

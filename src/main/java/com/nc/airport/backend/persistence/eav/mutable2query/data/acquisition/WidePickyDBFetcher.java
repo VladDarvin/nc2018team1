@@ -24,12 +24,12 @@ public class WidePickyDBFetcher {
     }
 
     public List<Mutable> getMutables(List<BigInteger> values,
-                              List<BigInteger> dateValues,
-                              List<BigInteger> listValues,
-                              List<BigInteger> references,
-                              int pagingFrom, int pagingTo,
-                              List<SortEntity> sortBy,
-                              List<FilterEntity> filterBy) {
+                                     List<BigInteger> dateValues,
+                                     List<BigInteger> listValues,
+                                     List<BigInteger> references,
+                                     int pagingFrom, int pagingTo,
+                                     List<SortEntity> sortBy,
+                                     List<FilterEntity> filterBy) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -118,10 +118,10 @@ public class WidePickyDBFetcher {
     }
 
     public List<Mutable> getMutablesByParentId(List<BigInteger> values,
-                              List<BigInteger> dateValues,
-                              List<BigInteger> listValues,
-                              List<BigInteger> references, int pagingFrom, int pagingTo,
-                              BigInteger parentId, BigInteger objectTypeId) {
+                                               List<BigInteger> dateValues,
+                                               List<BigInteger> listValues,
+                                               List<BigInteger> references, int pagingFrom, int pagingTo,
+                                               BigInteger parentId, BigInteger objectTypeId) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -159,11 +159,11 @@ public class WidePickyDBFetcher {
     }
 
     public List<Mutable> getMutablesByParentId(List<BigInteger> values,
-                                        List<BigInteger> dateValues,
-                                        List<BigInteger> listValues,
-                                        List<BigInteger> references, int pagingFrom, int pagingTo,
-                                        BigInteger parentId, BigInteger objectTypeId, List<SortEntity> sortBy,
-                                        List<FilterEntity> filterBy) {
+                                               List<BigInteger> dateValues,
+                                               List<BigInteger> listValues,
+                                               List<BigInteger> references, int pagingFrom, int pagingTo,
+                                               BigInteger parentId, BigInteger objectTypeId, List<SortEntity> sortBy,
+                                               List<FilterEntity> filterBy) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -211,10 +211,10 @@ public class WidePickyDBFetcher {
 
     //TODO refactor
     public List<Mutable> getMutablesByReference(List<BigInteger> values,
-                                              List<BigInteger> dateValues,
-                                              List<BigInteger> listValues,
-                                              List<BigInteger> references,
-                                              BigInteger objectId) {
+                                                List<BigInteger> dateValues,
+                                                List<BigInteger> listValues,
+                                                List<BigInteger> references,
+                                                BigInteger objectId) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -258,11 +258,20 @@ public class WidePickyDBFetcher {
         return mutables;
     }
 
+    private boolean isNumeric(String strNum) {
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException | NullPointerException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     public Mutable getSingleMutableByReference(List<BigInteger> values,
-                                         List<BigInteger> dateValues,
-                                         List<BigInteger> listValues,
-                                         List<BigInteger> references,
-                                         BigInteger objectId) {
+                                               List<BigInteger> dateValues,
+                                               List<BigInteger> listValues,
+                                               List<BigInteger> references,
+                                               BigInteger objectId) {
 
         QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
@@ -495,7 +504,7 @@ public class WidePickyDBFetcher {
     }
 
     private List<BigInteger> ensureNonNullSecurity(List<BigInteger> list) {
-        if (list == null){
+        if (list == null) {
             return new ArrayList<>();
         } else return list;
     }
