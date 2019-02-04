@@ -107,18 +107,62 @@ public class FlightService extends AbstractService {
         return repository.findById(airportId, Airplane.class);
     }
 
-    private Optional<Airline> getAirlineById(BigInteger airportId) {
-        return repository.findById(airportId, Airline.class);
+    private Optional<Airline> getAirlineById(BigInteger airlineId) {
+        return repository.findById(airlineId, Airline.class);
     }
 
     private List<FlightDTO> formFlightDTOs(List<Flight> flights) {
         List<FlightDTO> flightDTOs = new ArrayList<>();
+        Map<BigInteger, Airplane> airplanes = new HashMap<>();
+        Map<BigInteger, Airline> airlines = new HashMap<>();
+        Map<BigInteger, Airport> airports = new HashMap<>();
+
         for (Flight flight : flights) {
-            Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
-            Airline airline = getAirlineById(airplane.getAirlineId()).get();
-            Airport depAirport = getAirportById(flight.getDepartureAirportId()).get(),
-                    arrAirport = getAirportById(flight.getArrivalAirportId()).get();
-            flightDTOs.add(new FlightDTO(flight, null, null, null, arrAirport, depAirport, airplane, airline));
+            BigInteger departAirportId = flight.getDepartureAirportId();
+            BigInteger arrivAirportId = flight.getArrivalAirportId();
+            BigInteger airplaneId = flight.getAirplaneId();
+            BigInteger airlineId = null;
+
+            Airplane foundAirplane;
+            if (!airplanes.containsKey(airplaneId)) {
+                foundAirplane = getAirplaneById(airplaneId).orElse(null);
+                airplanes.put(airplaneId, foundAirplane);
+            } else {
+                foundAirplane = airplanes.get(airplaneId);
+            }
+
+            if (foundAirplane != null) {
+                airlineId = foundAirplane.getAirlineId();
+                if (!airlines.containsKey(airlineId)) {
+                    Airline foundAirline = getAirlineById(airlineId).orElse(null);
+                    airlines.put(airlineId, foundAirline);
+                }
+            }
+
+            if (!airports.containsKey(departAirportId)) {
+                Airport foundAirport = getAirportById(departAirportId).orElse(null);
+                airports.put(departAirportId, foundAirport);
+            }
+
+            if (!airports.containsKey(arrivAirportId)) {
+                Airport foundAirport = getAirportById(arrivAirportId).orElse(null);
+                airports.put(arrivAirportId, foundAirport);
+            }
+
+
+//            Airplane airplane = getAirplaneById(flight.getAirplaneId()).get();
+//            Airline airline = getAirlineById(airplane.getAirlineId()).get();
+//            Airport depAirport = getAirportById(flight.getDepartureAirportId()).get(),
+//                    arrAirport = getAirportById(flight.getArrivalAirportId()).get();
+//            flightDTOs.add(new FlightDTO(flight, null, null, null, arrAirport, depAirport, airplane, airline));
+
+            FlightDTO flightDTO = new FlightDTO(flight, null, null, null,
+                    airports.get(arrivAirportId),
+                    airports.get(departAirportId),
+                    airplanes.get(airplaneId),
+                    airlines.get(airlineId));
+            flightDTOs.add(flightDTO);
+
         }
         return flightDTOs;
     }
@@ -147,6 +191,9 @@ public class FlightService extends AbstractService {
         while (airports.size() < itemsCount) {
             airports.addAll(repository.findSlice(Airport.class, page.next()));
         }
+//        for (Airport airp : airports) {
+//            System.err.println(airp.toString());
+//        }
         return airports;
     }
 
