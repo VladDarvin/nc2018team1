@@ -23,6 +23,9 @@ public class Airplane extends BaseEntity {
     @ReferenceField(ID = "17")
     private BigInteger airlineId;
 
+    @ValueField(ID = "67")
+    private BigInteger versionNum;
+
     public Airplane() {
     }
 
