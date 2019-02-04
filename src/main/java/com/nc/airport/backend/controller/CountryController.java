@@ -54,4 +54,9 @@ public class CountryController {
                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return service.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
+
+    @GetMapping
+    public List<Country> findAllCountries() {
+        return service.getAll();
+    }
 }
