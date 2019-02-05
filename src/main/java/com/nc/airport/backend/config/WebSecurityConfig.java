@@ -121,6 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/flights/**").hasAnyAuthority("ROLE_CONTROLLER", "ROLE_ADMIN")
                  //Airports access
+                .antMatchers(HttpMethod.GET, "/airports/searchCityName/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.POST, "/airports").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.POST, "/airports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
