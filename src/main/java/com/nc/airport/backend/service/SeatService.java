@@ -7,6 +7,7 @@ import com.nc.airport.backend.model.entities.model.airplane.dto.AirplaneDto;
 import com.nc.airport.backend.model.entities.model.airplane.dto.SeatDto;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.service.exception.InconsistencyException;
+import com.nc.airport.backend.service.exception.ItemNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,7 @@ public class SeatService extends AbstractService<Seat> {
             if (result.isPresent()) {
                 idToSeatTypeMap.put(id, result.get());
             } else {
-                logAndThrow(new InconsistencyException("Cannot find seat type of id " + id));
+                logAndThrow(new ItemNotFoundException("Cannot find seat type of id " + id));
             }
         }
         return idToSeatTypeMap;
@@ -88,8 +89,9 @@ public class SeatService extends AbstractService<Seat> {
 //        insert all the seats from query
         List<SeatDto> updatedSeats = new ArrayList<>();
         for (SeatDto seat : seats) {
-            Seat updatedSeat = repository.update(new Seat(seat));
-            updatedSeats.add(new SeatDto(updatedSeat));
+            SeatDto updatedSeat = new SeatDto(repository.update(new Seat(seat)));
+            updatedSeat.setAirplane(airplane);
+            updatedSeats.add(updatedSeat);
         }
         return updatedSeats;
     }
