@@ -58,6 +58,11 @@ public class AirportController {
         return airportService.getDtoBySearchingResult(entities);
     }
 
+    @GetMapping("/searchCityName/cityName={cityName}")
+    public List<Airport> searchCityName(@PathVariable(name = "cityName") String cityName) {
+        return airportService.findCityNames(cityName);
+    }
+
     @GetMapping
     public List<Airport> getAll() {
         return airportService.getAll();
