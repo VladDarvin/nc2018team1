@@ -23,12 +23,17 @@ public class Airplane extends BaseEntity {
     @ReferenceField(ID = "17")
     private BigInteger airlineId;
 
+    @ValueField(ID = "67")
+    private BigInteger versionNum;
+
     public Airplane() {
+        this.versionNum = BigInteger.valueOf(0);
     }
 
     public Airplane(AirplaneDto airplaneDto) {
         super(airplaneDto);
         this.model = airplaneDto.getModel();
         this.airlineId = airplaneDto.getAirline().getObjectId();
+        this.versionNum = airplaneDto.getVersionNum();
     }
 }

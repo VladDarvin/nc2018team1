@@ -228,16 +228,20 @@ public class WidePickyDBFetcher {
 
         StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
         basicQuery.append("WHERE ");
-        for (int i = 1; i <= references.size(); i++) {
-            int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR"+references.get(i-1));
-            String numberString = "" + references.get(i-1);
-            String attrNumber = basicQuery.substring(indexOfAttrNumber-numberString.length(), indexOfAttrNumber);
+
+//        we don't need to append 'OR' to the last reference
+        int i = 1;
+        for (BigInteger reference : references) {
+            int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR" + reference);
+            String numberString = reference.toString();
+            String attrNumber = basicQuery.substring(indexOfAttrNumber - numberString.length(), indexOfAttrNumber);
             if (attrNumber.contains("A")) {
                 attrNumber = attrNumber.substring(1);
             }
             basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectId);
-            if (i != references.size()) {
+            if (i < references.size()) {
                 basicQuery.append(" OR ");
+                i++;
             }
         }
         String fullQuery = basicQuery.toString();

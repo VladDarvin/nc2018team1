@@ -35,6 +35,11 @@ public class SeatDto extends BaseEntity {
         this.modifier = seat.getModifier();
     }
 
+    public SeatDto(Seat seat, SeatType seatType) {
+        this(seat);
+        this.seatType = seatType;
+    }
+
     public SeatDto(BigInteger objectId) {
         super(objectId);
     }

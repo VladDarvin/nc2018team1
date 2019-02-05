@@ -24,7 +24,7 @@ public class AirplaneService extends AbstractService<Airplane> {
         this.airlineService = airlineService;
     }
 
-    public Airplane findAirplaneByObjectId(BigInteger objectId) {
+    public Airplane getByObjectId(BigInteger objectId) {
         Optional<Airplane> result = repository.findById(objectId, Airplane.class);
         if (result.isPresent()) {
             return result.get();
@@ -52,6 +52,16 @@ public class AirplaneService extends AbstractService<Airplane> {
             airplaneDtos.add(newAirplaneDto);
         }
         return airplaneDtos;
+    }
+
+    public boolean ifPlaneVersionUpToDate(BigInteger objectId, BigInteger version) {
+        Airplane upToDatePlane = getByObjectId(objectId);
+        if (upToDatePlane.getVersionNum().equals(version)) {
+            return true;
+        } else {
+            log.warn("Compared plane version is outdated. Compared=" + version + ". Up to date=" + upToDatePlane.getVersionNum());
+            return false;
+        }
     }
 }
 

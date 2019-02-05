@@ -3,6 +3,9 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
 import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
+import com.nc.airport.backend.security.controller.AuthenticationException;
+import com.nc.airport.backend.service.exception.InconsistencyException;
+import com.nc.airport.backend.service.exception.ItemNotFoundException;
 import com.nc.airport.backend.service.exception.PersistenceException;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +25,15 @@ public class TestExceptionController {
     private Map<Integer, String> idToName = new HashMap<>();
 
     public TestExceptionController() {
-        exceptions.add(new PersistenceException("msg1", null));
-        exceptions.add(new EntityExistsException("msg1"));
-        exceptions.add(new EntityNotFoundException("msg1"));
-        exceptions.add(new BadDBRequestException("msg1", null));
-        exceptions.add(new DatabaseConnectionException("msg1", null));
-        exceptions.add(new InvalidAnnotatedClassException("msg1", null));
+        exceptions.add(new PersistenceException("persistence message", null));
+        exceptions.add(new EntityExistsException("entity already exists message"));
+        exceptions.add(new EntityNotFoundException("entity was not found message"));
+        exceptions.add(new BadDBRequestException("bad db request message", null));
+        exceptions.add(new DatabaseConnectionException("database connection exception message", null));
+        exceptions.add(new InvalidAnnotatedClassException("invalid annotated class message", null));
+        exceptions.add(new InconsistencyException("inconsistency message"));
+        exceptions.add(new AuthenticationException("auth exception message", null));
+        exceptions.add(new ItemNotFoundException("item hasn't been found message"));
 
         fillMap();
     }

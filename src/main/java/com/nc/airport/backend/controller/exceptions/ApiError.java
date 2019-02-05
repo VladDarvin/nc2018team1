@@ -42,10 +42,7 @@ public class ApiError {
     }
 
     ApiError(HttpStatus status, Throwable ex) {
-        this();
-        this.status = status;
-        this.message = "Unexpected or unknown error";
-        this.debugMessage = ex.getLocalizedMessage();
+        this(status, "Unexpected or unknown error", ex);
     }
 
     ApiError(HttpStatus status, String message, Throwable ex) {
