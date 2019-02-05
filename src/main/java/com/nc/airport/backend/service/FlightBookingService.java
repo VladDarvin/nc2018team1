@@ -5,6 +5,7 @@ import com.nc.airport.backend.model.dto.FlightDTO;
 import com.nc.airport.backend.model.dto.FlightSearchWrapper;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.Flight;
+import com.nc.airport.backend.model.entities.model.flight.FlightStatus;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,36 +30,38 @@ public class FlightBookingService extends AbstractService {
     }
 
     public List<FlightDTO> findOneWayFlights (int page, String departureCity, String destinationCity, LocalDateTime date) {
-        List<Airport> departureAirportsByAttr = airportService.findItemsByAttr(departureCity, BigInteger.valueOf(5), Airport.class);
-        List<Airport> arrivalAirportsByAttr = airportService.findItemsByAttr(destinationCity, BigInteger.valueOf(5), Airport.class);
-        Set<Flight> flights = new HashSet<>();
-        for (Airport depArr:
-                departureAirportsByAttr) {
-            List<Flight> flightOfReference = flightService.repository.findSliceOfReference(depArr.getObjectId(), Flight.class);
-            flights.addAll(flightOfReference);
-        }
-
-        for (Airport arvArr:
-                arrivalAirportsByAttr) {
-            List<Flight> flightOfReference = flightService.repository.findSliceOfReference(arvArr.getObjectId(), Flight.class);
-            flights.addAll(flightOfReference);
-        }
+//        List<Airport> departureAirportsByAttr = airportService.findItemsByAttr(departureCity, BigInteger.valueOf(5), Airport.class);
+//        List<Airport> arrivalAirportsByAttr = airportService.findItemsByAttr(destinationCity, BigInteger.valueOf(5), Airport.class);
+        Airport departureAirport = airportService.findByAttr(departureCity, BigInteger.valueOf(5), Airport.class);
+        Airport destinationAirport = airportService.findByAttr(destinationCity, BigInteger.valueOf(5), Airport.class);
+//        Set<Flight> flights = new HashSet<>();
+        Map<BigInteger, BigInteger> objectIds = new HashMap<>();
+        objectIds.put(BigInteger.valueOf(11), departureAirport.getObjectId());
+        objectIds.put(BigInteger.valueOf(10), destinationAirport.getObjectId());
+//        for (Airport depArr:
+//                departureAirport) {
+            //List<Flight> flightOfReference = flightService.repository.findSliceOfSeveralReferences(depArr.getObjectId(), Flight.class);
+            //flights.addAll(flightOfReference);
+//        }
+        List<Flight> flights = flightService.repository.findSliceOfSeveralReferences(objectIds, Flight.class);
+//        for (Airport arvArr:
+//                arrivalAirportsByAttr) {
+//            List<Flight> flightOfReference = flightService.repository.findSliceOfReference(arvArr.getObjectId(), Flight.class);
+//            flights.addAll(flightOfReference);
+//        }
 
         Set<Flight> foundFlights = new HashSet<>();
         for (Flight flight:
-                flights) {
-            String dateFromFlight = "";
-            LocalDateTime tempDate = flight.getExpectedDepartureDatetime();
-            if (tempDate != null) {
-                dateFromFlight = tempDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-            String dateFromSearch = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+             flights) {
+            if (flight.getStatus().equals(FlightStatus.SCHEDULED)) {
+                String dateFromFlight = flight.getExpectedDepartureDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String dateFromSearch = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-            if (dateFromFlight.equals(dateFromSearch)) {
-                foundFlights.add(flight);
+                if (dateFromFlight.equals(dateFromSearch)) {
+                    foundFlights.add(flight);
+                }
             }
         }
-        System.err.println(foundFlights);
 
         return flightService.formFlightDTOs(new ArrayList<>(foundFlights));
     }
