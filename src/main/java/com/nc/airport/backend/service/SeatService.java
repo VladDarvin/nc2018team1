@@ -36,10 +36,8 @@ public class SeatService extends AbstractService<Seat> {
         List<SeatDto> seatDtos = new ArrayList<>();
         for (Seat seat : seats) {
             SeatType seatType = idToSeatType.get(seat.getSeatTypeId());
-            SeatDto seatDto = new SeatDto(seat);
-//            alas, for normal functionality front-end needs seatType name filled in seats :(
-//            FIXME fix front-end to get seatTypes from backend, not from seats payload
-            seatDto.setSeatType(seatType);
+            SeatDto seatDto = new SeatDto(seat, seatType);
+            seatDto.setAirplane(airplaneDto);
             seatDtos.add(seatDto);
         }
         log.debug(seatDtos);
