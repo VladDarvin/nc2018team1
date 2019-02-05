@@ -1,5 +1,6 @@
 package com.nc.airport.backend.service;
 
+import com.nc.airport.backend.model.dto.BookingTwoWaysDto;
 import com.nc.airport.backend.model.dto.FlightDTO;
 import com.nc.airport.backend.model.dto.FlightSearchWrapper;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
@@ -8,11 +9,9 @@ import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class FlightBookingService extends AbstractService {
@@ -29,9 +28,9 @@ public class FlightBookingService extends AbstractService {
         this.airportService = airportService;
     }
 
-    public List<FlightDTO> findOneWayFlights (int page, FlightSearchWrapper wrapper) {
-        List<Airport> departureAirportsByAttr = airportService.findItemsByAttr(wrapper.getDepartureCity(), BigInteger.valueOf(5), Airport.class);
-        List<Airport> arrivalAirportsByAttr = airportService.findItemsByAttr(wrapper.getDestinationCity(), BigInteger.valueOf(5), Airport.class);
+    public List<FlightDTO> findOneWayFlights (int page, String departureCity, String destinationCity, LocalDateTime date) {
+        List<Airport> departureAirportsByAttr = airportService.findItemsByAttr(departureCity, BigInteger.valueOf(5), Airport.class);
+        List<Airport> arrivalAirportsByAttr = airportService.findItemsByAttr(destinationCity, BigInteger.valueOf(5), Airport.class);
         Set<Flight> flights = new HashSet<>();
         for (Airport depArr:
                 departureAirportsByAttr) {
@@ -49,16 +48,25 @@ public class FlightBookingService extends AbstractService {
         for (Flight flight:
              flights) {
             String dateFromFlight = flight.getExpectedDepartureDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String dateFromSearch = wrapper.getDepartureDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            System.err.println(dateFromFlight);
-            System.err.println(dateFromSearch);
+            String dateFromSearch = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
             if (dateFromFlight.equals(dateFromSearch)) {
-                System.err.println("equals");
                 foundFlights.add(flight);
             }
         }
-        System.err.println(foundFlights);
+
         return flightService.formFlightDTOs(new ArrayList<>(foundFlights));
+    }
+
+    public BookingTwoWaysDto findTwoWayFlights (int page, String departureCity, String destinationCity, LocalDateTime departureDate, LocalDateTime returnDate) {
+        List<FlightDTO> departureFlights = findOneWayFlights(page, departureCity, destinationCity, departureDate);
+        List<FlightDTO> flightsBack = findOneWayFlights(page, destinationCity, departureCity, returnDate);
+
+        if (departureFlights.size() == 0 || flightsBack.size() == 0) {
+            return new BookingTwoWaysDto();
+        } else {
+            return new BookingTwoWaysDto(departureFlights, flightsBack);
+        }
     }
 
 //    public List<FlightDTO> findOneWayFlights (int page, String departureCity, String arrivalCity, LocalDateTime departureDate) {
