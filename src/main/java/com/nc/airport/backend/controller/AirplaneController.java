@@ -30,7 +30,7 @@ public class AirplaneController {
 
     @GetMapping("/objectId={objectId}")
     public Airplane getAirplaneById(@PathVariable(name = "objectId") BigInteger objectId) {
-        Airplane airplane = airplaneService.findAirplaneByObjectId(objectId);
+        Airplane airplane = airplaneService.getByObjectId(objectId);
         log.debug(airplane);
         return airplane;
     }
