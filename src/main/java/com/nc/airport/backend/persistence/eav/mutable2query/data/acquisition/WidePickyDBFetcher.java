@@ -470,7 +470,8 @@ public class WidePickyDBFetcher {
         Iterator<BigInteger> attrIterator = dateValuesIn.iterator();
         for (int i = indexesBefore + 1; i <= dateValuesIn.size() + indexesBefore; i++) {
             BigInteger attrId = attrIterator.next();
-            dateValuesOut.put(attrId, result.getTimestamp(i).toLocalDateTime());
+            Timestamp stamp = result.getTimestamp(i);
+            dateValuesOut.put(attrId, stamp != null ? stamp.toLocalDateTime() : null);
         }
         mutable.setDateValues(dateValuesOut);
     }

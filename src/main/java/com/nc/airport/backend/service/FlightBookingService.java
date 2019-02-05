@@ -46,8 +46,12 @@ public class FlightBookingService extends AbstractService {
 
         Set<Flight> foundFlights = new HashSet<>();
         for (Flight flight:
-             flights) {
-            String dateFromFlight = flight.getExpectedDepartureDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                flights) {
+            String dateFromFlight = "";
+            LocalDateTime tempDate = flight.getExpectedDepartureDatetime();
+            if (tempDate != null) {
+                dateFromFlight = tempDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
             String dateFromSearch = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             if (dateFromFlight.equals(dateFromSearch)) {
