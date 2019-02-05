@@ -4,13 +4,16 @@ import com.nc.airport.backend.model.dto.AirportDto;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.Country;
+import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AirportService extends AbstractService<Airport> {
@@ -49,4 +52,16 @@ public class AirportService extends AbstractService<Airport> {
         }
         return airportDtos;
     }
+
+    public List<Airport> findCityNames(String cityName) {
+        Set<Object> values = new HashSet<>();
+        values.add("%"+cityName+"%");
+        List<FilterEntity> filterEntities = new ArrayList<>();
+        filterEntities.add(new FilterEntity(BigInteger.valueOf(5), values));
+
+        int quantity = repository.count(Airport.class).intValue();
+        Page page = new Page(quantity, 0);
+        return repository.findSlice(Airport.class, page, null, filterEntities);
+    }
+
 }
