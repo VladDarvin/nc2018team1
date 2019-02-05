@@ -15,13 +15,16 @@ import java.math.BigInteger;
 public class AirplaneDto extends BaseEntity {
     private String model;
     private Airline airline;
+    private BigInteger versionNum;
 
     public AirplaneDto() {
+        versionNum = BigInteger.valueOf(0);
     }
 
     public AirplaneDto(Airplane airplane) {
         super(airplane);
         this.model = airplane.getModel();
+        this.versionNum = airplane.getVersionNum();
         this.airline = new Airline(airplane.getAirlineId());
     }
 
@@ -32,5 +35,9 @@ public class AirplaneDto extends BaseEntity {
 
     public AirplaneDto(BigInteger objectId) {
         super(objectId);
+    }
+
+    public void increaseVersion() {
+        this.versionNum = versionNum.add(BigInteger.valueOf(1));
     }
 }

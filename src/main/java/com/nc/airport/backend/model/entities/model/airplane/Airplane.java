@@ -27,11 +27,13 @@ public class Airplane extends BaseEntity {
     private BigInteger versionNum;
 
     public Airplane() {
+        this.versionNum = BigInteger.valueOf(0);
     }
 
     public Airplane(AirplaneDto airplaneDto) {
         super(airplaneDto);
         this.model = airplaneDto.getModel();
         this.airlineId = airplaneDto.getAirline().getObjectId();
+        this.versionNum = airplaneDto.getVersionNum();
     }
 }
