@@ -58,6 +58,7 @@ public class FlightBookingService extends AbstractService {
                 foundFlights.add(flight);
             }
         }
+        System.err.println(foundFlights);
 
         return flightService.formFlightDTOs(new ArrayList<>(foundFlights));
     }
