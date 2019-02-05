@@ -1,8 +1,12 @@
 package com.nc.airport.backend.controller.exceptions;
 
+import com.nc.airport.backend.persistence.eav.exceptions.BadDBRequestException;
+import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConnectionException;
 import com.nc.airport.backend.persistence.eav.exceptions.InvalidAnnotatedClassException;
 import com.nc.airport.backend.security.controller.AuthenticationException;
+import com.nc.airport.backend.service.exception.InconsistencyException;
 import com.nc.airport.backend.service.exception.ItemNotFoundException;
+import com.nc.airport.backend.service.exception.PersistenceException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,93 +19,56 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
-
 @ControllerAdvice
 @Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-
-    /*
-     * App related exceptions handlers
-     */
-
-    @ExceptionHandler(PersistenceException.class)
-    protected ResponseEntity<Object> notUniqueAttributes(PersistenceException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    /**
-     * Handle exception when entity already exist.
-     */
-    @ExceptionHandler(EntityExistsException.class)
-    protected ResponseEntity<Object> handleEntityAlreadyExist(EntityExistsException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    /**
-     * Handle exception when entity doesn't exist.
-     */
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    /**
-     * Handle exception when user is disabled or has bad credentials.
-     */
-    @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(InvalidAnnotatedClassException.class)
-    public ResponseEntity<Object> handleInvalidAnnotations(InvalidAnnotatedClassException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-        apiError.setMessage(ex.getCauseClass() + " is probably poorly annotated, please check.");
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(ItemNotFoundException.class)
-    public ResponseEntity<Object> handleFlightNotFoundException(ItemNotFoundException ex) {
-        log.error(ex);
-
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    /*
-     * Common exceptions handlers
-     */
 
     /**
      * Handle all exceptions that don’t have specific exception handler
      */
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<Object> defaultExceptionHandler(Exception ex) {
+    public ResponseEntity<Object> defaultExceptionHandler(Exception ex) {
         log.error(ex);
 
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex);
+        return buildResponseEntity(apiError);
+    }
+
+    /*
+     * App related exceptions handlers
+     */
+
+    @ExceptionHandler({
+            PersistenceException.class,
+            InconsistencyException.class
+    })
+    public ResponseEntity<Object> handlePersistenceException(RuntimeException ex) {
+        log.error(ex);
+
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT, ex.getMessage(), ex);
+        return buildResponseEntity(apiError);
+    }
+
+
+
+    @ExceptionHandler({
+            DatabaseConnectionException.class,
+            BadDBRequestException.class,
+            InvalidAnnotatedClassException.class,
+            ItemNotFoundException.class
+    })
+    public ResponseEntity<Object> handleDatabaseConnectionException(RuntimeException ex) {
+        return defaultExceptionHandler(ex);
+    }
+
+    /**
+     * Handle exception when user is disabled or has bad credentials.
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+        log.error(ex);
+
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
         return buildResponseEntity(apiError);
     }
 
@@ -109,13 +76,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Handle exception when method arguments are not the expected type
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
         log.error("Request : {}", request, ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(String.format(
-                "The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
+//        apiError.setMessage(String.format(
+//                "The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
         apiError.setDebugMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
