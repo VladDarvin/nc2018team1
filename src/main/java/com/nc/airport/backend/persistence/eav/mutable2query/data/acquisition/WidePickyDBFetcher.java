@@ -266,6 +266,69 @@ public class WidePickyDBFetcher {
         return mutables;
     }
 
+    public List<Mutable> getMutablesBySeveralReferences(List<BigInteger> values,
+                                                List<BigInteger> dateValues,
+                                                List<BigInteger> listValues,
+                                                List<BigInteger> references,
+                                                Map<BigInteger, BigInteger> objectIds) {
+
+        QueryCreator queryCreator = new QueryCreator();
+        List<Mutable> mutables = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        values = ensureNonNullSecurity(values);
+        dateValues = ensureNonNullSecurity(dateValues);
+        listValues = ensureNonNullSecurity(listValues);
+        references = ensureNonNullSecurity(references);
+
+        StringBuilder basicQuery = queryCreator.createWidePickyQuery(values, dateValues, listValues, references);
+        basicQuery.append("WHERE ");
+
+//        we don't need to append 'OR' to the last reference
+        int i = 1;
+        for (BigInteger reference : references) {
+            for (BigInteger attrId : objectIds.keySet()) {
+                if (reference.equals(attrId)) {
+                    int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR" + reference);
+                    String numberString = reference.toString();
+                    String attrNumber = basicQuery.substring(indexOfAttrNumber - numberString.length(), indexOfAttrNumber);
+                    if (attrNumber.contains("A")) {
+                        attrNumber = attrNumber.substring(1);
+                    }
+
+                        basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectIds.get(attrId));
+
+
+                    if (i < objectIds.keySet().size()) {
+                        basicQuery.append(" AND ");
+                        i++;
+                    }
+                }
+            }
+        }
+        String fullQuery = basicQuery.toString();
+
+        queryCreator.logSequence(log, fullQuery);
+
+        try {
+            statement = connection.prepareStatement(fullQuery);
+            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+            while (result.next()) {
+                Mutable mutable = new Mutable();
+                pullGeneralInfo(result, mutable);
+                pullAttributes(result, mutable, values, dateValues, listValues, references);
+                mutables.add(mutable);
+            }
+        } catch (SQLException e) {
+            log.error(e);
+            throw new DatabaseConnectionException("Could not open statement", e);
+        } finally {
+            closeResultSetAndStatement(result, statement);
+        }
+        return mutables;
+    }
+
     private boolean isNumeric(String strNum) {
         try {
             double d = Double.parseDouble(strNum);

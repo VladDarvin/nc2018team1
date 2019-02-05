@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
@@ -184,6 +185,24 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getDateFieldIds(entityClass),
                 ReflectionHelper.getListFieldIds(entityClass),
                 ReflectionHelper.getReferenceFieldIds(entityClass), objectId);
+
+        List<T> entities = new ArrayList<>();
+        for (Mutable mutable : mutables) {
+            entities.add(e2m.convertMutableToEntity(mutable, entityClass));
+        }
+        return entities;
+    }
+
+    @Override
+    public List<T> findSliceOfSeveralReferences(@NotNull Map<BigInteger, BigInteger> objectIds, @NotNull Class<T> entityClass) {
+        checkNull(entityClass);
+
+        List<Mutable> mutables;
+        mutables = m2db.getMutablesBySeveralReferences(
+                ReflectionHelper.getValueFieldIds(entityClass),
+                ReflectionHelper.getDateFieldIds(entityClass),
+                ReflectionHelper.getListFieldIds(entityClass),
+                ReflectionHelper.getReferenceFieldIds(entityClass), objectIds);
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {

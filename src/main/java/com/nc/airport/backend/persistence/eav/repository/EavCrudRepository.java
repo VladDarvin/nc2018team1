@@ -8,6 +8,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -164,6 +165,8 @@ public interface EavCrudRepository<T extends BaseEntity> {
     boolean existsById(@NotNull BigInteger objectId);
 
     List<T> findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
+
+    List<T> findSliceOfSeveralReferences(@NotNull Map<BigInteger, BigInteger> objectIds, @NotNull Class<T> entityClass);
 
     T findEntityByReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 

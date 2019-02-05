@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 //                          TODO MAKE PAGES BIG INTS
 @Component
@@ -129,9 +130,9 @@ public class Mutable2Query {
      *                     included in each Mutable object
      * @return Mutable object with specified attributes (those which was not specified neither will be in
      * the resulting Mutable, nor will be replaced with nulls, they just won`t be there)
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public Mutable getSingleMutable(BigInteger objectId, Collection<BigInteger> attributesId) {
         return new TallLazyDBFetcher(connection)
@@ -151,9 +152,9 @@ public class Mutable2Query {
      * @return List of Mutable objects with specified attributes
      * (those which was not specified neither will be in the resulting Mutable,
      * nor will be replaced with nulls, they just won`t be there)
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      * @see if your objectsId is of objects, that can contain your attributesId
      * this means that attributesId must be inherited or declared in objects' class
      */
@@ -172,9 +173,9 @@ public class Mutable2Query {
      * @return List of Mutable objects with specified attributes
      * (those which was not specified neither will be in the resulting Mutable,
      * nor will be replaced with nulls, they just won`t be there)
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      * @see if your objectsId is of objects, that can contain your attributesId
      * this means that attributesId must be inherited or declared in objects' class
      */
@@ -185,17 +186,17 @@ public class Mutable2Query {
     }
 
     /**
-     * @param values     values attr_id List
-     * @param dateValues dateValues attr_id List
-     * @param listValues listValues attr_id List
-     * @param references references attr_id List
+     * @param values                values attr_id List
+     * @param dateValues            dateValues attr_id List
+     * @param listValues            listValues attr_id List
+     * @param references            references attr_id List
      * @param pagingFrom
      * @param pagingTo
      * @param sortBy
      * @return List of Mutable objects with specified attributes
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public List<Mutable> getMutablesFromDB(List<BigInteger> values,
                                            List<BigInteger> dateValues,
@@ -207,18 +208,18 @@ public class Mutable2Query {
     }
 
     /**
-     * @param values     values attr_id List
-     * @param dateValues dateValues attr_id List
-     * @param listValues listValues attr_id List
-     * @param references references attr_id List
+     * @param values                values attr_id List
+     * @param dateValues            dateValues attr_id List
+     * @param listValues            listValues attr_id List
+     * @param references            references attr_id List
      * @param pagingFrom
      * @param pagingTo
      * @param sortBy
      * @param filterBy
      * @return List of Mutable objects with specified attributes
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public List<Mutable> getMutablesFromDB(List<BigInteger> values,
                                            List<BigInteger> dateValues,
@@ -255,7 +256,7 @@ public class Mutable2Query {
      * Returns number of objects of given type_id
      *
      * @param objTypeId search criteria
-     * @param filterBy  search criteria
+     * @param filterBy search criteria
      * @return number of objects
      */
     public BigInteger countById(BigInteger objTypeId, List<FilterEntity> filterBy) {
@@ -265,15 +266,15 @@ public class Mutable2Query {
     /**
      * Get count of returned items by filtering
      *
-     * @param values     values attr_id List
-     * @param dateValues dateValues attr_id List
-     * @param listValues listValues attr_id List
-     * @param references references attr_id List
+     * @param values                values attr_id List
+     * @param dateValues            dateValues attr_id List
+     * @param listValues            listValues attr_id List
+     * @param references            references attr_id List
      * @param filterBy
      * @return Total count of pages
-     * @throws BadDBRequestException       when arguments are invalid
-     * @throws DatabaseConnectionException when there's some problems with database or with it's connection
-     *                                     to the server
+     * @throws BadDBRequestException when arguments are invalid
+     * @exception DatabaseConnectionException when there's some problems with database or with it's connection
+     * to the server
      */
     public BigInteger countByFilter(List<BigInteger> values,
                                     List<BigInteger> dateValues,
@@ -283,15 +284,15 @@ public class Mutable2Query {
         int countOfItems = new WidePickyDBFetcher(connection)
                 .getCountOfMutables(values, dateValues, listValues, references, filterBy);
 
-        return BigInteger.valueOf(countOfItems == 0 ? 1 : (int) Math.ceil((double) countOfItems / (double) 10));
+        return BigInteger.valueOf(countOfItems == 0 ? 1 : (int)Math.ceil((double)countOfItems / (double)10));
     }
 
 
     public List<Mutable> getMutablesFromDBByParentId(List<BigInteger> values,
-                                                     List<BigInteger> dateValues,
-                                                     List<BigInteger> listValues,
-                                                     List<BigInteger> references,
-                                                     int pagingFrom, int pagingTo, BigInteger parentId, BigInteger objectTypeId) {
+                                           List<BigInteger> dateValues,
+                                           List<BigInteger> listValues,
+                                           List<BigInteger> references,
+                                         int pagingFrom, int pagingTo, BigInteger parentId, BigInteger objectTypeId) {
         return new WidePickyDBFetcher(connection)
                 .getMutablesByParentId(values, dateValues, listValues, references, pagingFrom, pagingTo, parentId, objectTypeId);
     }
@@ -308,21 +309,30 @@ public class Mutable2Query {
     }
 
     public Mutable getSingleMutableByReference(List<BigInteger> values,
-                                               List<BigInteger> dateValues,
-                                               List<BigInteger> listValues,
-                                               List<BigInteger> references,
-                                               BigInteger objectId) {
+                                                         List<BigInteger> dateValues,
+                                                         List<BigInteger> listValues,
+                                                         List<BigInteger> references,
+                                                         BigInteger objectId) {
         return new WidePickyDBFetcher(connection)
                 .getSingleMutableByReference(values, dateValues, listValues, references, objectId);
     }
 
     public List<Mutable> getMutablesByReference(List<BigInteger> values,
+                                                      List<BigInteger> dateValues,
+                                                      List<BigInteger> listValues,
+                                                      List<BigInteger> references,
+                                                      BigInteger objectId) {
+        return new WidePickyDBFetcher(connection)
+                .getMutablesByReference(values, dateValues, listValues, references, objectId);
+    }
+
+    public List<Mutable> getMutablesBySeveralReferences(List<BigInteger> values,
                                                 List<BigInteger> dateValues,
                                                 List<BigInteger> listValues,
                                                 List<BigInteger> references,
-                                                BigInteger objectId) {
+                                                Map<BigInteger, BigInteger> objectIds) {
         return new WidePickyDBFetcher(connection)
-                .getMutablesByReference(values, dateValues, listValues, references, objectId);
+                .getMutablesBySeveralReferences(values, dateValues, listValues, references, objectIds);
     }
 
     public BigInteger getNewObjectId() {
