@@ -53,5 +53,15 @@ public class AirplaneService extends AbstractService<Airplane> {
         }
         return airplaneDtos;
     }
+
+    public boolean ifPlaneVersionUpToDate(BigInteger objectId, BigInteger version) {
+        Airplane upToDatePlane = getByObjectId(objectId);
+        if (upToDatePlane.getVersionNum().equals(version)) {
+            return true;
+        } else {
+            log.warn("Compared plane version is outdated. Compared=" + version + ". Up to date=" + upToDatePlane.getVersionNum());
+            return false;
+        }
+    }
 }
 
