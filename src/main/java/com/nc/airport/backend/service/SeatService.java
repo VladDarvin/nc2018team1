@@ -1,7 +1,9 @@
 package com.nc.airport.backend.service;
 
+import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.model.entities.model.airplane.Seat;
 import com.nc.airport.backend.model.entities.model.airplane.SeatType;
+import com.nc.airport.backend.model.entities.model.airplane.dto.AirplaneDto;
 import com.nc.airport.backend.model.entities.model.airplane.dto.SeatDto;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.service.exception.InconsistencyException;
@@ -17,24 +19,25 @@ import java.util.*;
 public class SeatService extends AbstractService<Seat> {
 
     private final SeatTypeService seatTypeService;
+    private final AirplaneService airplaneService;
 
     @Autowired
-    public SeatService(EavCrudRepository<Seat> repository, SeatTypeService seatTypeService) {
+    public SeatService(EavCrudRepository<Seat> repository, SeatTypeService seatTypeService, AirplaneService airplaneService) {
         super(Seat.class, repository);
         this.seatTypeService = seatTypeService;
+        this.airplaneService = airplaneService;
     }
 
-    /**
-     * <h3>WARNING</h3>
-     * AIRPLANE_ID must be 23!
-     */
     public List<SeatDto> getByPlaneId(BigInteger id) {
         List<Seat> seats = repository.findSliceOfReference(id, Seat.class);
         Set<BigInteger> seatTypeIdSet = gatherSeatTypeIds(seats);
         Map<BigInteger, SeatType> idToSeatType = getIdToSeatType(seatTypeIdSet);
+        AirplaneDto airplaneDto = new AirplaneDto(airplaneService.getByObjectId(id));
 
         List<SeatDto> seatDtos = new ArrayList<>();
         for (Seat seat : seats) {
+//            alas, for normal functionality front-end needs seatType name filled in seats :(
+//            FIXME fix front-end to get seatTypes from backend, not from seats payload
             SeatType seatType = idToSeatType.get(seat.getSeatTypeId());
             SeatDto seatDto = new SeatDto(seat, seatType);
             seatDto.setAirplane(airplaneDto);
@@ -66,21 +69,20 @@ public class SeatService extends AbstractService<Seat> {
         return seatTypes;
     }
 
-    /*public List<Seat> getByPlaneId(BigInteger id) {
-        HashSet<Object> filterSet = new HashSet<>();
-        filterSet.add(id);
-        FilterEntity filter = new FilterEntity(BigInteger.valueOf(23), filterSet);
-        List<FilterEntity> filterList = Collections.singletonList(filter);
-
-        Page maxSizePage = new Page(repository.count(Seat.class, filterList).intValue(), 0);
-        return repository.findSlice(Seat.class, maxSizePage, new ArrayList<>(), filterList);
-    }*/
-
     public List<SeatDto> saveAll(List<SeatDto> seats, BigInteger planeId) {
-//        check seats
-        seatsAreOk(seats);
+        if (seats == null || seats.isEmpty() || planeId == null) {
+            log.warn("When saving seats got bad arguments: seats={}, planeId={}", seats, planeId);
+            return new ArrayList<>();
+        }
 
-//        delete all the seats of plane
+        checkSeatsAreConsistent(seats);
+
+        AirplaneDto airplane = seats.get(0).getAirplane();
+        checkPlaneIsUpToDate(airplane);
+
+        airplane.increaseVersion();
+        airplaneService.updateEntity(new Airplane(airplane));
+
         deletePlaneSeats(planeId);
 
 //        insert all the seats from query
@@ -92,13 +94,26 @@ public class SeatService extends AbstractService<Seat> {
         return updatedSeats;
     }
 
-    private void seatsAreOk(List<SeatDto> seats) {
+    private void checkPlaneIsUpToDate(AirplaneDto airplane) {
+        boolean planeIsUpToDate = airplaneService.ifPlaneVersionUpToDate(airplane.getObjectId(), airplane.getVersionNum());
+        if (!planeIsUpToDate) {
+            throw new InconsistencyException("Plane version is outdated. Reload the plane to get the latest version.");
+        }
+    }
+
+    private void checkSeatsAreConsistent(List<SeatDto> seats) {
         for (SeatDto seat : seats) {
+            if (seat == null) {
+                throw new RuntimeException("malformed seat, is null");
+            }
             if (seat.getAirplane().getObjectId() == null) {
                 throw new RuntimeException("malformed seat, no airplane id");
             }
             if (seat.getSeatType().getObjectId() == null) {
                 throw new RuntimeException("malformed seat, no seatType id");
+            }
+            if (seat.getAirplane().getVersionNum() == null) {
+                throw new RuntimeException("malformed seat, no airplane version");
             }
         }
     }
