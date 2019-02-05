@@ -24,7 +24,7 @@ public class AirplaneService extends AbstractService<Airplane> {
         this.airlineService = airlineService;
     }
 
-    public Airplane findAirplaneByObjectId(BigInteger objectId) {
+    public Airplane getByObjectId(BigInteger objectId) {
         Optional<Airplane> result = repository.findById(objectId, Airplane.class);
         if (result.isPresent()) {
             return result.get();
