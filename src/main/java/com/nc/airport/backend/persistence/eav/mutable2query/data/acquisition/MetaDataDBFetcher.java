@@ -43,21 +43,15 @@ public class MetaDataDBFetcher {
 
         try (PreparedStatement statement =
                      connection.prepareStatement("SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?")) {
-//            try {
-//                statement = connection.prepareStatement(
-//                        "SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?"
-//                );
-//            } catch (SQLException e) {
-//                log.error(e);
-//                throw new DatabaseConnectionException("Couldn't prepare the statement", e);
-//            }
 
             setIdentificator(statement, objTypeId);
 
             try (ResultSet result = statement.executeQuery()) {
-//            ResultSet result = statement.executeQuery();
                 result.next();
-                return new BigInteger(result.getString(1));
+                BigInteger number = new BigInteger(result.getString(1));
+                result.close();
+                statement.close();
+                return number;
             } catch (SQLException e) {
                 log.error(e);
                 throw new BadDBRequestException("Error occurred after query execution", e);
