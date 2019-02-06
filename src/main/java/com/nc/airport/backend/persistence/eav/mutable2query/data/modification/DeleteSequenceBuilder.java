@@ -42,6 +42,7 @@ public class DeleteSequenceBuilder extends SequenceBuilder {
 
         /* Old stuff that have been used to delete attributes and references before the object
          *  Is convenient when foreign key constraint is set to ON RESTRICT*/
+
 //    private void deleteAttributes() {
 //        deleteValues(mutable.getValues());
 //        deleteValues(mutable.getDateValues());

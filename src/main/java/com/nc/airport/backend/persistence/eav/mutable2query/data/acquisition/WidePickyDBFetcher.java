@@ -33,7 +33,7 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
@@ -56,8 +56,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -69,7 +69,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
@@ -81,7 +81,7 @@ public class WidePickyDBFetcher {
                                   List<FilterEntity> filterBy) {
 
         QueryCreator queryCreator = new QueryCreator();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
                 new FilteringToSortingDescriptor.DescriptorBuilder();
@@ -102,8 +102,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 countOfItems = result.getInt("total");
@@ -112,7 +112,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return countOfItems;
     }
@@ -125,7 +125,7 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
 
@@ -140,8 +140,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -153,7 +153,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
@@ -167,7 +167,7 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
@@ -191,8 +191,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -204,7 +204,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
@@ -218,7 +218,7 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
 
         values = ensureNonNullSecurity(values);
@@ -248,8 +248,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -261,20 +261,20 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
 
     public List<Mutable> getMutablesBySeveralReferences(List<BigInteger> values,
-                                                List<BigInteger> dateValues,
-                                                List<BigInteger> listValues,
-                                                List<BigInteger> references,
-                                                Map<BigInteger, BigInteger> objectIds) {
+                                                        List<BigInteger> dateValues,
+                                                        List<BigInteger> listValues,
+                                                        List<BigInteger> references,
+                                                        Map<BigInteger, BigInteger> objectIds) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
 
         values = ensureNonNullSecurity(values);
@@ -297,7 +297,7 @@ public class WidePickyDBFetcher {
                         attrNumber = attrNumber.substring(1);
                     }
 
-                        basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectIds.get(attrId));
+                    basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectIds.get(attrId));
 
 
                     if (i < objectIds.keySet().size()) {
@@ -311,8 +311,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
@@ -324,7 +324,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutables;
     }
@@ -346,9 +346,9 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
-        PreparedStatement statement = null;
+//        PreparedStatement statement = null;
         ResultSet result = null;
-
+//
         values = ensureNonNullSecurity(values);
         dateValues = ensureNonNullSecurity(dateValues);
         listValues = ensureNonNullSecurity(listValues);
@@ -360,8 +360,8 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try {
-            statement = connection.prepareStatement(fullQuery);
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+//            statement = connection.prepareStatement(fullQuery);
             result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 pullGeneralInfo(result, mutable);
@@ -371,7 +371,7 @@ public class WidePickyDBFetcher {
             log.error(e);
             throw new DatabaseConnectionException("Could not open statement", e);
         } finally {
-            closeResultSetAndStatement(result, statement);
+//            closeResultSetAndStatement(result, statement);
         }
         return mutable;
     }

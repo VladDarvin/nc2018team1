@@ -18,12 +18,13 @@ public class MetaDataDBFetcher {
         this.connection = connection;
     }
 
-     public boolean existsByObjId(BigInteger objectId) {
+    public boolean existsByObjId(BigInteger objectId) {
         if (objectId == null)
             return false;
 
-        try(PreparedStatement statement = connection
+        try (PreparedStatement statement = connection
                 .prepareStatement("SELECT * FROM OBJECTS WHERE OBJECT_ID = ?")) {
+
             setIdentificator(statement, objectId);
             try {
                 return statement.executeUpdate() != 0;
@@ -40,25 +41,31 @@ public class MetaDataDBFetcher {
         if (objTypeId == null)
             return new BigInteger("0");
 
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(
-                    "SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?"
-            );
+        try (PreparedStatement statement =
+                     connection.prepareStatement("SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?")) {
+//            try {
+//                statement = connection.prepareStatement(
+//                        "SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?"
+//                );
+//            } catch (SQLException e) {
+//                log.error(e);
+//                throw new DatabaseConnectionException("Couldn't prepare the statement", e);
+//            }
+
+            setIdentificator(statement, objTypeId);
+
+            try (ResultSet result = statement.executeQuery()) {
+//            ResultSet result = statement.executeQuery();
+                result.next();
+                return new BigInteger(result.getString(1));
+            } catch (SQLException e) {
+                log.error(e);
+                throw new BadDBRequestException("Error occurred after query execution", e);
+            }
+
         } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Couldn't prepare the statement", e);
-        }
-
-        setIdentificator(statement, objTypeId);
-
-        try {
-            ResultSet result = statement.executeQuery();
-            result.next();
-            return new BigInteger(result.getString(1));
-        } catch (SQLException e) {
-            log.error(e);
-            throw new BadDBRequestException("Error occurred after query execution", e);
         }
     }
 
