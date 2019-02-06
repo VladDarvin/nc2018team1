@@ -24,7 +24,7 @@ public class TallLazyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
 
         String fullQuery = queryCreator.createTallLazyQuery(getObjTypeIdInQuery(objectId.toString()),
                 "WHERE O.OBJECT_ID = " + objectId + " AND " + transferAttributesId(attributesId.size()))
@@ -32,9 +32,10 @@ public class TallLazyDBFetcher {
 
         queryCreator.logSequence(logger, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultSingleMutable(attributesId, statement)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultSingleMutable(attributesId, statement);
+//            result = resultSingleMutable(attributesId, statement);
             result.next();
             pullGeneralInfo(result, mutable);
             pullAttributes(result, mutable);
@@ -53,7 +54,7 @@ public class TallLazyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
 
         StringBuilder basicQuery = queryCreator.createTallLazyQuery(objType.toString(),
@@ -65,9 +66,10 @@ public class TallLazyDBFetcher {
 
         queryCreator.logSequence(logger, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(attributesId, statement)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(attributesId, statement);
+//            result = resultMultipleMutables(attributesId, statement);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullAttributes(result, mutable, attributesId.size());
@@ -88,7 +90,7 @@ public class TallLazyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
 
         String fullQuery = queryCreator.createTallLazyQuery(getObjTypeIdInQuery(objectsId.get(0).toString()),
                 "WHERE " + transferObjectsId(objectsId.size()) +
@@ -97,9 +99,10 @@ public class TallLazyDBFetcher {
 
         queryCreator.logSequence(logger, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(objectsId, attributesId, statement)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(objectsId, attributesId, statement);
+//            result = resultMultipleMutables(objectsId, attributesId, statement);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);

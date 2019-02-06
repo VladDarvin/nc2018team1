@@ -35,7 +35,7 @@ public abstract class SequenceBuilder {
         try (ResultSet nextVal = connection.createStatement()
                 .executeQuery("SELECT COALESCE(MIN(O1.OBJECT_ID + 1), 1)\n" +
                         "  FROM OBJECTS O1 LEFT JOIN OBJECTS O2 ON O1.OBJECT_ID + 1 = O2.OBJECT_ID\n" +
-                        "  WHERE O2.OBJECT_ID IS NULL")){
+                        "  WHERE O2.OBJECT_ID IS NULL")) {
             nextVal.next();
             return new BigInteger(nextVal.getString(1));
         } catch (SQLException e) {

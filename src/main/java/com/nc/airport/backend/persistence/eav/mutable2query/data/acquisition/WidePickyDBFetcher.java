@@ -34,7 +34,7 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
                 new FilteringToSortingDescriptor.DescriptorBuilder();
@@ -56,9 +56,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
@@ -82,7 +83,7 @@ public class WidePickyDBFetcher {
 
         QueryCreator queryCreator = new QueryCreator();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
                 new FilteringToSortingDescriptor.DescriptorBuilder();
         int countOfItems = 0;
@@ -102,9 +103,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 countOfItems = result.getInt("total");
             }
@@ -126,7 +128,7 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
 
         values = ensureNonNullSecurity(values);
@@ -140,9 +142,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, null)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
@@ -168,7 +171,7 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
         PagingDescriptor paging = new PagingDescriptor();
         FilteringToSortingDescriptor.DescriptorBuilder descBuilder =
                 new FilteringToSortingDescriptor.DescriptorBuilder();
@@ -191,9 +194,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, filterBy);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
@@ -219,7 +223,7 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
 
         values = ensureNonNullSecurity(values);
         dateValues = ensureNonNullSecurity(dateValues);
@@ -248,9 +252,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, null)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
@@ -275,7 +280,7 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
+//        ResultSet result = null;
 
         values = ensureNonNullSecurity(values);
         dateValues = ensureNonNullSecurity(dateValues);
@@ -311,9 +316,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery);) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, null)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 Mutable mutable = new Mutable();
                 pullGeneralInfo(result, mutable);
@@ -347,8 +353,8 @@ public class WidePickyDBFetcher {
         QueryCreator queryCreator = new QueryCreator();
         Mutable mutable = new Mutable();
 //        PreparedStatement statement = null;
-        ResultSet result = null;
-//
+//        ResultSet result = null;
+
         values = ensureNonNullSecurity(values);
         dateValues = ensureNonNullSecurity(dateValues);
         listValues = ensureNonNullSecurity(listValues);
@@ -360,9 +366,10 @@ public class WidePickyDBFetcher {
 
         queryCreator.logSequence(log, fullQuery);
 
-        try (PreparedStatement statement = connection.prepareStatement(fullQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement(fullQuery);
+             ResultSet result = resultMultipleMutables(statement, values, dateValues, listValues, references, null)) {
 //            statement = connection.prepareStatement(fullQuery);
-            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
+//            result = resultMultipleMutables(statement, values, dateValues, listValues, references, null);
             while (result.next()) {
                 pullGeneralInfo(result, mutable);
                 pullAttributes(result, mutable, values, dateValues, listValues, references);
