@@ -38,13 +38,35 @@ public class MetaDataDBFetcher {
     }
 
     public BigInteger countById(BigInteger objTypeId) {
-        if (objTypeId == null)
+        if (objTypeId == null) {
             return new BigInteger("0");
+        }
+        String query = "SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?";
+        return getCount(query, objTypeId);
+    }
 
+    private void setIdentificator(PreparedStatement statement, BigInteger identificator) {
+        try {
+            statement.setObject(1, identificator);
+        } catch (SQLException e) {
+            log.error(e);
+            throw new BadDBRequestException("Couldn't set the identificator" + identificator, e);
+        }
+    }
+
+    public BigInteger getCountOfReferences(BigInteger objectId) {
+        if (objectId == null) {
+            return new BigInteger("0");
+        }
+        String query = "SELECT COUNT(*) FROM OBJREFERENCE OREF WHERE OREF.REFERENCE = ?";
+        return getCount(query, objectId);
+    }
+
+    private BigInteger getCount(String query, BigInteger objectId) {
         try (PreparedStatement statement =
-                     connection.prepareStatement("SELECT COUNT(OBJECT_ID) FROM OBJECTS WHERE OBJECT_TYPE_ID = ?")) {
+                     connection.prepareStatement(query)) {
 
-            setIdentificator(statement, objTypeId);
+            setIdentificator(statement, objectId);
 
             try (ResultSet result = statement.executeQuery()) {
                 result.next();
@@ -60,15 +82,6 @@ public class MetaDataDBFetcher {
         } catch (SQLException e) {
             log.error(e);
             throw new DatabaseConnectionException("Couldn't prepare the statement", e);
-        }
-    }
-
-    private void setIdentificator(PreparedStatement statement, BigInteger identificator) {
-        try {
-            statement.setObject(1, identificator);
-        } catch (SQLException e) {
-            log.error(e);
-            throw new BadDBRequestException("Couldn't set the identificator" + identificator, e);
         }
     }
 
