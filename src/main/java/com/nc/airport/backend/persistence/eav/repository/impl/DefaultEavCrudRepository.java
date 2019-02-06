@@ -4,6 +4,7 @@ import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.Entity2Mutable;
 import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelper;
+import com.nc.airport.backend.persistence.eav.exceptions.InvalidDeleteException;
 import com.nc.airport.backend.persistence.eav.mutable2query.Mutable2Query;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.sorting.SortEntity;
@@ -236,6 +237,10 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     @Override
     public void deleteById(BigInteger objectId) {
         checkNull(objectId);
+
+        if (m2db.countOfReferencesById(objectId).compareTo(BigInteger.valueOf(0)) == 1) {
+            throw new InvalidDeleteException("Sorry, but you can't delete this item");
+        }
 
         m2db.sqlDelete(objectId);
         log.info("Deleted object with Object_id {}", objectId);

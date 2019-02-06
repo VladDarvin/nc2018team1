@@ -253,6 +253,16 @@ public class Mutable2Query {
     }
 
     /**
+     * Returns number of references bu given objectId
+     *
+     * @param objectId search criteria
+     * @return number of references
+     */
+    public BigInteger countOfReferencesById(BigInteger objectId) {
+        return new MetaDataDBFetcher(connection).getCountOfReferences(objectId);
+    }
+
+    /**
      * Returns number of objects of given type_id
      *
      * @param objTypeId search criteria
