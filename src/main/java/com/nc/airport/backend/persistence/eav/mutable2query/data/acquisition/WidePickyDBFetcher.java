@@ -275,7 +275,7 @@ public class WidePickyDBFetcher {
                                                         List<BigInteger> dateValues,
                                                         List<BigInteger> listValues,
                                                         List<BigInteger> references,
-                                                        Map<BigInteger, BigInteger> objectIds) {
+                                                        List<FilterEntity> filterEntities) {
 
         QueryCreator queryCreator = new QueryCreator();
         List<Mutable> mutables = new ArrayList<>();
@@ -293,7 +293,8 @@ public class WidePickyDBFetcher {
 //        we don't need to append 'OR' to the last reference
         int i = 1;
         for (BigInteger reference : references) {
-            for (BigInteger attrId : objectIds.keySet()) {
+            for (FilterEntity filter : filterEntities) {
+                BigInteger attrId = BigInteger.valueOf(Long.parseLong(filter.getType().substring(4)));
                 if (reference.equals(attrId)) {
                     int indexOfAttrNumber = basicQuery.toString().indexOf(".REFERENCE ATTR" + reference);
                     String numberString = reference.toString();
@@ -302,10 +303,19 @@ public class WidePickyDBFetcher {
                         attrNumber = attrNumber.substring(1);
                     }
 
-                    basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(objectIds.get(attrId));
+                    basicQuery.append("(");
+                    int j = 1;
+                    for (Object value:
+                         filter.getValues()) {
+                        basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(value);
+                        if (j < filter.getValues().size()) {
+                            basicQuery.append(" OR ");
+                            j++;
+                        }
+                    }
+                    basicQuery.append(")");
 
-
-                    if (i < objectIds.keySet().size()) {
+                    if (i < filterEntities.size()) {
                         basicQuery.append(" AND ");
                         i++;
                     }
@@ -313,7 +323,6 @@ public class WidePickyDBFetcher {
             }
         }
         String fullQuery = basicQuery.toString();
-
         queryCreator.logSequence(log, fullQuery);
 
         try (PreparedStatement statement = connection.prepareStatement(fullQuery);

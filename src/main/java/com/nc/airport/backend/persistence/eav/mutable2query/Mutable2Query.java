@@ -330,9 +330,9 @@ public class Mutable2Query {
                                                 List<BigInteger> dateValues,
                                                 List<BigInteger> listValues,
                                                 List<BigInteger> references,
-                                                Map<BigInteger, BigInteger> objectIds) {
+                                                List<FilterEntity> filterEntities) {
         return new WidePickyDBFetcher(connection)
-                .getMutablesBySeveralReferences(values, dateValues, listValues, references, objectIds);
+                .getMutablesBySeveralReferences(values, dateValues, listValues, references, filterEntities);
     }
 
     public BigInteger getNewObjectId() {

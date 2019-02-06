@@ -166,7 +166,7 @@ public interface EavCrudRepository<T extends BaseEntity> {
 
     List<T> findSliceOfReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 
-    List<T> findSliceOfSeveralReferences(@NotNull Map<BigInteger, BigInteger> objectIds, @NotNull Class<T> entityClass);
+    List<T> findSliceOfSeveralReferences(@NotNull List<FilterEntity> filterEntities, @NotNull Class<T> entityClass);
 
     T findEntityByReference(@NotNull BigInteger objectId, @NotNull Class<T> entityClass);
 

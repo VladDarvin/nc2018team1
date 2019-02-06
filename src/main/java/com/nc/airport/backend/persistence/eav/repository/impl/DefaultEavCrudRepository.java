@@ -194,7 +194,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
     }
 
     @Override
-    public List<T> findSliceOfSeveralReferences(@NotNull Map<BigInteger, BigInteger> objectIds, @NotNull Class<T> entityClass) {
+    public List<T> findSliceOfSeveralReferences(@NotNull List<FilterEntity> filterEntities, @NotNull Class<T> entityClass) {
         checkNull(entityClass);
 
         List<Mutable> mutables;
@@ -202,7 +202,7 @@ public class DefaultEavCrudRepository<T extends BaseEntity> implements EavCrudRe
                 ReflectionHelper.getValueFieldIds(entityClass),
                 ReflectionHelper.getDateFieldIds(entityClass),
                 ReflectionHelper.getListFieldIds(entityClass),
-                ReflectionHelper.getReferenceFieldIds(entityClass), objectIds);
+                ReflectionHelper.getReferenceFieldIds(entityClass), filterEntities);
 
         List<T> entities = new ArrayList<>();
         for (Mutable mutable : mutables) {
