@@ -194,6 +194,18 @@ public final class ReflectionHelper {
         return attributeIds;
     }
 
+    public static BigInteger getAttributeIdByFieldName(Class<? extends BaseEntity> entityClass,
+                                                       Class<? extends Annotation> fieldAnnotation,
+                                                       String fieldName) {
+        List<Field> fields = getAllFields(entityClass);
+        for (Field field : fields) {
+            if (field.getName().equals(fieldName)) {
+                return getAnnotationIdFromField(field, fieldAnnotation);
+            }
+        }
+        return null;
+    }
+
     // FIXME: 18.12.2018 REFACTOR
     public static List<BigInteger> getValueFieldIds(Class<? extends BaseEntity> entityClass) {
         List<Field> fields = getAllFields(entityClass);
@@ -231,10 +243,14 @@ public final class ReflectionHelper {
         List<BigInteger> ids = new ArrayList<>();
 
         for (Field field : getFieldsFilteredByAnnotation(fields, annotationClass)) {
-            Annotation annotation = field.getAnnotation(annotationClass);
-            ids.add(getIdFromAnnotation(annotation));
+            ids.add(getAnnotationIdFromField(field, annotationClass));
         }
 
         return ids;
+    }
+
+    private static BigInteger getAnnotationIdFromField(Field field, Class<? extends Annotation> annotationClass) {
+        Annotation annotation = field.getAnnotation(annotationClass);
+        return getIdFromAnnotation(annotation);
     }
 }
