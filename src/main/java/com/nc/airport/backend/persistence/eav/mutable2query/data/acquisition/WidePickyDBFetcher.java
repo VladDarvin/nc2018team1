@@ -488,7 +488,7 @@ public class WidePickyDBFetcher {
             mutable.setObjectDescription(result.getString(5));
         } catch (SQLException e) {
             log.error(e);
-            throw new BadDBRequestException("Couldn`t pull general object information", e);
+            throw new BadDBRequestException("Database doesn't contain requested object", e);
         }
     }
 

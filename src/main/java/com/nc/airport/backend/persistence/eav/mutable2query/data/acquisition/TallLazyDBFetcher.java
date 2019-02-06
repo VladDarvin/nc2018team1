@@ -175,7 +175,7 @@ public class TallLazyDBFetcher {
             mutable.setObjectDescription(result.getString(5));
         } catch (SQLException e) {
             logger.error(e);
-            throw new DatabaseConnectionException("Failed to pull OBJECTS table data", e);
+            throw new BadDBRequestException("Database doesn't contain requested object", e);
         }
     }
 
