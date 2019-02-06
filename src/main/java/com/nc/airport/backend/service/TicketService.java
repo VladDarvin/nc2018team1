@@ -1,5 +1,6 @@
 package com.nc.airport.backend.service;
 
+import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.TicketDTO;
 import com.nc.airport.backend.model.entities.model.airline.Airline;
@@ -13,6 +14,7 @@ import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.fi
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
 import org.springframework.stereotype.Service;
+
 import java.math.BigInteger;
 import java.util.*;
 
@@ -22,27 +24,36 @@ public class TicketService extends AbstractService {
         super(Ticket.class, repository);
     }
 
+    /**
+     * <h3>WARNING</h3>
+     * we expect page is one-based
+     *
+     * @param searchString
+     * @param filters
+     * @param page
+     * @return
+     */
     public ResponseFilteringWrapper getTicketsInfo(String searchString, List<BigInteger> filters, int page) {
-        List<Passenger> passengers = new ArrayList<>();
-        List<Flight> flights = new ArrayList<>();
-        List<FilterEntity> filterEntities = new ArrayList<>();
-        if (filters.size() == 2 && (filters.get(0).equals(BigInteger.valueOf(38)) || filters.get(0).equals(BigInteger.valueOf(39)))) {
-            filterEntities = makeFilterList(searchString, Passenger.class);
-            passengers = repository.findSlice(Passenger.class, new Page(page-1), null, filterEntities);
-            if (passengers.size() == 0) {
-                return new ResponseFilteringWrapper(Collections.emptyList(), BigInteger.valueOf(0));
-            }
-            List<FilterEntity> filterForTickets = makeFilterListForTicketsByPassenger(passengers);
-            return searchItems(filterForTickets, page);
+        page--;
+        final BigInteger passengerFirstNameAttrId = BigInteger.valueOf(38);
+        final BigInteger passengerLastNameAttrId = BigInteger.valueOf(39);
+
+        if (filters.size() == 2 &&
+                (filters.get(0).equals(passengerFirstNameAttrId) || filters.get(0).equals(passengerLastNameAttrId))) {
+            return searchByClass(Passenger.class, searchString, page);
         } else {
-            filterEntities = makeFilterList(searchString, Flight.class);
-            flights = repository.findSlice(Flight.class, new Page(page-1), null, filterEntities);
-            if (flights.size() == 0) {
-                return new ResponseFilteringWrapper(Collections.emptyList(), BigInteger.valueOf(0));
-            }
-            List<FilterEntity> filterForTickets = makeFilterListForTicketsByFlight(flights);
-            return searchItems(filterForTickets, page);
+            return searchByClass(Flight.class, searchString, page);
         }
+    }
+
+    private ResponseFilteringWrapper searchByClass(Class<? extends BaseEntity> clazz, String searchString, int page) {
+        List<FilterEntity> filterEntities = makeFilterList(searchString, clazz);
+        List<? extends BaseEntity> entities = repository.findSlice(clazz, new Page(page), null, filterEntities);
+        if (entities.size() == 0) {
+            return new ResponseFilteringWrapper(Collections.emptyList(), BigInteger.valueOf(0));
+        }
+        List<FilterEntity> filterForTickets = makeFilterListForTickets(entities, clazz);
+        return searchItems(filterForTickets, page);
     }
 
     private ResponseFilteringWrapper searchItems(List<FilterEntity> filterForTickets, int page) {
@@ -66,20 +77,18 @@ public class TicketService extends AbstractService {
         return new ResponseFilteringWrapper(returnItems, countOfPages);
     }
 
-    private List<FilterEntity> makeFilterListForTicketsByPassenger(List<Passenger> filters) {
+    private List<FilterEntity> makeFilterListForTickets(List<? extends BaseEntity> filters, Class<? extends BaseEntity> clazz) {
         List<FilterEntity> filterEntities = new ArrayList<>();
-        for (Passenger entity :
-                filters) {
-            filterEntities.add(new FilterEntity(BigInteger.valueOf(32), new HashSet<>(Arrays.asList(entity.getObjectId()))));
+        final BigInteger ticketFlightIdAttrId = BigInteger.valueOf(30);
+        final BigInteger ticketPassengerIdAttrId = BigInteger.valueOf(32);
+        BigInteger attrId;
+        if (clazz == Passenger.class) {
+            attrId = ticketPassengerIdAttrId;
+        } else {
+            attrId = ticketFlightIdAttrId;
         }
-        return filterEntities;
-    }
-
-    private List<FilterEntity> makeFilterListForTicketsByFlight(List<Flight> filters) {
-        List<FilterEntity> filterEntities = new ArrayList<>();
-        for (Flight entity :
-                filters) {
-            filterEntities.add(new FilterEntity(BigInteger.valueOf(30), new HashSet<>(Arrays.asList(entity.getObjectId()))));
+        for (BaseEntity entity : filters) {
+            filterEntities.add(new FilterEntity(attrId, new HashSet<>(Arrays.asList(entity.getObjectId()))));
         }
         return filterEntities;
     }
