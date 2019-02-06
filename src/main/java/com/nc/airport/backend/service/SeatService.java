@@ -37,14 +37,17 @@ public class SeatService extends AbstractService<Seat> {
     }
 
     /**
-     *
      * @param planeObjId can be null, in this case plane id is extracted from the first seat in seat list
      * @param seats
      * @return
      */
     public List<SeatDto> seatsToSeatDtos(BigInteger planeObjId, List<Seat> seats) {
+        if (seats == null || seats.size() == 0) {
+            return new ArrayList<>();
+        }
+
         if (planeObjId == null) {
-            if (seats != null && seats.size() > 0) {
+            if (seats.get(0).getAirplaneId() != null) {
                 planeObjId = seats.get(0).getAirplaneId();
             } else {
 //                FIXME throw convenient exception
