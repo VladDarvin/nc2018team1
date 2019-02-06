@@ -6,16 +6,18 @@ import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.model.entities.model.airplane.Seat;
 import com.nc.airport.backend.model.entities.model.airplane.SeatType;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
-import com.nc.airport.backend.model.entities.model.flight.Country;
 import com.nc.airport.backend.model.entities.model.flight.Flight;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passenger;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConsistencyException;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.model.dto.PrintableTicket;
+import com.nc.airport.backend.util.mail.TicketSender;
+import com.nc.airport.backend.util.print.pdf.PdfTicketGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -26,15 +28,30 @@ public class PrintableTicketService {
     @Autowired
     public PrintableTicketService(EavCrudRepository repository) {
         this.repository = repository;
+        TicketSender.authenticate("ticket_service@airpost.net", "lgahaf6er3en55da");
+    }
+
+    public boolean sendTicketByEmail(Ticket ticket,
+                                     String recipientEmail) {
+
+        PrintableTicket printableTicket;
+        ByteArrayOutputStream outputStream;
+        byte[] ticketPdf;
+
+        printableTicket = getPrintableTicket(ticket);
+        outputStream = new ByteArrayOutputStream();
+        PdfTicketGenerator.putTicketPdfInOutputStream(printableTicket, outputStream);
+        ticketPdf = outputStream.toByteArray();
+
+        return TicketSender.sendTicketById(ticketPdf, recipientEmail);
     }
 
     public PrintableTicket getPrintableTicket(Ticket ticket) {
+
         PrintableTicket printableTicket = new PrintableTicket();
         Flight flight;
         Airport departureAirport;
-        Country departureCountry;
         Airport arrivalAirport;
-        Country arrivalCountry;
         Airplane airplane;
         Airline airline;
         Seat seat;
