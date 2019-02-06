@@ -93,6 +93,10 @@ public class TicketService extends AbstractService {
         return filterEntities;
     }
 
+    public List<Ticket> getAllByFlightId(BigInteger flightId) {
+        return repository.findSliceOfReference(flightId, Ticket.class);
+    }
+
     private Optional<Flight> getFlightById(BigInteger flightId) {
         return repository.findById(flightId, Flight.class);
     }

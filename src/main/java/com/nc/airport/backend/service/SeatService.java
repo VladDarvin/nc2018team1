@@ -31,9 +31,32 @@ public class SeatService extends AbstractService<Seat> {
 
     public List<SeatDto> getByPlaneId(BigInteger id) {
         List<Seat> seats = repository.findSliceOfReference(id, Seat.class);
+        List<SeatDto> seatDtos = seatsToSeatDtos(id, seats);
+        log.debug(seatDtos);
+        return seatDtos;
+    }
+
+    /**
+     *
+     * @param planeObjId can be null, in this case plane id is extracted from the first seat in seat list
+     * @param seats
+     * @return
+     */
+    public List<SeatDto> seatsToSeatDtos(BigInteger planeObjId, List<Seat> seats) {
+        if (planeObjId == null) {
+            if (seats != null && seats.size() > 0) {
+                planeObjId = seats.get(0).getAirplaneId();
+            } else {
+//                FIXME throw convenient exception
+                throw new RuntimeException("No plane id in arg list. " +
+                        "No plane id in the first seat of seats list. " +
+                        "Can't convert seats to seatDtos.");
+            }
+        }
+
         Set<BigInteger> seatTypeIdSet = gatherSeatTypeIds(seats);
         Map<BigInteger, SeatType> idToSeatType = getIdToSeatType(seatTypeIdSet);
-        AirplaneDto airplaneDto = new AirplaneDto(airplaneService.getByObjectId(id));
+        AirplaneDto airplaneDto = new AirplaneDto(airplaneService.getByObjectId(planeObjId));
 
         List<SeatDto> seatDtos = new ArrayList<>();
         for (Seat seat : seats) {
@@ -44,9 +67,9 @@ public class SeatService extends AbstractService<Seat> {
             seatDto.setAirplane(airplaneDto);
             seatDtos.add(seatDto);
         }
-        log.debug(seatDtos);
         return seatDtos;
     }
+
 
     private Map<BigInteger, SeatType> getIdToSeatType(Set<BigInteger> seatTypeIdSet) {
         //        THIS IS TO REDUCE THE NUMBER OF TIMES WE TALK TO DB
@@ -130,5 +153,17 @@ public class SeatService extends AbstractService<Seat> {
     private void logAndThrow(RuntimeException ex) throws RuntimeException {
         log.error(ex);
         throw ex;
+    }
+
+    public Seat getByObjectId(BigInteger objId) {
+        Optional<Seat> result = repository.findById(objId, Seat.class);
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            String message = "Tried to find seat of id=" + objId + " but it does not exist.";
+            InconsistencyException ex = new InconsistencyException(message);
+            logAndThrow(ex);
+        }
+        return null;
     }
 }
