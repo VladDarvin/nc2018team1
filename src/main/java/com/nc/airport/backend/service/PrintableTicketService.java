@@ -58,6 +58,7 @@ public class PrintableTicketService {
         return TicketSender.sendTicketById(ticketPdf, recipientEmail);
     }
 
+    @SuppressWarnings("unchecked")
     public Ticket findTicketByFlightAndPassport(BigInteger flightId, String passportSerialNumber) {
 
         Passport passport;
