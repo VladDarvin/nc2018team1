@@ -5,13 +5,13 @@ import com.nc.airport.backend.persistence.eav.annotations.enums.ListValue;
 public enum TicketStatus {
 
     @ListValue(ID = "6")
-    NEW("New"),
+    NEW("NEW"),
 
     @ListValue(ID = "7")
-    BOUGHT("Bought"),
+    BOUGHT("NEW"),
 
     @ListValue(ID = "8")
-    ARCHIVED("Archived");
+    ARCHIVED("NEW");
 
 
     private String statusName;
