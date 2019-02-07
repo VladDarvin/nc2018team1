@@ -88,10 +88,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ROLE_ADMIN")
                 //Airlines access
-                .antMatchers(HttpMethod.GET, "/airlines").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airlines").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.POST, "/airlines").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/airlines/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/airlines/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airlines/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.PUT, "/airlines/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/airlines/**").hasAuthority("ROLE_ADMIN")
                 //Airplanes access
