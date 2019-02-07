@@ -4,10 +4,7 @@ import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.persistence.eav.annotations.ObjectType;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ListField;
 import com.nc.airport.backend.persistence.eav.annotations.attribute.value.ReferenceField;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigInteger;
 
@@ -15,6 +12,7 @@ import java.math.BigInteger;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Ticket extends BaseEntity {
 
