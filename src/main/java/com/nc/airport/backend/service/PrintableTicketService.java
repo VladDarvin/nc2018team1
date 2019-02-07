@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.annotation.Annotation;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
@@ -134,27 +135,29 @@ public class PrintableTicketService {
 //    }
 
     private FilterEntity requestThePassportBySerialNumber(String passportSerialNumber) {
-        BigInteger passportSerialNumAttributeId =
-                ReflectionHelper.getAttributeIdByFieldName(Passport.class, ValueField.class, "serialNumber");
-        return new FilterEntity(passportSerialNumAttributeId, Collections.singleton(passportSerialNumber));
+        return createRequestWithSingleValue(passportSerialNumber, ValueField.class, "serialNumber", Passport.class);
     }
 
     private FilterEntity requestThePassengerByPassportId(BigInteger passportId) {
-        BigInteger referenceId =
-                ReflectionHelper.getAttributeIdByFieldName(Passenger.class, ReferenceField.class, "passportId");
-        return new FilterEntity(referenceId, Collections.singleton(passportId));
+        return createRequestWithSingleValue(passportId, ReferenceField.class, "passportId", Passenger.class);
     }
 
     private FilterEntity requestTheTicketByFlightId(BigInteger flightId) {
-        BigInteger flightIdReferenceId =
-                ReflectionHelper.getAttributeIdByFieldName(Ticket.class, ReferenceField.class, "flightId");
-        return new FilterEntity(flightIdReferenceId, Collections.singleton(flightId));
+        return createRequestWithSingleValue(flightId, ReferenceField.class, "flightId", Ticket.class);
     }
 
     private FilterEntity requestTheTicketByPassengerId(BigInteger passengerId) {
-        BigInteger passengerIdReferenceId =
-                ReflectionHelper.getAttributeIdByFieldName(Ticket.class, ReferenceField.class, "passengerId");
-        return new FilterEntity(passengerIdReferenceId, Collections.singleton(passengerId));
+        return createRequestWithSingleValue(passengerId, ReferenceField.class, "passengerId", Ticket.class);
+    }
+
+    private FilterEntity createRequestWithSingleValue(Object requestBody,
+                                                      Class<? extends Annotation> requestType,
+                                                      String requestFieldName,
+                                                      Class<? extends BaseEntity> requestedClass) {
+
+        BigInteger requestFieldId =
+                ReflectionHelper.getAttributeIdByFieldName(requestedClass, requestType, requestFieldName);
+        return new FilterEntity(requestFieldId, Collections.singleton(requestBody));
     }
 
 }
