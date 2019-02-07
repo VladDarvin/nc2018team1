@@ -10,6 +10,7 @@ import com.nc.airport.backend.model.entities.model.flight.Flight;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passenger;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
+import com.nc.airport.backend.model.entities.model.ticketinfo.TicketStatus;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
 import com.nc.airport.backend.persistence.eav.repository.Page;
@@ -20,6 +21,7 @@ import java.util.*;
 
 @Service
 public class TicketService extends AbstractService {
+
     public TicketService(EavCrudRepository repository) {
         super(Ticket.class, repository);
     }
@@ -58,9 +60,9 @@ public class TicketService extends AbstractService {
 
     private ResponseFilteringWrapper searchItems(List<FilterEntity> filterForTickets, int page) {
         List<TicketDTO> returnItems = new ArrayList<>();
-        List<Ticket> tickets = repository.findSlice(Ticket.class, new Page(page-1), null, filterForTickets);
+        List<Ticket> tickets = repository.findSlice(Ticket.class, new Page(page - 1), null, filterForTickets);
         BigInteger countOfPages = repository.count(Ticket.class, filterForTickets);
-        for (Ticket ticket:
+        for (Ticket ticket :
                 tickets) {
             Flight flight = getFlightById(ticket.getFlightId()).get();
             Passenger passenger = getPassengerById(ticket.getPassengerId()).get();
@@ -119,5 +121,16 @@ public class TicketService extends AbstractService {
 
     private Optional<Passport> getPassportById(BigInteger passportId) {
         return repository.findById(passportId, Passport.class);
+    }
+
+    public List<Ticket> saveAll(List<Ticket> tickets) {
+        List<Ticket> savedTickets = repository.saveAll(tickets);
+
+        if (tickets.size() > 0) {
+            TicketStatus ticketStatus = tickets.get(0).getTicketStatus();
+            if (ticketStatus == TicketStatus.NEW) {
+            }
+        }
+        return savedTickets;
     }
 }

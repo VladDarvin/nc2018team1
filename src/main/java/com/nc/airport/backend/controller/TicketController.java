@@ -10,7 +10,9 @@ import com.nc.airport.backend.service.PassengerService;
 import com.nc.airport.backend.service.PassportService;
 import com.nc.airport.backend.service.TicketService;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigInteger;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -51,4 +53,8 @@ public class TicketController {
         return ticketDTO;
     }
 
+    @PutMapping("/tickets/book")
+    public List<Ticket> saveTickets(@RequestBody List<Ticket> tickets) {
+        return ticketService.saveAll(tickets);
+    }
 }

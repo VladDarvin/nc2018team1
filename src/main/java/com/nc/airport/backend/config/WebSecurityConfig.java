@@ -98,7 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/airplanes").hasAnyAuthority("ROLE_ADMIN", "ROLE_CONTROLLER")
                 .antMatchers(HttpMethod.POST, "/airplanes").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/airplanes/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/airplanes/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/airplanes/**").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.PUT, "/airplanes/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/airplanes/**").hasAuthority("ROLE_ADMIN")
                 //Countries access
@@ -140,9 +140,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //Tickets access
                 .antMatchers(HttpMethod.GET, "/tickets").hasAuthority("ROLE_CASHIER")
                 .antMatchers(HttpMethod.POST, "/tickets").hasAuthority("ROLE_CASHIER")
-                .antMatchers(HttpMethod.POST, "/tickets/**").hasAuthority("ROLE_CASHIER")
+                .antMatchers(HttpMethod.POST, "/tickets/**").hasAnyAuthority("ROLE_CASHIER", "ROLE_USER")
                 .antMatchers(HttpMethod.GET, "/tickets/**").hasAuthority("ROLE_CASHIER")
-                .antMatchers(HttpMethod.PUT, "/tickets/**").hasAuthority("ROLE_CASHIER")
+                .antMatchers(HttpMethod.PUT, "/tickets/**").hasAnyAuthority("ROLE_CASHIER", "ROLE_USER")
                 .antMatchers(HttpMethod.DELETE, "/tickets/**").hasAuthority("ROLE_CASHIER")
                 //SeatType access
                 .antMatchers(HttpMethod.GET, "/seat-type").hasAuthority("ROLE_ADMIN")
@@ -155,7 +155,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/seats").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/seats").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/seats/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/seats/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/seats/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 .antMatchers(HttpMethod.PUT, "/seats/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/seats/**").hasAuthority("ROLE_ADMIN")
 //                FLIGHT-BOOKING
