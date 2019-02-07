@@ -6,15 +6,18 @@ import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passenger;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.users.User;
+import com.nc.airport.backend.persistence.eav.repository.Page;
 import com.nc.airport.backend.service.PassengerService;
 import com.nc.airport.backend.service.PassportService;
 import com.nc.airport.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigInteger;
 import java.util.List;
 
 @RestController
+@RequestMapping("/passengers")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PassengerController {
     private PassengerService passengerService;
@@ -29,12 +32,12 @@ public class PassengerController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/passengers/userLogin={userLogin}/page={page}", method = RequestMethod.GET)
+    @RequestMapping(value = "/userLogin={userLogin}/page={page}", method = RequestMethod.GET)
     public List<Passenger> getAllPassengers(@PathVariable String userLogin, @PathVariable int page) {
-        return passengerService.findAllPassengersByUserLogin(userLogin, page);
+        return passengerService.findAllPassengersByUserLogin(userLogin, new Page(page - 1));
     }
 
-    @PostMapping(value = "/passengers/userLogin={userLogin}")
+    @PostMapping(value = "/userLogin={userLogin}")
     public PassengerPassportDTO addNewPassenger(@PathVariable String userLogin, @RequestBody PassengerPassportDTO dto) {
         Passport passport = dto.getPassport();
         passport = passportService.updateEntity(passport);
@@ -46,16 +49,21 @@ public class PassengerController {
         return new PassengerPassportDTO(passenger, passport);
     }
 
-    @PostMapping(value = "/passengers/userLogin={userLogin}/search/page={page}")
+    @PostMapping(value = "/userLogin={userLogin}/search/page={page}")
     public ResponseFilteringWrapper searchPassengers(@PathVariable(name = "userLogin") String userLogin, @PathVariable(name = "page") int page,
                                                      @RequestBody SortingFilteringWrapper wrapper) {
         return passengerService.filterAndSortEntitiesByUserLogin(userLogin, page, wrapper.getSearchString(), wrapper.getSortList());
     }
 
-    @DeleteMapping(value = "/passengers/passenger={psgId}/passport={pstId}")
+    @DeleteMapping(value = "/passenger={psgId}/passport={pstId}")
     public void deletePassenger(@PathVariable(name = "psgId") BigInteger psgId, @PathVariable(name = "pstId") BigInteger pstId) {
         passportService.deleteEntity(pstId);
         passengerService.deleteEntity(psgId);
+    }
+
+    @GetMapping("/userLogin={userLogin}")
+    public List<PassengerPassportDTO> getAllByUserLogin(@PathVariable String userLogin) {
+        return passengerService.getAllByUserLogin(userLogin);
     }
 
 }
