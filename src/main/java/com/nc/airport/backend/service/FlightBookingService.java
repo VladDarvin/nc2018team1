@@ -32,19 +32,19 @@ public class FlightBookingService extends AbstractService {
         this.airportService = airportService;
     }
 
-    public List<FlightDTO> findOneWayFlights (int page, String departureCity, String destinationCity, LocalDateTime date) {
+    public List<FlightDTO> findOneWayFlights(int page, String departureCity, String destinationCity, LocalDateTime date) {
         List<Airport> departureAirports = airportService.findItemsByAttr(departureCity, BigInteger.valueOf(5), Airport.class);
         List<Airport> destinationAirports = airportService.findItemsByAttr(destinationCity, BigInteger.valueOf(5), Airport.class);
 
         Set<Object> departureValues = new HashSet<>();
-        for (Airport airport:
+        for (Airport airport :
                 departureAirports) {
             departureValues.add(airport.getObjectId());
         }
         FilterEntity departureAirportsFilter = new FilterEntity(BigInteger.valueOf(11), departureValues);
 
         Set<Object> destinationValues = new HashSet<>();
-        for (Airport airport:
+        for (Airport airport :
                 destinationAirports) {
             destinationValues.add(airport.getObjectId());
         }
@@ -56,8 +56,8 @@ public class FlightBookingService extends AbstractService {
         List<Flight> flights = flightService.repository.findSliceOfSeveralReferences(filterEntities, Flight.class);
 
         Set<Flight> foundFlights = new HashSet<>();
-        for (Flight flight:
-             flights) {
+        for (Flight flight :
+                flights) {
             if (flight.getStatus().equals(FlightStatus.SCHEDULED)) {
                 String dateFromFlight = flight.getExpectedDepartureDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String dateFromSearch = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -71,7 +71,7 @@ public class FlightBookingService extends AbstractService {
         return flightService.formFlightDTOs(new ArrayList<>(foundFlights));
     }
 
-    public BookingTwoWaysDto findTwoWayFlights (int page, String departureCity, String destinationCity, LocalDateTime departureDate, LocalDateTime returnDate) {
+    public BookingTwoWaysDto findTwoWayFlights(int page, String departureCity, String destinationCity, LocalDateTime departureDate, LocalDateTime returnDate) {
         List<FlightDTO> departureFlights = findOneWayFlights(page, departureCity, destinationCity, departureDate);
         List<FlightDTO> flightsBack = findOneWayFlights(page, destinationCity, departureCity, returnDate);
 

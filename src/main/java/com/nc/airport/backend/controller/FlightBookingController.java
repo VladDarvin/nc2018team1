@@ -21,13 +21,13 @@ public class FlightBookingController {
 
     @PostMapping("/flight-booking/search-one-way/page={page}")
     public List<FlightDTO> findFlights(@PathVariable(name = "page") int page,
-                                                    @RequestBody FlightSearchWrapper wrapper) {
-        return flightBookingService.findOneWayFlights(page,wrapper.getDepartureCity(), wrapper.getDestinationCity(), wrapper.getDepartureDate());
+                                       @RequestBody FlightSearchWrapper wrapper) {
+        return flightBookingService.findOneWayFlights(page, wrapper.getDepartureCity(), wrapper.getDestinationCity(), wrapper.getDepartureDate());
     }
 
     @PostMapping("/flight-booking/search-both/page={page}")
     public BookingTwoWaysDto findFlightsForTwoWays(@PathVariable(name = "page") int page,
                                                    @RequestBody FlightSearchWrapper wrapper) {
-        return flightBookingService.findTwoWayFlights(page,wrapper.getDepartureCity(), wrapper.getDestinationCity(), wrapper.getDepartureDate(), wrapper.getReturnDate());
+        return flightBookingService.findTwoWayFlights(page, wrapper.getDepartureCity(), wrapper.getDestinationCity(), wrapper.getDepartureDate(), wrapper.getReturnDate());
     }
 }

@@ -91,7 +91,7 @@ public abstract class AbstractService<T extends BaseEntity> {
     public List<T> findItemsByAttr(String value, BigInteger attrId, Class<T> clazz) {
 //        TODO IMPLEMENT ATTR_ID PARSING
         Set<Object> searchSet = new HashSet<>();
-        searchSet.add('%'+value+'%');
+        searchSet.add('%' + value + '%');
         FilterEntity filterEntity = new FilterEntity(attrId, searchSet);
 
         List<FilterEntity> filterEntities = new ArrayList<>();
@@ -104,6 +104,7 @@ public abstract class AbstractService<T extends BaseEntity> {
     /**
      * <h3>WARNING</h3>
      * <p>The number of items returned is restricted to 2^32</p>
+     *
      * @return list of all items up to 2^32
      */
     public List<T> getAll() {
