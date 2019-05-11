@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("changePassword/login={login}")
     public boolean changeUserPassword(
             @PathVariable String login, @RequestBody PasswordDTO passwordDTO
-            ) {
+    ) {
         User user = service.findByLogin(login);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {

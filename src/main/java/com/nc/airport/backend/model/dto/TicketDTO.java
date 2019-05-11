@@ -7,7 +7,6 @@ import com.nc.airport.backend.model.entities.model.flight.Flight;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passenger;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Passport;
 import com.nc.airport.backend.model.entities.model.ticketinfo.Ticket;
-import com.nc.airport.backend.model.entities.model.ticketinfo.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -66,7 +66,7 @@ public class SeatTypeController {
 
     @PostMapping("/search/page={page}")
     public ResponseFilteringWrapper searchSeatTypes(@PathVariable(name = "page") int page,
-                                                @RequestBody SortingFilteringWrapper wrapper) {
+                                                    @RequestBody SortingFilteringWrapper wrapper) {
         return seatTypeService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }

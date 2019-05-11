@@ -3,7 +3,6 @@ package com.nc.airport.backend.controller;
 import com.nc.airport.backend.model.dto.AirportDto;
 import com.nc.airport.backend.model.dto.ResponseFilteringWrapper;
 import com.nc.airport.backend.model.dto.SortingFilteringWrapper;
-import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.service.AirportService;
 import org.springframework.web.bind.annotation.*;

@@ -18,7 +18,7 @@ import org.junit.Test;
 public class Entity2MutableTest {
     private Entity2Mutable e2m = new DefaultEntity2Mutable(new DefaultEntityParser(), new DefaultEntityBuilder());
 
-    private <T extends BaseEntity> void givenValidEntity_whenConverted2MutAndBack_thenEqual(T expectedBE){
+    private <T extends BaseEntity> void givenValidEntity_whenConverted2MutAndBack_thenEqual(T expectedBE) {
         log.info("Expected entity : {}", expectedBE);
 
         Mutable mutable = e2m.convertEntityToMutable(expectedBE);
@@ -31,34 +31,34 @@ public class Entity2MutableTest {
     }
 
     @Test
-    public void givenValidNoFieldsEnt_whenConverted_thenEqual(){
+    public void givenValidNoFieldsEnt_whenConverted_thenEqual() {
         givenValidEntity_whenConverted2MutAndBack_thenEqual(new ValidNoFieldsEntity());
     }
 
-//    @Ignore
+    //    @Ignore
     @Test
-    public void givenValidDateTimeEnt_whenConverted_thenEqual(){
+    public void givenValidDateTimeEnt_whenConverted_thenEqual() {
         // TODO: 18.12.2018 make scan include superclass
         givenValidEntity_whenConverted2MutAndBack_thenEqual(new ValidDateTimeEntity());
     }
 
-//    @Ignore
+    //    @Ignore
     @Test
-    public void givenValidEnumEnt_whenConverted_thenEqual(){
+    public void givenValidEnumEnt_whenConverted_thenEqual() {
         // TODO: 18.12.2018 implement enum conversion and enable test
         givenValidEntity_whenConverted2MutAndBack_thenEqual(new ValidEnumEntity());
     }
 
-//    @Ignore
+    //    @Ignore
     @Test
-    public void givenValidReferenceEnt_whenConverted_thenEqual(){
+    public void givenValidReferenceEnt_whenConverted_thenEqual() {
         // TODO: 18.12.2018 make scan include superclass
         givenValidEntity_whenConverted2MutAndBack_thenEqual(new ValidReferenceEntity());
     }
 
-//    @Ignore
+    //    @Ignore
     @Test
-    public void givenValidValueEnt_whenConverted_thenEqual(){
+    public void givenValidValueEnt_whenConverted_thenEqual() {
         // TODO: 18.12.2018 make scan include superclass
         givenValidEntity_whenConverted2MutAndBack_thenEqual(new ValidValueEntity());
     }

@@ -3,9 +3,9 @@ package com.nc.airport.backend.model.dto;
 import com.nc.airport.backend.model.BaseEntity;
 import com.nc.airport.backend.model.entities.model.flight.Airport;
 import com.nc.airport.backend.model.entities.model.flight.Country;
-import lombok.*;
-
-import java.math.BigInteger;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

@@ -19,7 +19,7 @@ public class PrintableTicketController {
     public boolean sendTicketPdfToEmail(@PathVariable(name = "email") String recipientEmail,
                                         @RequestBody Ticket ticket) {
 
-         return printableTicketService.sendTicketByEmail(ticket, recipientEmail);
+        return printableTicketService.sendTicketByEmail(ticket, recipientEmail);
     }
 
     @GetMapping("/tickets/lost/onFlight={flightId}/passport={serialNumber}")

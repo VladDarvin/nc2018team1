@@ -31,7 +31,7 @@ public class PdfTicketGenerator {
             document.open();
             fillMetaData(document, ticket);
 
-            PdfPTable rootTable = new PdfPTable(new float[] {1, 0.6f});
+            PdfPTable rootTable = new PdfPTable(new float[]{1, 0.6f});
             PdfPTable baseTable = new PdfPTable(1);
             PdfPTable sideTable = new PdfPTable(1);
             rootTable.setWidthPercentage(100);
@@ -77,13 +77,13 @@ public class PdfTicketGenerator {
                     ticket.getArrivalCity()
             ));
 
-            int gateNum = Integer.valueOf(ticket.getFlightNumber().replaceAll("\\D+","")) % 10;
+            int gateNum = Integer.valueOf(ticket.getFlightNumber().replaceAll("\\D+", "")) % 10;
             String gate = gateNum == 0 ? "10" : "0" + gateNum;
             String boardingTill = ticket.getExpectedArrivalDatetime().toLocalTime().truncatedTo(ChronoUnit.MINUTES).minusMinutes(30).toString();
             String seat = "" + ticket.getSeatRow() + ((char) (ticket.getSeatRow() + 64));
             baseTable.addCell(writeInStyle(
                     PdfTicketGenerator::setToLastBaseLineContentWrapperStyle,
-                    new float[] {1, 1, 1},
+                    new float[]{1, 1, 1},
                     "Gate",
                     "Boarding till",
                     "Seat",
@@ -92,7 +92,7 @@ public class PdfTicketGenerator {
                     seat
             ));
             sideTable.addCell(writeInSide(
-                    new float[] {1, 1, 0.5f},
+                    new float[]{1, 1, 0.5f},
                     "Flight",
                     "Date",
                     "Time",
@@ -106,8 +106,8 @@ public class PdfTicketGenerator {
             baseTable.addCell(emptyCell);
             sideTable.addCell(writeInStyle(
                     PdfTicketGenerator::setToLastSideLineContentWrapperStyle,
-                    new float[] {1, 1, 0.5f},
-                "Gate",
+                    new float[]{1, 1, 0.5f},
+                    "Gate",
                     "Boarding till",
                     "Seat",
                     gate,
@@ -142,13 +142,13 @@ public class PdfTicketGenerator {
         document.addCreationDate();
     }
 
-    private static void setToHeaderStyle(Font ... fonts) {
+    private static void setToHeaderStyle(Font... fonts) {
         for (Font font : fonts) {
             font.setColor(BaseColor.WHITE);
         }
     }
 
-    private static void setToHeaderStyle(PdfPCell ... cells) {
+    private static void setToHeaderStyle(PdfPCell... cells) {
         for (PdfPCell cell : cells) {
             cell.setBackgroundColor(BaseColor.BLUE);
             disableCellBorders(cell);
@@ -180,7 +180,7 @@ public class PdfTicketGenerator {
         cell.setMinimumHeight(31);
     }
 
-    private static void setToFooterStyle(PdfPCell ... footerPieces) {
+    private static void setToFooterStyle(PdfPCell... footerPieces) {
         for (PdfPCell footerPiece : footerPieces) {
             setToFooterStyle(footerPiece);
         }
@@ -196,7 +196,7 @@ public class PdfTicketGenerator {
 
         PdfPTable headerTable = new PdfPTable(3);
         headerTable.setWidthPercentage(100);
-        headerTable.setWidths(new float[] {1, 1.8f, 4});
+        headerTable.setWidths(new float[]{1, 1.8f, 4});
 
         Font logoFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
         Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
@@ -272,7 +272,7 @@ public class PdfTicketGenerator {
         cell.setBorder(Rectangle.NO_BORDER);
     }
 
-    private static void disableAllCellsBorders(PdfPCell ... cells) {
+    private static void disableAllCellsBorders(PdfPCell... cells) {
         for (PdfPCell cell : cells) {
             disableCellBorders(cell);
         }
@@ -284,7 +284,7 @@ public class PdfTicketGenerator {
         return cellWrapper;
     }
 
-    private static void writeLine(PdfPTable wrapper, Phrase ... phrases) {
+    private static void writeLine(PdfPTable wrapper, Phrase... phrases) {
         for (Phrase phrase : phrases) {
             PdfPCell cell = new PdfPCell(phrase);
             disableCellBorders(cell);
@@ -298,7 +298,7 @@ public class PdfTicketGenerator {
         return widths;
     }
 
-    private static PdfPTable writePropertiesValues(float[] widths, String ... propertiesValues) {
+    private static PdfPTable writePropertiesValues(float[] widths, String... propertiesValues) {
         if (propertiesValues.length % 2 != 0) {
             throw new UnsupportedOperationException("Number of properties doesn't equal to number of values");
         }
@@ -319,32 +319,32 @@ public class PdfTicketGenerator {
         return tableWrapper;
     }
 
-    private static PdfPCell writeInStyle(Consumer<PdfPCell> stylist, float[] widths, String ... propertiesValues) {
+    private static PdfPCell writeInStyle(Consumer<PdfPCell> stylist, float[] widths, String... propertiesValues) {
         return createStyledWrapperCell(writePropertiesValues(widths, propertiesValues), stylist);
     }
 
-    private static PdfPCell writeInBase(String ... propertiesValues) {
+    private static PdfPCell writeInBase(String... propertiesValues) {
         return writeInStyle(
                 PdfTicketGenerator::setToBaseContentWrapperStyle,
                 getBalancedWidths(propertiesValues.length),
                 propertiesValues);
     }
 
-    private static PdfPCell writeInBase(float[] widths, String ... propertiesValues) {
+    private static PdfPCell writeInBase(float[] widths, String... propertiesValues) {
         return writeInStyle(
                 PdfTicketGenerator::setToBaseContentWrapperStyle,
                 widths,
                 propertiesValues);
     }
 
-    private static PdfPCell writeInSide(String ... propertiesValues) {
+    private static PdfPCell writeInSide(String... propertiesValues) {
         return writeInStyle(
                 PdfTicketGenerator::setToSideContentWrapperStyle,
                 getBalancedWidths(propertiesValues.length),
                 propertiesValues);
     }
 
-    private static PdfPCell writeInSide(float[] widths, String ... propertiesValues) {
+    private static PdfPCell writeInSide(float[] widths, String... propertiesValues) {
         return writeInStyle(
                 PdfTicketGenerator::setToSideContentWrapperStyle,
                 widths,
@@ -352,7 +352,7 @@ public class PdfTicketGenerator {
     }
 
     private static PdfPCell createFooter(PrintableTicket ticket) {
-        PdfPTable tableWrapper = new PdfPTable(new float[] {1.5f, 1, 0.1f});
+        PdfPTable tableWrapper = new PdfPTable(new float[]{1.5f, 1, 0.1f});
         Font footerFont = new Font(Font.FontFamily.HELVETICA, 7, Font.ITALIC);
         footerFont.setColor(BaseColor.LIGHT_GRAY);
 

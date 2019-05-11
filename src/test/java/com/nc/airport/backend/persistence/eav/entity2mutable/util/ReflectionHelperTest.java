@@ -17,7 +17,7 @@ import java.util.List;
 public class ReflectionHelperTest {
 
     @Test
-    public void givenBaseEntityChild_whenComparedActualIdsAndScanned_thenEqual(){
+    public void givenBaseEntityChild_whenComparedActualIdsAndScanned_thenEqual() {
         List<BigInteger> expectedIds = new ArrayList<>();
         expectedIds.add(new BigInteger("1"));
         expectedIds.add(new BigInteger("2"));

@@ -103,9 +103,9 @@ class QueryCreator {
             WHERE rnum >= 1
     */
     StringBuilder createWidePickyQuery(List<BigInteger> values,
-                                         List<BigInteger> dateValues,
-                                         List<BigInteger> listValues,
-                                         List<BigInteger> references) {
+                                       List<BigInteger> dateValues,
+                                       List<BigInteger> listValues,
+                                       List<BigInteger> references) {
         StringBuilder query = new StringBuilder
                 ("  SELECT O.OBJECT_ID, O.PARENT_ID, O.OBJECT_TYPE_ID, O.NAME, O.DESCRIPTION, ");
         transferAttributesSelection(query, values, dateValues, listValues, references);

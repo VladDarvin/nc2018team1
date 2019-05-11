@@ -50,7 +50,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-
     @ExceptionHandler({
             DatabaseConnectionException.class,
             BadDBRequestException.class,

@@ -71,7 +71,7 @@ public class FilteringDescriptorTest {
     }
 
     @Test
-    public void givenStringsFilter_whenFilter_thenAsExpected(){
+    public void givenStringsFilter_whenFilter_thenAsExpected() {
         filterEntities = new ArrayList<>();
 
         Set<Object> stringValues = new HashSet<>();
@@ -88,7 +88,7 @@ public class FilteringDescriptorTest {
     }
 
     @Test
-    public void given3StringsFilter_whenFilter_thenAsExpected(){
+    public void given3StringsFilter_whenFilter_thenAsExpected() {
         filterEntities = new ArrayList<>();
 
         Set<Object> stringValues = new HashSet<>();
@@ -99,8 +99,8 @@ public class FilteringDescriptorTest {
         filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
         filterEntities.add(new FilterEntity(BigInteger.valueOf(7), stringValues));
 
-        String expected = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
-                "OR (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) "+
+        String expected = " WHERE (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) " +
+                "OR (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?)) " +
                 "OR (LOWER(ATTR7) LIKE LOWER(?) OR LOWER(ATTR7) LIKE LOWER(?))";
         String result = filteringDescriptor.doFiltering(filterEntities);
 

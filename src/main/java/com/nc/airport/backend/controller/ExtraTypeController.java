@@ -51,7 +51,7 @@ public class ExtraTypeController {
 
     @PostMapping("/search/page={page}")
     public ResponseFilteringWrapper searchExtraTypes(@PathVariable(name = "page") int page,
-                                                    @RequestBody SortingFilteringWrapper wrapper) {
+                                                     @RequestBody SortingFilteringWrapper wrapper) {
         return extraTypeService.filterAndSortEntities(page, wrapper.getSearchString(), wrapper.getSortList());
     }
 }

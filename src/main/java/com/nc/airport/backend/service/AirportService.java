@@ -55,7 +55,7 @@ public class AirportService extends AbstractService<Airport> {
 
     public List<Airport> findCityNames(String cityName) {
         Set<Object> values = new HashSet<>();
-        values.add("%"+cityName+"%");
+        values.add("%" + cityName + "%");
         List<FilterEntity> filterEntities = new ArrayList<>();
         filterEntities.add(new FilterEntity(BigInteger.valueOf(5), values));
 

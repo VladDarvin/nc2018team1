@@ -305,8 +305,8 @@ public class WidePickyDBFetcher {
 
                     basicQuery.append("(");
                     int j = 1;
-                    for (Object value:
-                         filter.getValues()) {
+                    for (Object value :
+                            filter.getValues()) {
                         basicQuery.append("A").append(attrNumber).append(".REFERENCE = ").append(value);
                         if (j < filter.getValues().size()) {
                             basicQuery.append(" OR ");

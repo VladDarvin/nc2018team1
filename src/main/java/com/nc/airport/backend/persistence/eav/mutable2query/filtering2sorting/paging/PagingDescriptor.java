@@ -9,8 +9,8 @@ public class PagingDescriptor {
      * Wrap select query into rownum for getting paging
      *
      * @param query select query for wrapping
-     * @param from start position
-     * @param to end position
+     * @param from  start position
+     * @param to    end position
      * @return query sting wrapped into rownum
      */
     public String getPaging(StringBuilder query, int from, int to) {

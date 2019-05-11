@@ -1,6 +1,7 @@
 package com.nc.airport.backend.service;
 
 import com.nc.airport.backend.model.BaseEntity;
+import com.nc.airport.backend.model.dto.PrintableTicket;
 import com.nc.airport.backend.model.entities.model.airline.Airline;
 import com.nc.airport.backend.model.entities.model.airplane.Airplane;
 import com.nc.airport.backend.model.entities.model.airplane.Seat;
@@ -16,7 +17,6 @@ import com.nc.airport.backend.persistence.eav.entity2mutable.util.ReflectionHelp
 import com.nc.airport.backend.persistence.eav.exceptions.DatabaseConsistencyException;
 import com.nc.airport.backend.persistence.eav.mutable2query.filtering2sorting.filtering.FilterEntity;
 import com.nc.airport.backend.persistence.eav.repository.EavCrudRepository;
-import com.nc.airport.backend.model.dto.PrintableTicket;
 import com.nc.airport.backend.persistence.eav.repository.Page;
 import com.nc.airport.backend.util.mail.TicketSender;
 import com.nc.airport.backend.util.print.pdf.PdfTicketGenerator;
@@ -80,7 +80,7 @@ public class PrintableTicketService {
         List<FilterEntity> ticketRequest = Arrays.asList(
                 requestTheTicketByFlightId(flightId),
                 requestTheTicketByPassengerId(passenger.getObjectId())
-            );
+        );
         List<BaseEntity> ticketRequestResults = repository.findSlice(Ticket.class, new Page(0), null, ticketRequest);
         return (Ticket) ticketRequestResults.get(0);
     }

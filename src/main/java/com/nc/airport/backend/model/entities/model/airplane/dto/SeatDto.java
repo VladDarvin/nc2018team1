@@ -24,6 +24,7 @@ public class SeatDto extends BaseEntity {
 
     /**
      * Creates Airplane dto only with ids, anything else like airplane name or seatType name you should add on your own
+     *
      * @param seat
      */
     public SeatDto(Seat seat) {

@@ -11,6 +11,7 @@ import java.util.List;
 public class CreditCardService extends AbstractService<CreditCard> {
 
     private UserService userService;
+
     public CreditCardService(EavCrudRepository<CreditCard> repository, UserService userService) {
         super(CreditCard.class, repository);
         this.userService = userService;

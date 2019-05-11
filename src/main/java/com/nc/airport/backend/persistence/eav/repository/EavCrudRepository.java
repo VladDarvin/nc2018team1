@@ -8,7 +8,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -77,9 +76,9 @@ public interface EavCrudRepository<T extends BaseEntity> {
     /**
      * Returns list of entities that are children of given entity
      *
-     * @param parentId objectId of parent class
+     * @param parentId   objectId of parent class
      * @param childClass searched child
-     * @param page   zero-based
+     * @param page       zero-based
      * @return list of entity's children
      */
     List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass, Page page);
@@ -103,11 +102,11 @@ public interface EavCrudRepository<T extends BaseEntity> {
      * Returns all children of given entity that are within row range, filtered and sortered.
      * Consider found instances form a list (this is where rows are from)
      *
-     * @param parentId objectId of parent class
+     * @param parentId   objectId of parent class
      * @param childClass searched child
-     * @param page     zero-based
-     * @param sortBy   sorting criteria
-     * @param filterBy filtering criteria
+     * @param page       zero-based
+     * @param sortBy     sorting criteria
+     * @param filterBy   filtering criteria
      * @return slice of entities that are found and ordered with criterias
      */
     List<T> findSliceOfChildren(@NotNull BigInteger parentId, @NotNull Class<T> childClass,

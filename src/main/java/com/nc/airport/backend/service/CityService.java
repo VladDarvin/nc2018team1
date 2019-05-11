@@ -9,7 +9,7 @@ import java.math.BigInteger;
 
 @Service
 @Log4j2
-public class CityService extends AbstractService<City>{
+public class CityService extends AbstractService<City> {
 
     public CityService(EavCrudRepository<City> repository) {
         super(City.class, repository);

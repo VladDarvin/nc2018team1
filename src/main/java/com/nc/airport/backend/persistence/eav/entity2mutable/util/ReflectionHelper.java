@@ -24,7 +24,8 @@ import java.util.List;
 public final class ReflectionHelper {
     private static final Marker DATA_LOSS = MarkerManager.getMarker("DATA_LOSS");
 
-    private ReflectionHelper() {}
+    private ReflectionHelper() {
+    }
 
     /**
      * Gets field list from entity

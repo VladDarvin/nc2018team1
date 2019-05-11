@@ -20,7 +20,8 @@ public abstract class BaseEntity {
     private String objectName;
     private String objectDescription;
 
-    public BaseEntity() {}
+    public BaseEntity() {
+    }
 
     public BaseEntity(BaseEntity entity) {
         this.objectId = entity.getObjectId();

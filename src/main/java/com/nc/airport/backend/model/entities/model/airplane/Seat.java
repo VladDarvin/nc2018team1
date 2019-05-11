@@ -32,7 +32,8 @@ public class Seat extends BaseEntity {
     @ValueField(ID = "66")
     private Double modifier;
 
-    public Seat() {}
+    public Seat() {
+    }
 
     public Seat(SeatDto seatDto) {
         super(seatDto);

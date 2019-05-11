@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- *  TODO javadoc
+ * TODO javadoc
  */
 @Log4j2
 @Component
@@ -171,7 +171,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
     private Object newStringConstructorInstance(Class classToCreate, String initArg) {
         Object newInstance = null;
-        if(initArg == null) {
+        if (initArg == null) {
             initArg = "";
         }
 
@@ -184,7 +184,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
                 logAndThrowDataLossEx(message, e);
             }
         } catch (NoSuchMethodException e) {
-            String message = "No constructor " + classToCreate.getName() +"(String)";
+            String message = "No constructor " + classToCreate.getName() + "(String)";
             logAndThrowDataLossEx(message, e);
         }
         return newInstance;
